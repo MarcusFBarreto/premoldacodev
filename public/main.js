@@ -143,11 +143,15 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('tipo-laje').focus();
         if (footerMenu) footerMenu.style.display = 'flex';
       } else if (step === 2) {
-        calcStep2.style.display = 'flex';
-        calcStep2.classList.add('active');
-        progressCircles[2].classList.add('active');
-        backButtons[1].style.display = 'block';
-        if (footerMenu) footerMenu.style.display = 'none';
+        if (calcData.tipoLaje !== 'solicitar-medicao') {
+          calcStep2.style.display = 'flex';
+          calcStep2.classList.add('active');
+          progressCircles[2].classList.add('active');
+          backButtons[1].style.display = 'block';
+          if (footerMenu) footerMenu.style.display = 'none';
+        } else {
+          showStep(3); // Pula direto para o Passo 3 se for "Solicitar Medição"
+        }
       } else if (step === 3) {
         calcStep3.style.display = 'flex';
         calcStep3.classList.add('active');
@@ -247,137 +251,136 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Passo 2: Inserção de Cômodos
-calculateButton.addEventListener('click', () => {
-  console.log('Passo 2: Calculando resultado.');
-  let totalArea = 0;
-  const comodos = [];
-  const comodoItems = comodosContainer.getElementsByClassName("comodo-item");
-  const tipoLaje = calcData.tipoLaje;
-  let espacamento = (tipoLaje === 'trelicada-eps') ? 0.50 : 0.43;
+    calculateButton.addEventListener('click', () => {
+      console.log('Passo 2: Calculando resultado.');
+      let totalArea = 0;
+      const comodos = [];
+      const comodoItems = comodosContainer.getElementsByClassName("comodo-item");
+      const tipoLaje = calcData.tipoLaje;
+      let espacamento = (tipoLaje === 'trelicada-eps') ? 0.50 : 0.43;
 
-  for (let i = 1; i <= comodoItems.length; i++) {
-    const name = document.getElementById(`comodo-name-${i}`)?.value.trim() || `Cômodo ${i}`;
-    const largura = parseFloat(document.getElementById(`largura-${i}`).value);
-    const comprimento = parseFloat(document.getElementById(`comprimento-${i}`).value);
-    if (comprimento && largura && !isNaN(comprimento) && !isNaN(largura)) {
-      const area = comprimento * largura;
-      totalArea += area;
-      const quantidadeVigotas = Math.ceil(comprimento / espacamento);
-      let quantidadeBlocos = null;
+      for (let i = 1; i <= comodoItems.length; i++) {
+        const name = document.getElementById(`comodo-name-${i}`)?.value.trim() || `Cômodo ${i}`;
+        const largura = parseFloat(document.getElementById(`largura-${i}`).value);
+        const comprimento = parseFloat(document.getElementById(`comprimento-${i}`).value);
+        if (comprimento && largura && !isNaN(comprimento) && !isNaN(largura)) {
+          const area = comprimento * largura;
+          totalArea += area;
+          const quantidadeVigotas = Math.ceil(comprimento / espacamento);
+          let quantidadeBlocos = null;
 
-      if (tipoLaje === 'resolver-vendedor' || tipoLaje === 'solicitar-medicao') {
-        quantidadeBlocos = null;
-      } else if (tipoLaje.includes('eps-h733')) {
-        const blocosPorFileira = Math.ceil(largura / 0.30);
-        const fileiras = Math.ceil(comprimento / 1.0);
-        quantidadeBlocos = blocosPorFileira * fileiras;
-      } else if (tipoLaje.includes('eps-h740')) {
-        const blocosPorFileira = Math.ceil(largura / 0.37);
-        const fileiras = Math.ceil(comprimento / 1.0);
-        quantidadeBlocos = blocosPorFileira * fileiras;
-      } else { // Tijolo H8
-        const tijolosPorFileira = Math.ceil(comprimento / 0.20);
-        const fileiras = Math.ceil(largura / 0.30);
-        quantidadeBlocos = tijolosPorFileira * fileiras;
+          if (tipoLaje === 'resolver-vendedor' || tipoLaje === 'solicitar-medicao') {
+            quantidadeBlocos = null;
+          } else if (tipoLaje.includes('eps-h733')) {
+            const blocosPorFileira = Math.ceil(largura / 0.30);
+            const fileiras = Math.ceil(comprimento / 1.0);
+            quantidadeBlocos = blocosPorFileira * fileiras;
+          } else if (tipoLaje.includes('eps-h740')) {
+            const blocosPorFileira = Math.ceil(largura / 0.37);
+            const fileiras = Math.ceil(comprimento / 1.0);
+            quantidadeBlocos = blocosPorFileira * fileiras;
+          } else { // Tijolo H8
+            const tijolosPorFileira = Math.ceil(comprimento / 0.20);
+            const fileiras = Math.ceil(largura / 0.30);
+            quantidadeBlocos = tijolosPorFileira * fileiras;
+          }
+
+          comodos.push({
+            name,
+            comprimento: comprimento.toFixed(2),
+            largura: largura.toFixed(2),
+            area: area.toFixed(2),
+            vigotaComprimento: largura.toFixed(2),
+            quantidadeVigotas,
+            quantidadeBlocos,
+            tipoBloco: tipoLaje.includes('eps') ? 'EPS' : tipoLaje === 'tijolo-h8' ? 'Tijolo H8' : null
+          });
+        } else {
+          alert(`Por favor, preencha corretamente as dimensões do ${name}.`);
+          return;
+        }
       }
-
-      comodos.push({
-        name,
-        comprimento: comprimento.toFixed(2),
-        largura: largura.toFixed(2),
-        area: area.toFixed(2),
-        vigotaComprimento: largura.toFixed(2),
-        quantidadeVigotas,
-        quantidadeBlocos,
-        tipoBloco: tipoLaje.includes('eps') ? 'EPS' : tipoLaje === 'tijolo-h8' ? 'Tijolo H8' : null
-      });
-    } else {
-      alert(`Por favor, preencha corretamente as dimensões do ${name}.`);
-      return;
-    }
-  }
-  calcData.totalArea = totalArea;
-  calcData.comodos = comodos;
-  showStep(3);
-});
+      calcData.totalArea = totalArea;
+      calcData.comodos = comodos;
+      showStep(3);
+    });
 
     // Passo 3: Revisão e Orçamento
-    
     whatsappLink.addEventListener('click', (e) => {
-  console.log('Passo 3: Gerando orçamento.');
-  const nome = document.getElementById('nome').value.trim();
-  const telefone = document.getElementById('telefone').value;
-  const email = document.getElementById('email').value.trim();
-  const observacoes = document.getElementById('observacoes').value.trim();
+      console.log('Passo 3: Gerando orçamento.');
+      const nome = document.getElementById('nome').value.trim();
+      const telefone = document.getElementById('telefone').value;
+      const email = document.getElementById('email').value.trim();
+      const observacoes = document.getElementById('observacoes').value.trim();
 
-  if (!nome || !/^[0-9]{10,11}$/.test(telefone) || !email.includes('@')) {
-    alert('Por favor, preencha todos os campos de contato corretamente.');
-    e.preventDefault();
-    return;
-  }
+      if (!nome || !/^[0-9]{10,11}$/.test(telefone) || !email.includes('@')) {
+        alert('Por favor, preencha todos os campos de contato corretamente.');
+        e.preventDefault();
+        return;
+      }
 
-  calcData.nome = nome;
-  calcData.telefone = telefone;
-  calcData.email = email;
-  calcData.observacoes = observacoes;
+      calcData.nome = nome;
+      calcData.telefone = telefone;
+      calcData.email = email;
+      calcData.observacoes = observacoes;
 
-  const tipoLaje = calcData.tipoLaje;
-  let comodosList;
-  if (tipoLaje === 'solicitar-medicao') {
-    comodosList = ['Gostaria de solicitar uma visita para medição.'];
-  } else {
-    comodosList = calcData.comodos.map(comodo => 
-      `${comodo.name}: Largura ${comodo.largura}m x Comprimento ${comodo.comprimento}m = ${comodo.area}m² ` +
-      (comodo.quantidadeBlocos !== null ? `(Vigotas: ${comodo.quantidadeVigotas} de ${comodo.vigotaComprimento}m, ` +
-      `Blocos: ${comodo.quantidadeBlocos} ${comodo.tipoBloco})` : 
-      `(Vigotas: ${comodo.quantidadeVigotas} de ${comodo.vigotaComprimento}m)`)
-    );
-  }
-  const modal = document.getElementById('budget-modal');
-  const modalObraName = document.getElementById('modal-obra-name');
-  const modalComodosList = document.getElementById('modal-comodos-list');
-  const modalTotalArea = document.getElementById('modal-total-area');
-  const modalContact = document.getElementById('modal-contact');
-  const modalObservacoes = document.getElementById('modal-observacoes');
+      const tipoLaje = calcData.tipoLaje;
+      let comodosList;
+      if (tipoLaje === 'solicitar-medicao') {
+        comodosList = ['Gostaria de solicitar uma visita para medição.'];
+      } else {
+        comodosList = calcData.comodos.map(comodo => 
+          `${comodo.name}: Largura ${comodo.largura}m x Comprimento ${comodo.comprimento}m = ${comodo.area}m² ` +
+          (comodo.quantidadeBlocos !== null ? `(Trilhos: ${comodo.quantidadeVigotas} de ${comodo.vigotaComprimento} metros, ` +
+          `Blocos: ${comodo.quantidadeBlocos} ${comodo.tipoBloco})` : 
+          `(Trilhos: ${comodo.quantidadeVigotas} de ${comodo.vigotaComprimento} metros)`)
+        );
+      }
+      const modal = document.getElementById('budget-modal');
+      const modalObraName = document.getElementById('modal-obra-name');
+      const modalComodosList = document.getElementById('modal-comodos-list');
+      const modalTotalArea = document.getElementById('modal-total-area');
+      const modalContact = document.getElementById('modal-contact');
+      const modalObservacoes = document.getElementById('modal-observacoes');
 
-  modalContact.textContent = `Contato: ${nome}, ${telefone}, ${email}`;
-  modalObraName.textContent = `Solicita orçamento para: ${calcData.obraName}`;
-  modalComodosList.innerHTML = comodosList.map(comodo => `<li>${comodo}</li>`).join('');
-  modalTotalArea.textContent = tipoLaje === 'solicitar-medicao' ? '' : `Total em metros quadrados: ${calcData.totalArea.toFixed(2)}m²`;
-  modalObservacoes.textContent = observacoes ? `Observações: ${observacoes}` : '';
+      modalContact.textContent = `Contato: ${nome}, ${telefone}, ${email}`;
+      modalObraName.textContent = `Solicita ${tipoLaje === 'solicitar-medicao' ? 'medição para' : 'orçamento para'}: ${calcData.obraName}`;
+      modalComodosList.innerHTML = comodosList.map(comodo => `<li>${comodo}</li>`).join('');
+      modalTotalArea.textContent = tipoLaje === 'solicitar-medicao' ? '' : `Total em metros quadrados: ${calcData.totalArea.toFixed(2)}m²`;
+      modalObservacoes.textContent = observacoes ? `Observações: ${observacoes}` : '';
 
-  modal.style.display = 'flex';
-  e.preventDefault();
+      modal.style.display = 'flex';
+      e.preventDefault();
 
-  const confirmBudget = document.getElementById('confirm-budget');
-  confirmBudget.onclick = () => {
-    const mensagem = [
-      `Contato: ${nome}, ${telefone}, ${email}`,
-      '* * *',
-      `Solicita orçamento para: ${calcData.obraName}`,
-      '* * *',
-      comodosList.join('\n'),
-      '* * *',
-      tipoLaje === 'solicitar-medicao' ? '' : `Total em metros quadrados: ${calcData.totalArea.toFixed(2)}m²`,
-      observacoes ? '* * *' : '',
-      observacoes ? `Observações: ${observacoes}` : ''
-    ].filter(line => line).join('\n');
-    whatsappLink.href = `https://wa.me/5585992947431?text=${encodeURIComponent(mensagem)}`;
-    window.open(whatsappLink.href, '_blank');
-    modal.style.display = 'none';
-  };
+      const confirmBudget = document.getElementById('confirm-budget');
+      confirmBudget.onclick = () => {
+        const mensagem = [
+          `Contato: ${nome}, ${telefone}, ${email}`,
+          '* * *',
+          `Solicita ${tipoLaje === 'solicitar-medicao' ? 'medição para' : 'orçamento para'}: ${calcData.obraName}`,
+          '* * *',
+          comodosList.join('\n'),
+          '* * *',
+          tipoLaje === 'solicitar-medicao' ? '' : `Total em metros quadrados: ${calcData.totalArea.toFixed(2)}m²`,
+          observacoes ? '* * *' : '',
+          observacoes ? `Observações: ${observacoes}` : ''
+        ].filter(line => line).join('\n');
+        whatsappLink.href = `https://wa.me/5585992947431?text=${encodeURIComponent(mensagem)}`;
+        window.open(whatsappLink.href, '_blank');
+        modal.style.display = 'none';
+      };
 
-  const closeModal = document.querySelector('.close-modal');
-  closeModal.onclick = () => {
-    modal.style.display = 'none';
-  };
+      const closeModal = document.querySelector('.close-modal');
+      closeModal.onclick = () => {
+        modal.style.display = 'none';
+      };
 
-  window.onclick = (event) => {
-    if (event.target === modal) {
-      modal.style.display = 'none';
-    }
-  };
-});
+      window.onclick = (event) => {
+        if (event.target === modal) {
+          modal.style.display = 'none';
+        }
+      };
+    });
 
     // Navegação com botões Voltar
     backButtons.forEach((button, index) => {
