@@ -20,6 +20,6 @@ jobs:
         run: npm install -g firebase-tools
 
       - name: Deploy to Firebase
-        run: firebase deploy --only hosting --project seu-id-do-projeto-firebase # Substitua pelo ID do seu projeto Firebase
+        run: firebase deploy --only hosting -- project premoldaco-webapp # Substitua pelo ID do seu projeto Firebase
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_PREMOLDACODEV }} # O nome do secret que você criou
