@@ -253,13 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const comodos = [];
       const comodoItems = comodosContainer.getElementsByClassName("comodo-item");
       const tipoLaje = calcData.tipoLaje;
-      let espaçamento;
-
-      if (tipoLaje === 'trelicada-eps') {
-        espaçamento = 0.50;
-      } else {
-        espaçamento = 0.43; // Padrão para trilhos
-      }
+      let espacamento = (tipoLaje === 'trelicada-eps') ? 0.50 : 0.43; // Espaçamento dos trilhos
 
       for (let i = 1; i <= comodoItems.length; i++) {
         const name = document.getElementById(`comodo-name-${i}`)?.value.trim() || `Cômodo ${i}`;
@@ -268,14 +262,31 @@ document.addEventListener('DOMContentLoaded', () => {
         if (comprimento && largura && !isNaN(comprimento) && !isNaN(largura)) {
           const area = comprimento * largura;
           totalArea += area;
-          const quantidadeVigotas = Math.ceil(comprimento / espaçamento); // Cálculo de trilhos
+          const quantidadeVigotas = Math.ceil(comprimento / espacamento); // Cálculo de trilhos
+          let quantidadeBlocos;
+
+          // Cálculo de blocos baseado no tipo de laje
+          if (tipoLaje.includes('eps-h733')) {
+            const blocosBase = Math.ceil(largura / 0.30);
+            const sobra = largura % 0.30;
+            quantidadeBlocos = (sobra > 0 && sobra <= 0.30) ? blocosBase - 1 : blocosBase; // Aproveita sobra
+          } else if (tipoLaje.includes('eps-h740')) {
+            const blocosBase = Math.ceil(largura / 0.37);
+            const sobra = largura % 0.37;
+            quantidadeBlocos = (sobra > 0 && sobra <= 0.37) ? blocosBase - 1 : blocosBase; // Aproveita sobra
+          } else { // Tijolo H8
+            quantidadeBlocos = Math.ceil(comprimento / 0.20); // Sem aproveitamento de sobras
+          }
+
           comodos.push({
             name,
             comprimento: comprimento.toFixed(2),
             largura: largura.toFixed(2),
             area: area.toFixed(2),
-            vigotaComprimento: largura.toFixed(2),
-            quantidadeVigotas
+            vigotaComprimento: largura.toFixed(2), // Mantido como largura por convenção
+            quantidadeVigotas,
+            quantidadeBlocos,
+            tipoBloco: tipoLaje.includes('eps') ? 'EPS' : 'Tijolo H8'
           });
         } else {
           alert(`Por favor, preencha corretamente as dimensões do ${name}.`);
@@ -308,7 +319,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const tipoLaje = calcData.tipoLaje.replace('trelicada-', '').replace('-', ' ').toUpperCase();
       const comodosList = calcData.comodos.map(comodo => 
-        `${comodo.name}: Largura ${comodo.largura}m x Comprimento ${comodo.comprimento}m = ${comodo.area}m² (Vigotas: ${comodo.quantidadeVigotas} de ${comodo.vigotaComprimento}m)`
+        `${comodo.name}: Largura ${comodo.largura}m x Comprimento ${comodo.comprimento}m = ${comodo.area}m² ` +
+        `(Vigotas: ${comodo.quantidadeVigotas} de ${comodo.vigotaComprimento}m, ` +
+        `Blocos: ${comodo.quantidadeBlocos} ${comodo.tipoBloco})`
       );
       const modal = document.getElementById('budget-modal');
       const modalObraName = document.getElementById('modal-obra-name');
