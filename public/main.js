@@ -253,7 +253,7 @@ calculateButton.addEventListener('click', () => {
   const comodos = [];
   const comodoItems = comodosContainer.getElementsByClassName("comodo-item");
   const tipoLaje = calcData.tipoLaje;
-  let espacamento = (tipoLaje === 'trelicada-eps') ? 0.50 : 0.43; // Espaçamento dos trilhos
+  let espacamento = (tipoLaje === 'trelicada-eps') ? 0.50 : 0.43;
 
   for (let i = 1; i <= comodoItems.length; i++) {
     const name = document.getElementById(`comodo-name-${i}`)?.value.trim() || `Cômodo ${i}`;
@@ -262,22 +262,23 @@ calculateButton.addEventListener('click', () => {
     if (comprimento && largura && !isNaN(comprimento) && !isNaN(largura)) {
       const area = comprimento * largura;
       totalArea += area;
-      const quantidadeVigotas = Math.ceil(comprimento / espacamento); // Cálculo de trilhos
-      let quantidadeBlocos = null; // Inicializa como nulo para casos especiais
+      const quantidadeVigotas = Math.ceil(comprimento / espacamento);
+      let quantidadeBlocos = null;
 
-      // Cálculo de blocos baseado no tipo de laje
       if (tipoLaje === 'resolver-vendedor' || tipoLaje === 'solicitar-medicao') {
-        quantidadeBlocos = null; // Não calcula blocos nesses casos
+        quantidadeBlocos = null;
       } else if (tipoLaje.includes('eps-h733')) {
-        const blocosBase = Math.ceil(largura / 0.30);
-        const sobra = largura % 0.30;
-        quantidadeBlocos = (sobra > 0 && sobra <= 0.30) ? blocosBase - 1 : blocosBase; // Aproveita sobra
+        const blocosPorFileira = Math.ceil(largura / 0.30);
+        const fileiras = Math.ceil(comprimento / 1.0);
+        quantidadeBlocos = blocosPorFileira * fileiras;
       } else if (tipoLaje.includes('eps-h740')) {
-        const blocosBase = Math.ceil(largura / 0.37);
-        const sobra = largura % 0.37;
-        quantidadeBlocos = (sobra > 0 && sobra <= 0.37) ? blocosBase - 1 : blocosBase; // Aproveita sobra
+        const blocosPorFileira = Math.ceil(largura / 0.37);
+        const fileiras = Math.ceil(comprimento / 1.0);
+        quantidadeBlocos = blocosPorFileira * fileiras;
       } else { // Tijolo H8
-        quantidadeBlocos = Math.ceil(comprimento / 0.20); // Sem aproveitamento de sobras
+        const tijolosPorFileira = Math.ceil(comprimento / 0.20);
+        const fileiras = Math.ceil(largura / 0.30);
+        quantidadeBlocos = tijolosPorFileira * fileiras;
       }
 
       comodos.push({
@@ -285,7 +286,7 @@ calculateButton.addEventListener('click', () => {
         comprimento: comprimento.toFixed(2),
         largura: largura.toFixed(2),
         area: area.toFixed(2),
-        vigotaComprimento: largura.toFixed(2), // Mantido como largura por convenção
+        vigotaComprimento: largura.toFixed(2),
         quantidadeVigotas,
         quantidadeBlocos,
         tipoBloco: tipoLaje.includes('eps') ? 'EPS' : tipoLaje === 'tijolo-h8' ? 'Tijolo H8' : null
