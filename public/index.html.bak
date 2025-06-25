@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Premoldaço: Lajes premoldadas, tijolos cerâmicos e isopor para laje em Maracanaú, CE. Entrega grátis em até 50km. Solicite seu orçamento!">
+  <meta name="keywords" content="isopor para laje, lajes premoldadas Maracanaú, tijolos cerâmicos, EPS construção, ferragens para laje, Premoldaço">
+  <meta name="author" content="Premoldaço">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://premoldaco.com.br/">
+  <title>Premoldaço - Isopor para Laje e Lajes Premoldadas em Maracanaú, CE</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Schema.org para Organização e Produtos -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Premoldaço",
+    "url": "https://premoldaco.com.br",
+    "logo": "https://premoldaco.com.br/imagens/logo-premoldaco_preto_degrade.png",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "+5585992712043",
+      "contactType": "Customer Service",
+      "areaServed": "BR"
+    },
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Av. Exemplo, 123",
+      "addressLocality": "Fortaleza",
+      "addressRegion": "CE",
+      "addressCountry": "BR"
+    },
+    "sameAs": [
+      "https://instagram.com/premoldaco",
+      "https://facebook.com/premoldaco"
+    ]
+  }
+  </script>
+  <!-- Firebase SDKs e main.js com defer -->
+  <script defer src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+  <script defer src="main.js"></script>
+</head>
+<body>
+  <!-- Definição de SVGs reutilizáveis -->
+  <svg style="display: none;">
+    <symbol id="whatsapp-icon" viewBox="0 0 24 24">
+      <path fill="currentColor" d="M12 0C5.373 0 0 5.373 0 12c0 2.116.548 4.106 1.502 5.84L0 24l6.335-1.668A11.937 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm6.462 17.143c-.287.81-.81 1.478-1.668 1.764-.955.318-2.21.096-3.99-.955-1.78-1.05-3.082-2.497-3.99-4.235-.908-1.738-.908-3.176-.287-4.235.62-1.05 1.478-1.478 2.497-1.478.382 0 .764.096.955.287.287.287.62.573.955 1.05.382.573.477 1.05.287 1.478-.191.382-.477.764-.955 1.05-.477.287-1.05.573-1.05 1.05 0 .573.477 1.05 1.05 1.478.573.382 1.243.764 1.91 1.05.668.287 1.338.382 1.91.096.573-.287 1.05-.764 1.478-1.338.382-.573.764-.668 1.05-.477.287.191.573.477 1.05.955.477.477.573 1.05.287 1.91z"/>
+    </symbol>
+    <symbol id="instagram-icon" viewBox="0 0 24 24">
+      <path fill="currentColor" d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10S6.486 2 12 2zm0-2C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 4c-4.418 0-8 3.582-8 8s3.582 8 8 8 8-3.582 8-8-3.582-8-8-8zm0 2c3.314 0 6 2.686 6 6s-2.686 6-6 6-6-2.686-6-6 2.686-6 6-6zm2.5 1.5v3h1v2h-1v3h-2v-3h-1v-2h1v-3h2z"/>
+    </symbol>
+    <symbol id="facebook-icon" viewBox="0 0 24 24">
+      <path fill="currentColor" d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10S6.486 2 12 2zm0-2C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm1 4.5h-2v4H8v2h3v4h2v-4h3v-2h-3v-4z"/>
+    </symbol>
+  </svg>
+
+  <header>
+    <nav class="nav-container">
+      <a href="#home" class="logo" aria-label="Premoldaço Home">
+        <img src="imagens/logo-premoldaco_preto_degrade.webp" alt="Premoldaço Logo" class="logo-image">
+      </a>
+      <button class="menu-toggle" aria-label="Toggle menu">
+        <span class="hamburger"></span>
+      </button>
+      <ul class="nav-menu">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#products">Produtos</a></li>
+        <li><a href="#about">Sobre</a></li>
+        <li><a href="#calculator">Calculadora</a></li>
+        <li><a href="#contact">Contato</a></li>
+      </ul>
+      <a href="https://wa.me/+5585992712043" class="whatsapp-button" aria-label="Fale conosco via WhatsApp">
+        <svg class="whatsapp-icon"><use href="#whatsapp-icon"></use></svg>
+        Fale Conosco
+      </a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="home" class="hero">
+      <div class="hero-content">
+        <div class="hero-text">
+          <h1>Isopor para Laje e Lajes Premoldadas em Maracanaú, CE</h1>
+          <p class="hero-tagline">Construa com confiança e precisão. Entrega grátis em até 50km!</p>
+          <a href="https://wa.me/+5585992712043" class="whatsapp-button" aria-label="Solicite um orçamento via WhatsApp">
+            <svg class="whatsapp-icon"><use href="#whatsapp-icon"></use></svg>
+            Solicite um Orçamento
+          </a>
+        </div>
+        <div class="hero-images">
+          <picture>
+            <source srcset="imagens/premoldaco_institucional_01.webp" type="image/webp">
+            <img src="imagens/premoldaco_institucional_01.png" alt="Lajes Premoldaço em obra" class="hero-institutional" loading="lazy">
+          </picture>
+        </div>
+      </div>
+    </section>
+
+    <section id="budget-banner" class="banner">
+      <h2>Construa com confiança: agilidade, segurança e rapidez!</h2>
+      <button id="start-budget" class="banner-button" aria-label="Iniciar orçamento">Faça seu orçamento agora</button>
+    </section>
+
+    <section id="budget-flow" class="budget-flow">
+      <article id="step1" class="step active">
+        <h2>Passo 1: Dimensões da Laje</h2>
+        <label for="length">Comprimento (metros):</label>
+        <input type="number" id="length" name="length" step="0.01" min="0.1" max="100" required aria-required="true">
+        <label for="width">Largura (metros):</label>
+        <input type="number" id="width" name="width" step="0.01" min="0.1" max="100" required aria-required="true">
+        <button type="button" class="step-button" aria-label="Próximo passo">Próximo</button>
+      </article>
+      <article id="step2" class="step">
+        <h2>Passo 2: Tipo de Material</h2>
+        <label for="material">Material:</label>
+        <select id="material" name="material" required aria-required="true">
+          <option value="">Selecione</option>
+          <option value="EPS">EPS</option>
+          <option value="Cerâmica">Cerâmica</option>
+        </select>
+        <button type="button" class="step-button back" aria-label="Voltar">Voltar</button>
+        <button type="button" class="step-button" aria-label="Próximo passo">Próximo</button>
+      </article>
+      <article id="step3" class="step">
+        <h2>Passo 3: Dados de Contato</h2>
+        <label for="name">Nome:</label>
+        <input type="text" id="name" name="name" placeholder="Seu nome" required aria-required="true">
+        <label for="phone">Telefone:</label>
+        <input type="tel" id="phone" name="phone" placeholder="Ex.: 85991234567" required aria-required="true">
+        <button type="button" class="step-button back" aria-label="Voltar">Voltar</button>
+        <button type="button" class="step-button" aria-label="Enviar orçamento">Enviar</button>
+      </article>
+    </section>
+
+    <section id="highlights" class="highlights">
+      <h2>Nossos Diferenciais</h2>
+      <div class="highlights-grid">
+        <article class="highlight-item">
+          <svg class="highlight-icon" viewBox="0 0 24 24">
+            <path fill="var(--laranja)" d="M18 2h-2v2h2v2h2v12h-2v2h-2v2h-6v-2H8v-2H6V6h2V4h2V2h6v2zm-2 4H8v10h8V6zm-2 6h-4v2h4v-2z"/>
+          </svg>
+          <h3>Entrega Rápida</h3>
+          <p>Receba seus materiais no prazo para manter sua obra no cronograma.</p>
+        </article>
+        <article class="highlight-item">
+          <svg class="highlight-icon" viewBox="0 0 24 24">
+            <path fill="var(--laranja)" d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 18a8 8 0 110-16 8 8 0 010 16zm1-12h-2v6H9l3 3 3-3h-2V8z"/>
+          </svg>
+          <h3>Medição na Obra</h3>
+          <p>Equipe especializada para medições precisas no local da sua obra.</p>
+        </article>
+        <article class="highlight-item">
+          <svg class="highlight-icon" viewBox="0 0 24 24">
+            <path fill="var(--laranja)" d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 18a8 8 0 110-16 8 8 0 010 16zm-1-11l-3 3 3 3 6-6-3-3z"/>
+          </svg>
+          <h3>Qualidade Superior</h3>
+          <p>Treliças pesadas, trilhos etiquetados e vibrados, feitos com areia de britagem e cimento estrutural.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="reviews" class="reviews">
+      <h2>O que Nossos Clientes Dizem</h2>
+      <div class="reviews-grid">
+        <article class="review-item">
+          <blockquote>
+            <p>Excelente atendimento e entrega super rápida! A qualidade das lajes é impecável.</p>
+            <footer>— João Silva, Fortaleza</footer>
+          </blockquote>
+        </article>
+        <article class="review-item">
+          <blockquote>
+            <p>Comprei tijolos e EPS para minha obra. Tudo chegou no prazo e com ótima qualidade!</p>
+            <footer>— Maria Oliveira, Eusébio</footer>
+          </blockquote>
+        </article>
+        <article class="review-item">
+          <blockquote>
+            <p>A Premoldaço fez a medição na obra e entregou tudo certinho. Recomendo!</p>
+            <footer>— Carlos Souza, Caucaia</footer>
+          </blockquote>
+        </article>
+      </div>
+    </section>
+
+    <section id="products" class="products">
+      <h2>Soluções em Lajes, Premoldados, Tijolos e EPS para Sua Obra</h2>
+      <div class="product-grid">
+        <article class="product-item">
+          <picture>
+            <source srcset="imagens/laje.webp" type="image/webp">
+            <img src="imagens/laje.jpg" alt="Laje treliçada Premoldaço" loading="lazy">
+          </picture>
+          <h3>Lajes Treliçadas</h3>
+          <p>Resistência e precisão para sua obra, com treliças pesadas e cimento estrutural.</p>
+          <a href="https://wa.me/+5585992712043" class="product-button" aria-label="Saiba mais sobre lajes treliçadas">Saiba Mais</a>
+        </article>
+        <article class="product-item">
+          <picture>
+            <source srcset="imagens/tijolo.webp" type="image/webp">
+            <img src="imagens/tijolo.jpg" alt="Tijolo cerâmico Premoldaço" loading="lazy">
+          </picture>
+          <h3>Tijolos Cerâmicos</h3>
+          <p>Alta qualidade para paredes e estruturas, feitos com areia de britagem.</p>
+          <a href="https://wa.me/+5585992712043" class="product-button" aria-label="Saiba mais sobre tijolos cerâmicos">Saiba Mais</a>
+        </article>
+        <article class="product-item">
+          <picture>
+            <source srcset="imagens/eps.webp" type="image/webp">
+            <img src="imagens/eps.jpg" alt="Blocos de EPS Premoldaço" loading="lazy">
+          </picture>
+          <h3>Blocos de EPS</h3>
+          <p>Leveza e eficiência térmica para lajes e construções modernas.</p>
+          <a href="https://wa.me/+5585992712043" class="product-button" aria-label="Saiba mais sobre blocos de EPS">Saiba Mais</a>
+        </article>
+      </div>
+    </section>
+
+    <section id="about" class="about">
+      <h2>Sobre a Premoldaço</h2>
+      <div class="about-content">
+        <div class="about-text">
+          <p>Há mais de 10 anos, a Premoldaço é referência em lajes premoldadas, tijolos cerâmicos e isopor para laje em Maracanaú e Fortaleza, CE. Nosso compromisso é entregar qualidade, precisão e confiança.</p>
+          <p><strong>Quem é exigente compra com a gente!</strong></p>
+          <h3>Missão, Visão e Valores</h3>
+          <p><strong>Missão:</strong> Fornecer materiais de construção de alta qualidade, com entrega rápida e atendimento personalizado.</p>
+          <p><strong>Visão:</strong> Ser a principal escolha em soluções para construção civil no Nordeste.</p>
+          <p><strong>Valores:</strong> Qualidade, confiança, inovação e compromisso com o cliente.</p>
+        </div>
+        <div class="about-image">
+          <picture>
+            <source srcset="imagens/empresa.webp" type="image/webp">
+            <img src="imagens/empresa.jpg" alt="Imagem institucional da Premoldaço" loading="lazy">
+          </picture>
+        </div>
+      </div>
+    </section>
+
+    <section id="calculator" class="calculator">
+      <h2>Calculadora de Vigotas Treliçadas</h2>
+      <form id="calc-form" aria-label="Calculadora de vigotas treliçadas">
+        <label for="comprimento">Comprimento da Laje (metros):</label>
+        <input type="number" id="comprimento" name="comprimento" step="0.01" min="0.1" max="100" required aria-required="true">
+        <button type="submit">Calcular</button>
+        <div id="resultado" aria-live="polite"></div>
+      </form>
+    </section>
+
+    <section id="contact" class="contact">
+      <h2>Entre em Contato</h2>
+      <form id="contact-form" aria-label="Formulário de contato">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" placeholder="Seu Nome" required aria-required="true">
+        <label for="email">E-mail:</label>
+        <input type="email" id="email" name="email" placeholder="Seu E-mail" required aria-required="true">
+        <label for="mensagem">Mensagem:</label>
+        <textarea id="mensagem" name="mensagem" placeholder="Sua Mensagem" required aria-required="true"></textarea>
+        <button type="submit">Enviar</button>
+      </form>
+      <div class="contact-info">
+        <p><strong>Telefone:</strong> <a href="tel:+5585992712043">+55 85 99271-2043</a></p>
+        <p><strong>E-mail:</strong> <a href="mailto:contato@premoldaco.com.br">contato@premoldaco.com.br</a></p>
+        <p><strong>Localização:</strong> <a href="https://maps.app.goo.gl/FyJiJ2JPBUGG8fTo9" target="_blank" rel="noopener">Av. Exemplo, 123, Fortaleza, CE</a></p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025 Premoldaço. Quem é exigente compra com a gente!</p>
+    <p><strong>Endereço:</strong> Av. Exemplo, 123, Fortaleza, CE | <a href="https://maps.app.goo.gl/FyJiJ2JPBUGG8fTo9" target="_blank" rel="noopener">Ver no Google Maps</a></p>
+    <nav class="social-links" aria-label="Redes sociais">
+      <a href="https://instagram.com/premoldaco" target="_blank" class="social-icon" aria-label="Instagram da Premoldaço" rel="noopener">
+        <svg class="social-icon-svg"><use href="#instagram-icon"></use></svg>
+      </a>
+      <a href="https://facebook.com/premoldaco" target="_blank" class="social-icon" aria-label="Facebook da Premoldaço" rel="noopener">
+        <svg class="social-icon-svg"><use href="#facebook-icon"></use></svg>
+      </a>
+    </nav>
+  </footer>
+
+  <a href="https://wa.me/+5585992712043" class="whatsapp-float" aria-label="Fale conosco via WhatsApp">
+    <svg class="whatsapp-icon"><use href="#whatsapp-icon"></use></svg>
+    Fale Conosco
+  </a>
+</body>
+</html>

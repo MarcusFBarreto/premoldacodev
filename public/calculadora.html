@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora - Premoldaço</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="no-js">
+  <!-- Cabeçalho -->
+  <header>
+    <div class="brand">
+      <span class="site-title">Premoldaço</span>
+    </div>
+  </header>
+
+  <main class="wrapper">
+    <section id="calculator" class="highlights">
+      <div class="highlights-grid">
+        <div class="highlight-item calculator-panel">
+          <div class="progress-circles">
+            <button class="progress-circle" data-step="0" aria-label="Passo 1: Nome da Obra">1</button>
+            <button class="progress-circle" data-step="1" aria-label="Passo 2: Tipo de Laje">2</button>
+            <button class="progress-circle" data-step="2" aria-label="Passo 3: Cômodos">3</button>
+            <button class="progress-circle" data-step="3" aria-label="Passo 4: Orçamento">4</button>
+          </div>
+          <div class="calculator-steps">
+            <!-- Passo 0: Nome da Obra -->
+            <form id="calc-step0" class="calc-step">
+              <h3>Passo 1: Nomeie sua Obra</h3>
+              <label for="obra-name">Digite o nome da sua obra</label>
+              <input type="text" id="obra-name" name="obra-name" required aria-required="true" placeholder="Ex.: Casa da Praia ou Obra 01">
+              <div class="form-actions">
+                <button type="button" class="next-button">Próximo</button>
+              </div>
+            </form>
+
+            <!-- Passo 1: Tipo de Laje -->
+            <form id="calc-step1" class="calc-step">
+              <h3>Passo 2: Selecione o Tipo de Laje</h3>
+              <label for="tipo-laje">Escolha o tipo de laje:</label>
+              <select id="tipo-laje" name="tipo-laje" required aria-required="true">
+                <option value="trelicada-eps">Treliçada com EPS</option>
+                <option value="trelicada-ceramica">Treliçada com Cerâmico</option>
+                <option value="convencional">Resolverei Com o Vendedor</option>
+              </select>
+              <div class="form-actions">
+                <button type="button" class="back-button" style="display: none;">Voltar</button>
+                <button type="button" class="next-button">Próximo</button>
+              </div>
+            </form>
+
+            <!-- Passo 2: Inserção de Cômodos -->
+            <form id="calc-step2" class="calc-step">
+              <h3>Passo 3: Insira os Cômodos</h3>
+              <div id="comodos-container">
+                <div class="comodo-item">
+                  <label for="comodo-name-1">Nome do Cômodo (opcional):</label>
+                  <input type="text" id="comodo-name-1" placeholder="Ex.: Sala">
+                  <label for="largura-1">Largura (m):</label>
+                  <input type="number" id="largura-1" min="0.1" max="20" step="0.01" required aria-required="true" placeholder="Ex.: 4.00">
+                  <label for="comprimento-1">Comprimento (m):</label>
+                  <input type="number" id="comprimento-1" min="0.1" max="20" step="0.01" required aria-required="true" placeholder="Ex.: 5.00">
+                  <button type="button" class="remove-comodo" style="display: none;">Remover</button>
+                </div>
+              </div>
+              <div class="comodo-actions">
+                <button type="button" id="add-comodo" aria-label="Adicionar novo cômodo">Adicionar Cômodo</button>
+                <button type="button" id="calculate-button" aria-label="Calcular orçamento">Calcular</button>
+              </div>
+              <div class="form-actions">
+                <button type="button" class="back-button">Voltar</button>
+                <button type="button" class="next-button" style="display: none;">Calcular</button>
+              </div>
+            </form>
+
+            <!-- Passo 3: Revisão e Orçamento -->
+            <form id="calc-step3" class="calc-step">
+              <h3>Passo 4: Receba Seu Orçamento</h3>
+              <label for="nome">Nome:</label>
+              <input type="text" id="nome" name="nome" required aria-required="true" placeholder="Ex.: João Silva">
+              <label for="telefone">Telefone:</label>
+              <input type="tel" id="telefone" name="telefone" pattern="[0-9]{10,11}" placeholder="Ex.: 85999999999" required aria-required="true">
+              <label for="email">E-mail:</label>
+              <input type="email" id="email" name="email" required aria-required="true" placeholder="Ex.: joao@email.com">
+              <label for="observacoes">Observações (opcional):</label>
+              <textarea id="observacoes" name="observacoes" placeholder="Ex.: Preciso de entrega urgente"></textarea>
+              <div class="form-actions">
+                <button type="button" class="back-button">Voltar</button>
+                <a id="whatsapp-link" href="#" target="_blank" class="whatsapp-contact" aria-label="Enviar orçamento pelo WhatsApp">Enviar por WhatsApp</a>
+              </div>
+              <!-- Modal -->
+              <div id="budget-modal" class="modal" style="display: none;">
+                <div class="modal-content">
+                  <span class="close-modal">×</span>
+                  <p id="modal-contact"></p>
+                  <hr>
+                  <h4 id="modal-obra-name"></h4>
+                  <ul id="modal-comodos-list"></ul>
+                  <hr>
+                  <p id="modal-total-area"></p>
+                  <p id="modal-observacoes"></p>
+                  <button id="confirm-budget" class="whatsapp-contact">Confirmar e Enviar</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer-menu">
+    <div class="nav-menu">
+      <a href="#home" class="menu-item">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="menu-icon"><path fill="var(--branco)" d="M12 2L4 7v10h5v5l8-7V7l-5-5zm0 2.5l6 4.2v8.8l-6 4.2V9l-6-4.2V7h12v10h-2V9h-8V7.8L12 4.5z"/></svg>
+        <span>Home</span>
+      </a>
+      <a href="#products" class="menu-item">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="menu-icon"><path fill="var(--branco)" d="M4 6h16v2H4V6zm0 5h16v2H4v-2zm0 5h16v2H4v-2z"/></svg>
+        <span>Produtos</span>
+      </a>
+      <a href="#about" class="menu-item">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="menu-icon"><path fill="var(--branco)" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-13c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/></svg>
+        <span>Sobre</span>
+      </a>
+      <a href="calculadora.html" class="menu-item">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="menu-icon"><path fill="var(--branco)" d="M4 2h16c1.1 0 2 .9 2 2v16c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2zm0 2v16h16V4H4zm2 2h12v2H6V6zm0 4h6v2H6v-2zm0 4h8v2H6v-2zm0 4h10v2H6v-2zm12-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/></svg>
+        <span>Calculadora</span>
+      </a>
+      <a href="#contact" class="menu-item">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="menu-icon"><path fill="var(--branco)" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 2v12H4V6h16zm-8 6l-6-4v8l6-4zm6 0l-6 4V8l6 4z"/></svg>
+        <span>Contato</span>
+      </a>
+    </div>
+    <div class="social-icons">
+      <a href="https://wa.me/5585992947431" class="whatsapp-float">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="whatsapp-icon">
+          <path fill="var(--branco)" d="M12 0C5.373 0 0 5.373 0 12c0 2.116.548 4.106 1.502 5.84L0 24l6.335-1.668A11.937 11.937 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm6.462 17.143c-.287.81-.81 1.478-1.668 1.764-.955.318-2.21.096-3.99-.955-1.78-1.05-3.082-2.497-3.99-4.235-.908-1.738-.908-3.176-.287-4.235.62-1.05 1.478-1.478 2.497-1.478.382 0 .764.096.955.287.287.287.62.573.955 1.05.382.573.477 1.05.287 1.478-.191.382-.477.764-.955 1.05-.477.287-1.05.573-1.05 1.05 0 .573.477 1.05 1.05 1.478.573.382 1.243.764 1.91 1.05.668.287 1.338.382 1.91.096.573-.287 1.05-.764 1.478-1.338.382-.573.764-.668 1.05-.477.287.191.573.477 1.05.955.477.477.573 1.05.287 1.91z"/>
+        </svg>
+        Fale Conosco
+      </a>
+      <div class="social-group">
+        <a href="https://www.facebook.com/seu-perfil" target="_blank" rel="noopener" class="social-item">
+          <img src="imagens/Facebook_Logo_Primary.png" alt="Facebook" class="social-icon">
+        </a>
+        <a href="https://www.instagram.com/seu-perfil" target="_blank" rel="noopener" class="social-item">
+          <img src="imagens/Instagram_Glyph_Gradient.png" alt="Instagram" class="social-icon">
+        </a>
+        <a href="https://x.com/seu-perfil" target="_blank" rel="noopener" class="social-item">
+          <img src="imagens/x_logo-white.png" alt="X" class="social-icon">
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
