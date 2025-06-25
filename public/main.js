@@ -258,7 +258,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (tipoLaje === 'trelicada-eps') {
         espaçamento = 0.50;
       } else {
-        espaçamento = 0.43;
+        espaçamento = 0.43; // Padrão para trilhos
       }
 
       for (let i = 1; i <= comodoItems.length; i++) {
@@ -268,7 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (comprimento && largura && !isNaN(comprimento) && !isNaN(largura)) {
           const area = comprimento * largura;
           totalArea += area;
-          const quantidadeVigotas = Math.ceil(comprimento / espaçamento);
+          const quantidadeVigotas = Math.ceil(comprimento / espaçamento); // Cálculo de trilhos
           comodos.push({
             name,
             comprimento: comprimento.toFixed(2),
