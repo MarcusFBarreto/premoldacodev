@@ -39,11 +39,14 @@
             <form id="calc-step1" class="calc-step">
               <h3>Passo 2: Selecione o Tipo de Laje</h3>
               <label for="tipo-laje">Escolha o tipo de laje:</label>
-              <select id="tipo-laje" name="tipo-laje" required aria-required="true">
-                <option value="trelicada-eps">Treliçada com EPS</option>
-                <option value="trelicada-ceramica">Treliçada com Cerâmico</option>
-                <option value="convencional">Resolverei Com o Vendedor</option>
-              </select>
+              <select id="tipo-laje" required>
+  <option value="" disabled selected>Selecione o tipo de laje</option>
+  <option value="eps-h733">EPS H733</option>
+  <option value="eps-h740">EPS H740</option>
+  <option value="tijolo-h8">Tijolo H8</option>
+  <option value="resolver-vendedor">Resolverei com o vendedor</option>
+  <option value="solicitar-medicao">Solicitar Medição</option>
+</select>
               <div class="form-actions">
                 <button type="button" class="back-button" style="display: none;">Voltar</button>
                 <button type="button" class="next-button">Próximo</button>
