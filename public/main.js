@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let currentIndex = 0;
     let intervalId = null;
-    const autoSlideTime = 5000; // 5 segundos por slide
+    const autoSlideTime = 4000; // 5 segundos por slide
 
     // Criar dots para cada item
     items.forEach((_, index) => {
@@ -358,16 +358,18 @@ document.addEventListener('DOMContentLoaded', () => {
       confirmBudget.onclick = () => {
         const mensagem = [
           `Contato: ${nome}, ${telefone}, ${email}`,
-          '* * *',
+          '---',
           `Solicita ${tipoLaje === 'solicitar-medicao' ? 'medição para' : 'orçamento para'}: ${calcData.obraName}`,
-          '* * *',
+          '---',
           comodosList.join('\n'),
-          '* * *',
+          '---',
           tipoLaje === 'solicitar-medicao' ? '' : `Total em metros quadrados: ${calcData.totalArea.toFixed(2)}m²`,
-          observacoes ? '* * *' : '',
+          observacoes ? '---' : '',
           observacoes ? `Observações: ${observacoes}` : ''
         ].filter(line => line).join('\n');
-        whatsappLink.href = `https://wa.me/5585992947431?text=${encodeURIComponent(mensagem)}`;
+        // Substituir por este na versão final >> whatsappLink.href = `https://wa.me/5585992947431?text=${encodeURIComponent(mensagem)}`;
+        whatsappLink.href = `https://wa.me/5585992712043?text=${encodeURIComponent(mensagem)}`;
+
         window.open(whatsappLink.href, '_blank');
         modal.style.display = 'none';
       };
