@@ -308,7 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
       showStep(3);
     });
 
-    // Passo 3: Revisão e Orçamento
+   // Passo 3: Revisão e Orçamento
 whatsappLink.addEventListener('click', (e) => {
   console.log('Passo 3: Gerando orçamento.');
   const nome = document.getElementById('nome').value.trim();
@@ -350,41 +350,23 @@ whatsappLink.addEventListener('click', (e) => {
   e.preventDefault();
 
   const confirmBudget = document.getElementById('confirm-budget');
-  confirmBudget.onclick = () => {
-   
-    /* ORIGINAL
-   
-    const mensagem = [    
+  confirmBudget.onclick = (e) => {
+    e.preventDefault(); // Impede comportamento padrão do link
+    const mensagem = [
       `Contato:\n${nome}\n${telefone}\n${email}`,
-      '* * *',
-      `Solicita ${tipoLaje === 'solicitar-medicao' ? 'medição para' : 'orçamento para'}: ${calcData.obraName}`,
-      '* * *',
-      comodosList.join('\n'),
-      '* * *',
-      tipoLaje === 'solicitar-medicao' ? '' : `Total em metros quadrados: ${calcData.totalArea.toFixed(2)}m²`,
-      observacoes ? '* * *' : '',
-      observacoes ? `Observações: ${observacoes}` : ''
+      '- - -',
+      `Solicitação: ${tipoLaje === 'solicitar-medicao' ? 'Medição para' : 'Orçamento para'} ${calcData.obraName}`,
+      '- - -',
+      `Detalhes dos cômodos:\n${comodosList.join('\n')}`,
+      '- - -',
+      tipoLaje === 'solicitar-medicao' ? '' : `Área total: ${calcData.totalArea.toFixed(2)}m²`,
+      observacoes ? '- - -' : '',
+      observacoes ? `Observações adicionais:\n${observacoes}` : ''
     ].filter(line => line).join('\n');
-    
-    FIM DE ORIGINAL */
 
-    /* Em teste */
-
-  const mensagem = [
-  `Contato:\n${nome}\n${telefone}\n${email}`,
-  '- - -',
-  `Solicitação: ${tipoLaje === 'solicitar-medicao' ? 'Medição para' : 'Orçamento para'} ${calcData.obraName}`,
-  '- - -',
-  `Detalhes dos cômodos:\n${comodosList.join('\n')}`,
-  '- - -',
-  tipoLaje === 'solicitar-medicao' ? '' : `Área total: ${calcData.totalArea.toFixed(2)}m²`,
-  observacoes ? '- - -' : '',
-  observacoes ? `Observações adicionais:\n${observacoes}` : ''
-].filter(line => line).join('\n');
-
-   /* fim de em teste*/
-
-    whatsappLink.href = `https://wa.me/5585992712043?text=${encodeURIComponent(mensagem)}`;
+    const whatsappUrl = `https://wa.me/5585992712043?text=${encodeURIComponent(mensagem)}`;
+    console.log('URL gerada:', whatsappUrl); // Depuração
+    whatsappLink.href = whatsappUrl;
     window.open(whatsappLink.href, '_blank');
     modal.style.display = 'none';
   };
