@@ -272,17 +272,11 @@ document.addEventListener('DOMContentLoaded', () => {
           if (tipoLaje === 'resolver-vendedor' || tipoLaje === 'solicitar-medicao') {
             quantidadeBlocos = null;
           } else if (tipoLaje.includes('eps-h733')) {
-            const blocosPorFileira = Math.ceil(largura / 0.30);
-            const fileiras = Math.ceil(comprimento / 1.0);
-            quantidadeBlocos = blocosPorFileira * fileiras;
+            quantidadeBlocos = Math.ceil(area * 2.2); // 2.2 blocos por m²
           } else if (tipoLaje.includes('eps-h740')) {
-            const blocosPorFileira = Math.ceil(largura / 0.37);
-            const fileiras = Math.ceil(comprimento / 1.0);
-            quantidadeBlocos = blocosPorFileira * fileiras;
+            quantidadeBlocos = Math.ceil(area * 2); // 2 blocos por m²
           } else { // Tijolo H8
-            const tijolosPorFileira = Math.ceil(comprimento / 0.20);
-            const fileiras = Math.ceil(largura / 0.30);
-            quantidadeBlocos = tijolosPorFileira * fileiras;
+            quantidadeBlocos = Math.ceil(area * 12 * 1.01); // 12 blocos por m² + 1% de perda
           }
 
           comodos.push({
@@ -293,7 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
             vigotaComprimento: largura.toFixed(2),
             quantidadeVigotas,
             quantidadeBlocos,
-            tipoBloco: tipoLaje.includes('eps') ? 'EPS' : tipoLaje === 'tijolo-h8' ? 'Tijolo H8' : null
+            tipoBloco: tipoLaje.includes('eps') ? 'EPS ' + tipoLaje.replace('eps-', '') : tipoLaje === 'tijolo-h8' ? 'Tijolo H8' : null
           });
         } else {
           alert(`Por favor, preencha corretamente as dimensões do ${name}.`);
@@ -330,10 +324,9 @@ document.addEventListener('DOMContentLoaded', () => {
         comodosList = ['Gostaria de solicitar uma visita para medição.'];
       } else {
         comodosList = calcData.comodos.map(comodo => 
-          `${comodo.name}: Largura ${comodo.largura}m x Comprimento ${comodo.comprimento}m = ${comodo.area}m² ` +
-          (comodo.quantidadeBlocos !== null ? `(Trilhos: ${comodo.quantidadeVigotas} de ${comodo.vigotaComprimento} metros, ` +
-          `Blocos: ${comodo.quantidadeBlocos} ${comodo.tipoBloco})` : 
-          `(Trilhos: ${comodo.quantidadeVigotas} de ${comodo.vigotaComprimento} metros)`)
+          `${comodo.name}: ${comodo.largura}m x ${comodo.comprimento}m | ` +
+          `${comodo.quantidadeVigotas} trilhos de ${comodo.vigotaComprimento} metros ` +
+          (comodo.quantidadeBlocos !== null ? `+ ${comodo.quantidadeBlocos} blocos ${comodo.tipoBloco}` : '')
         );
       }
       const modal = document.getElementById('budget-modal');
