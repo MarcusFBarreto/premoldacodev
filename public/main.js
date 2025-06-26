@@ -345,7 +345,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const modalContact = document.getElementById('modal-contact');
       const modalObservacoes = document.getElementById('modal-observacoes');
 
-      modalContact.textContent = `Contato: ${nome}, ${telefone}, ${email}`;
+      modalContact.textContent = `${nome} <li>, ${telefone}, ${email}</li>`;
       modalObraName.textContent = `Solicita ${tipoLaje === 'solicitar-medicao' ? 'medição para' : 'orçamento para'}: ${calcData.obraName}`;
       modalComodosList.innerHTML = comodosList.map(comodo => `<li>${comodo}</li>`).join('');
       modalTotalArea.textContent = tipoLaje === 'solicitar-medicao' ? '' : `Total em metros quadrados: ${calcData.totalArea.toFixed(2)}m²`;
