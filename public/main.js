@@ -46,6 +46,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const showItem = (index) => {
       items.forEach((item, i) => {
         item.classList.toggle('active', i === index);
+        const img = item.querySelector('img');
+        if (img) {
+          img.style.width = '100%';
+          img.style.height = 'auto';
+        }
       });
       const dots = dotsContainer.querySelectorAll('.carousel-dot');
       dots.forEach((dot, i) => {
@@ -271,12 +276,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
           if (tipoLaje === 'resolver-vendedor' || tipoLaje === 'solicitar-medicao') {
             quantidadeBlocos = null;
-          } else if (tipoLaje.includes('eps-h733')) {
-            quantidadeBlocos = Math.ceil(area * 2.2); // 2.2 blocos por m²
-          } else if (tipoLaje.includes('eps-h740')) {
-            quantidadeBlocos = Math.ceil(area * 2); // 2 blocos por m²
-          } else { // Tijolo H8
-            quantidadeBlocos = Math.ceil(area * 12 * 1.01); // 12 blocos por m² + 1% de perda
+          } else {
+            const areaComodo = largura * comprimento;
+            if (tipoLaje.includes('eps-h733')) {
+              quantidadeBlocos = Math.ceil(areaComodo * 2.2); // 2.2 blocos por m²
+            } else if (tipoLaje.includes('eps-h740')) {
+              quantidadeBlocos = Math.ceil(areaComodo * 2); // 2 blocos por m²
+            } else { // Tijolo H8
+              quantidadeBlocos = Math.ceil(areaComodo * 12 * 1.01); // 12 blocos por m² + 1% de perda
+            }
           }
 
           comodos.push({
