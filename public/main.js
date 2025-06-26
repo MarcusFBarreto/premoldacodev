@@ -28,12 +28,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let currentIndex = 0;
     let intervalId = null;
-    const autoSlideTime = 5000;
+    const autoSlideTime = 5000; // 5 segundos por slide
 
+    // Criar dots para cada item
     items.forEach((_, index) => {
       const dot = document.createElement('span');
       dot.classList.add('carousel-dot');
-      if (index === 0) dot.classList.add('active');
+      if (index === 0) dot.classList.add('active'); // Só o primeiro é ativo inicialmente
       dot.setAttribute('aria-label', `Ir para imagem ${index + 1}`);
       dot.addEventListener('click', () => {
         currentIndex = index;
@@ -98,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       carousel.addEventListener('mouseenter', () => clearInterval(intervalId));
       carousel.addEventListener('mouseleave', startInterval);
-      startInterval();
+      startInterval(); // Inicia o auto-slide
     } else {
       console.warn('Carrossel: itens ou botões não encontrados.');
     }
