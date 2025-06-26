@@ -308,80 +308,83 @@ document.addEventListener('DOMContentLoaded', () => {
       showStep(3);
     });
 
-   // Passo 3: Revisão e Orçamento
-whatsappLink.addEventListener('click', (e) => {
-  console.log('Passo 3: Gerando orçamento.');
-  const nome = document.getElementById('nome').value.trim();
-  const telefone = document.getElementById('telefone').value;
-  const email = document.getElementById('email').value.trim();
-  const observacoes = document.getElementById('observacoes').value.trim();
+    // Passo 3: Revisão e Orçamento
+    whatsappLink.addEventListener('click', (e) => {
+      console.log('Passo 3: Gerando orçamento.');
+      const nome = document.getElementById('nome').value.trim();
+      const telefone = document.getElementById('telefone').value;
+      const email = document.getElementById('email').value.trim();
+      const observacoes = document.getElementById('observacoes').value.trim();
 
-  if (!nome || !/^[0-9]{10,11}$/.test(telefone) || !email.includes('@')) {
-    alert('Por favor, preencha todos os campos de contato corretamente.');
-    e.preventDefault();
-    return;
-  }
+      if (!nome || !/^[0-9]{10,11}$/.test(telefone) || !email.includes('@')) {
+        alert('Por favor, preencha todos os campos de contato corretamente.');
+        e.preventDefault();
+        return;
+      }
 
-  calcData.nome = nome;
-  calcData.telefone = telefone;
-  calcData.email = email;
-  calcData.observacoes = observacoes;
+      calcData.nome = nome;
+      calcData.telefone = telefone;
+      calcData.email = email;
+      calcData.observacoes = observacoes;
 
-  const tipoLaje = calcData.tipoLaje;
-  let comodosList;
-  if (tipoLaje === 'solicitar-medicao') {
-    comodosList = ['Gostaria de solicitar uma visita para medição.'];
-  } else {
-    comodosList = calcData.comodos.map(comodo => 
-      `${comodo.name}: ${comodo.largura}m x ${comodo.comprimento}m | ` +
-      `${comodo.quantidadeVigotas} trilhos de ${comodo.vigotaComprimento} metros ` +
-      (comodo.quantidadeBlocos !== null ? `+ ${comodo.quantidadeBlocos} blocos ${comodo.tipoBloco}` : '')
-    );
-  }
+      const tipoLaje = calcData.tipoLaje;
+      let comodosList;
+      if (tipoLaje === 'solicitar-medicao') {
+        comodosList = ['Gostaria de solicitar uma visita para medição.'];
+      } else {
+        comodosList = calcData.comodos.map(comodo => 
+          `${comodo.name}: ${comodo.largura}m x ${comodo.comprimento}m | ` +
+          `${comodo.quantidadeVigotas} trilhos de ${comodo.vigotaComprimento} metros ` +
+          (comodo.quantidadeBlocos !== null ? `+ ${comodo.quantidadeBlocos} blocos ${comodo.tipoBloco}` : '')
+        );
+      }
+      const modal = document.getElementById('budget-modal');
+      const modalObraName = document.getElementById('modal-obra-name');
+      const modalComodosList = document.getElementById('modal-comodos-list');
+      const modalTotalArea = document.getElementById('modal-total-area');
+      const modalContact = document.getElementById('modal-contact');
+      const modalObservacoes = document.getElementById('modal-observacoes');
 
-  // Formatação com quebras de linha no modal
-  modalContact.innerHTML = `${nome}<br>${telefone}<br>${email}`.replace(/\n/g, '<br>');
-  modalObraName.innerHTML = `Solicita ${tipoLaje === 'solicitar-medicao' ? 'medição para' : 'orçamento para'}:<br>${calcData.obraName}`.replace(/\n/g, '<br>');
-  modalComodosList.innerHTML = comodosList.map(comodo => `<li>${comodo}</li>`).join('');
-  modalTotalArea.innerHTML = tipoLaje === 'solicitar-medicao' ? '' : `Total em metros quadrados:<br>${calcData.totalArea.toFixed(2)}m²`.replace(/\n/g, '<br>');
-  modalObservacoes.innerHTML = observacoes ? `Observações:<br>${observacoes}`.replace(/\n/g, '<br>') : '';
+      modalContact.textContent = `${nome}, ${telefone}, ${email}`;
+      modalObraName.textContent = `Solicita ${tipoLaje === 'solicitar-medicao' ? 'medição para' : 'orçamento para'}: ${calcData.obraName}`;
+      modalComodosList.innerHTML = comodosList.map(comodo => `<li>${comodo}</li>`).join('');
+      modalTotalArea.textContent = tipoLaje === 'solicitar-medicao' ? '' : `Total em metros quadrados: ${calcData.totalArea.toFixed(2)}m²`;
+      modalObservacoes.textContent = observacoes ? `Observações: ${observacoes}` : '';
 
-  modal.style.display = 'flex';
-  e.preventDefault();
+      modal.style.display = 'flex';
+      e.preventDefault();
 
-  const confirmBudget = document.getElementById('confirm-budget');
-  confirmBudget.onclick = (e) => {
-    e.preventDefault(); // Impede comportamento padrão do link
-    const mensagem = [
-      `Contato:\n${nome}\n${telefone}\n${email}`,
-      '- - -',
-      `Solicitação: ${tipoLaje === 'solicitar-medicao' ? 'Medição para' : 'Orçamento para'} ${calcData.obraName}`,
-      '- - -',
-      `Detalhes dos cômodos:\n${comodosList.join('\n')}`,
-      '- - -',
-      tipoLaje === 'solicitar-medicao' ? '' : `Área total: ${calcData.totalArea.toFixed(2)}m²`,
-      observacoes ? '- - -' : '',
-      observacoes ? `Observações adicionais:\n${observacoes}` : ''
-    ].filter(line => line).join('\n');
+      const confirmBudget = document.getElementById('confirm-budget');
+      confirmBudget.onclick = () => {
+        const mensagem = [
+          `Contato: ${nome}, ${telefone}, ${email}`,
+          '---',
+          `Solicita ${tipoLaje === 'solicitar-medicao' ? 'medição para' : 'orçamento para'}: ${calcData.obraName}`,
+          '---',
+          comodosList.join('\n'),
+          '---',
+          tipoLaje === 'solicitar-medicao' ? '' : `Total em metros quadrados: ${calcData.totalArea.toFixed(2)}m²`,
+          observacoes ? '---' : '',
+          observacoes ? `Observações: ${observacoes}` : ''
+        ].filter(line => line).join('\n');
+        // Substituir por este na versão final >> whatsappLink.href = `https://wa.me/5585992947431?text=${encodeURIComponent(mensagem)}`;
+        whatsappLink.href = `https://wa.me/5585992712043?text=${encodeURIComponent(mensagem)}`;
 
-    const whatsappUrl = `https://wa.me/5585992712043?text=${encodeURIComponent(mensagem)}`;
-    console.log('URL gerada:', whatsappUrl); // Depuração
-    whatsappLink.href = whatsappUrl;
-    window.open(whatsappLink.href, '_blank');
-    modal.style.display = 'none';
-  };
+        window.open(whatsappLink.href, '_blank');
+        modal.style.display = 'none';
+      };
 
-  const closeModal = document.querySelector('.close-modal');
-  closeModal.onclick = () => {
-    modal.style.display = 'none';
-  };
+      const closeModal = document.querySelector('.close-modal');
+      closeModal.onclick = () => {
+        modal.style.display = 'none';
+      };
 
-  window.onclick = (event) => {
-    if (event.target === modal) {
-      modal.style.display = 'none';
-    }
-  };
-});
+      window.onclick = (event) => {
+        if (event.target === modal) {
+          modal.style.display = 'none';
+        }
+      };
+    });
 
     // Navegação com botões Voltar
     backButtons.forEach((button, index) => {
