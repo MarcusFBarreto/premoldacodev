@@ -331,7 +331,8 @@ document.addEventListener('DOMContentLoaded', () => {
         comodosList = calcData.comodos.map(comodo => 
           `${comodo.name}: ${comodo.largura}m x ${comodo.comprimento}m | ` +
           `${comodo.quantidadeVigotas} trilhos de ${comodo.vigotaComprimento} metros ` +
-          (comodo.quantidadeBlocos !== null ? `+ ${comodo.quantidadeBlocos} blocos ${comodo.tipoBloco}` : '')
+          (comodo.quantidadeBlocos !== null ? `+ ${comodo.quantidadeBlocos} blocos ${comodo.tipoBloco}` : '' +
+            '¨ ¨ ¨')
         );
       }
       const modal = document.getElementById('budget-modal');
@@ -354,14 +355,15 @@ document.addEventListener('DOMContentLoaded', () => {
       confirmBudget.onclick = () => {
         console.log('Confirmando orçamento');
         const mensagem = [
-          `Contato: ${nome}, ${telefone}, ${email}`,
-          '* * *',
+          `${nome}`,
+          `${telefone}, ${email}`,
+          '- - -',
           `Solicita ${tipoLaje === 'solicitar-medicao' ? 'medição para' : 'orçamento para'}: ${calcData.obraName}`,
-          '* * *',
+          '- - -',
           comodosList.join('\n'),
-          '* * *',
+          '- - -',
           tipoLaje === 'solicitar-medicao' ? '' : `Total em metros quadrados: ${calcData.totalArea.toFixed(2)}m²`,
-          observacoes ? '* * *' : '',
+          observacoes ? '- - -' : '',
           observacoes ? `Observações: ${observacoes}` : ''
         ].filter(line => line).join('\n');
         whatsappLink.href = `https://wa.me/5585992947431?text=${encodeURIComponent(mensagem)}`;
