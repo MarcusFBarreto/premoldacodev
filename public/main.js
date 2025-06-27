@@ -28,13 +28,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let currentIndex = 0;
     let intervalId = null;
-    const autoSlideTime = 4000; // 5 segundos por slide
+    const autoSlideTime = 4000;
 
-    // Criar dots para cada item
     items.forEach((_, index) => {
       const dot = document.createElement('span');
       dot.classList.add('carousel-dot');
-      if (index === 0) dot.classList.add('active'); // Só o primeiro é ativo inicialmente
+      if (index === 0) dot.classList.add('active');
       dot.setAttribute('aria-label', `Ir para imagem ${index + 1}`);
       dot.addEventListener('click', () => {
         currentIndex = index;
@@ -99,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       carousel.addEventListener('mouseenter', () => clearInterval(intervalId));
       carousel.addEventListener('mouseleave', startInterval);
-      startInterval(); // Inicia o auto-slide
+      startInterval();
     } else {
       console.warn('Carrossel: itens ou botões não encontrados.');
     }
@@ -156,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
           backButtons[1].style.display = 'block';
           if (footerMenu) footerMenu.style.display = 'none';
         } else {
-          showStep(3); // Pula direto para o Passo 3 se for "Solicitar Medição"
+          showStep(3);
         }
       } else if (step === 3) {
         calcStep3.style.display = 'flex';
@@ -165,10 +164,10 @@ document.addEventListener('DOMContentLoaded', () => {
         backButtons[2].style.display = 'block';
         document.getElementById('nome').focus();
         if (footerMenu) footerMenu.style.display = 'none';
-        const whatsappButton = document.getElementById('whatsapp-link');
-        if (whatsappButton) {
+        if (whatsappLink) {
+          whatsappLink.style.display = 'inline-block'; // Garante que o botão seja exibido
           setTimeout(() => {
-            whatsappButton.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            whatsappLink.scrollIntoView({ behavior: 'smooth', block: 'center' });
           }, 200);
         }
       }
@@ -212,7 +211,6 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         comodosContainer.appendChild(comodoDiv);
 
-        // Toast notification para adição
         const toast = document.createElement('div');
         toast.className = 'toast';
         toast.textContent = 'Cômodo adicionado!';
@@ -223,7 +221,6 @@ document.addEventListener('DOMContentLoaded', () => {
           toast.remove();
         }, 3000);
 
-        // Garantir que o primeiro cômodo tenha botão "Remover" escondido
         const removeButtons = document.querySelectorAll('.remove-comodo');
         if (removeButtons.length > 0) {
           removeButtons[0].style.display = 'none';
@@ -243,7 +240,6 @@ document.addEventListener('DOMContentLoaded', () => {
           const removeButton = document.querySelector('.remove-comodo');
           if (removeButton) removeButton.style.display = 'none';
         }
-        // Toast notification para remoção
         const toast = document.createElement('div');
         toast.className = 'toast';
         toast.textContent = 'Cômodo removido!';
@@ -261,7 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
       console.log('Passo 2: Calculando resultado.');
       let totalArea = 0;
       const comodos = [];
-      const comodoItems = comodosContainer.getElementsByClassName("comodo-item");
+      const comodoItems = comodosContainer.getElementsByClassName('comodo-item');
       const tipoLaje = calcData.tipoLaje;
       let espacamento = (tipoLaje === 'trelicada-eps') ? 0.50 : 0.43;
 
@@ -280,11 +276,11 @@ document.addEventListener('DOMContentLoaded', () => {
           } else {
             const areaComodo = largura * comprimento;
             if (tipoLaje.includes('eps-h733')) {
-              quantidadeBlocos = Math.ceil(areaComodo * 2.2); // 2.2 blocos por m²
+              quantidadeBlocos = Math.ceil(areaComodo * 2.2);
             } else if (tipoLaje.includes('eps-h740')) {
-              quantidadeBlocos = Math.ceil(areaComodo * 2); // 2 blocos por m²
-            } else { // Tijolo H8
-              quantidadeBlocos = Math.ceil(areaComodo * 12 * 1.01); // 12 blocos por m² + 1% de perda
+              quantidadeBlocos = Math.ceil(areaComodo * 2);
+            } else {
+              quantidadeBlocos = Math.ceil(areaComodo * 12 * 1.01);
             }
           }
 
@@ -310,7 +306,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Passo 3: Revisão e Orçamento
     whatsappLink.addEventListener('click', (e) => {
-      console.log('Passo 3: Gerando orçamento.');
+      console.log('Passo 3: Gerando orçamento. Evento disparado:', e.type);
+      e.preventDefault();
       const nome = document.getElementById('nome').value.trim();
       const telefone = document.getElementById('telefone').value;
       const email = document.getElementById('email').value.trim();
@@ -318,7 +315,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (!nome || !/^[0-9]{10,11}$/.test(telefone) || !email.includes('@')) {
         alert('Por favor, preencha todos os campos de contato corretamente.');
-        e.preventDefault();
         return;
       }
 
@@ -352,10 +348,11 @@ document.addEventListener('DOMContentLoaded', () => {
       modalObservacoes.textContent = observacoes ? `Observações: ${observacoes}` : '';
 
       modal.style.display = 'flex';
-      e.preventDefault();
+      console.log('Modal exibido');
 
       const confirmBudget = document.getElementById('confirm-budget');
       confirmBudget.onclick = () => {
+        console.log('Confirmando orçamento');
         const mensagem = [
           `Contato: ${nome}, ${telefone}, ${email}`,
           '* * *',
