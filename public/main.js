@@ -366,7 +366,7 @@ document.addEventListener('DOMContentLoaded', () => {
           observacoes ? '- - -' : '',
           observacoes ? `Observações: ${observacoes}` : ''
         ].filter(line => line).join('\n');
-        whatsappLink.href = `https://wa.me/5585992947431?text=${encodeURIComponent(mensagem)}`;
+        whatsappLink.href = `https://wa.me/5585992712043?text=${encodeURIComponent(mensagem)}`;
         window.open(whatsappLink.href, '_blank');
         modal.style.display = 'none';
       };
