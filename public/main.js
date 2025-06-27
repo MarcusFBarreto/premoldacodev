@@ -28,13 +28,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let currentIndex = 0;
     let intervalId = null;
-    const autoSlideTime = 4000; // 5 segundos por slide
+    const autoSlideTime = 4000;
 
-    // Criar dots para cada item
     items.forEach((_, index) => {
       const dot = document.createElement('span');
       dot.classList.add('carousel-dot');
-      if (index === 0) dot.classList.add('active'); // Só o primeiro é ativo inicialmente
+      if (index === 0) dot.classList.add('active');
       dot.setAttribute('aria-label', `Ir para imagem ${index + 1}`);
       dot.addEventListener('click', () => {
         currentIndex = index;
@@ -99,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       carousel.addEventListener('mouseenter', () => clearInterval(intervalId));
       carousel.addEventListener('mouseleave', startInterval);
-      startInterval(); // Inicia o auto-slide
+      startInterval();
     } else {
       console.warn('Carrossel: itens ou botões não encontrados.');
     }
@@ -126,54 +125,54 @@ document.addEventListener('DOMContentLoaded', () => {
   if (calcStep0 && calcStep1 && calcStep2 && calcStep3 && whatsappLink && progressCircles.length === 4 && backButtons.length === 3 && nextButtons.length === 3 && addComodo && comodosContainer && calculateButton) {
     console.log('Todos os elementos da calculadora encontrados.');
     const showStep = (step) => {
-  console.log(`Mostrando passo ${step}`);
-  const footerMenu = document.querySelector('.footer-menu');
-  [calcStep0, calcStep1, calcStep2, calcStep3].forEach(s => {
-    s.style.display = 'none';
-    s.classList.remove('active');
-  });
-  progressCircles.forEach(c => c.classList.remove('active'));
-  backButtons.forEach(b => b.style.display = 'none');
-  if (whatsappLink) whatsappLink.style.display = 'none'; // Oculta o botão por padrão
+      console.log(`Mostrando passo ${step}`);
+      const footerMenu = document.querySelector('.footer-menu');
+      [calcStep0, calcStep1, calcStep2, calcStep3].forEach(s => {
+        s.style.display = 'none';
+        s.classList.remove('active');
+      });
+      progressCircles.forEach(c => c.classList.remove('active'));
+      backButtons.forEach(b => b.style.display = 'none');
+      if (whatsappLink) whatsappLink.style.display = 'none'; // Oculta o botão por padrão
 
-  if (step === 0) {
-    calcStep0.style.display = 'flex';
-    calcStep0.classList.add('active');
-    progressCircles[0].classList.add('active');
-    document.getElementById('obra-name').focus();
-    if (footerMenu) footerMenu.style.display = 'flex';
-  } else if (step === 1) {
-    calcStep1.style.display = 'flex';
-    calcStep1.classList.add('active');
-    progressCircles[1].classList.add('active');
-    backButtons[0].style.display = 'block';
-    document.getElementById('tipo-laje').focus();
-    if (footerMenu) footerMenu.style.display = 'flex';
-  } else if (step === 2) {
-    if (calcData.tipoLaje !== 'solicitar-medicao') {
-      calcStep2.style.display = 'flex';
-      calcStep2.classList.add('active');
-      progressCircles[2].classList.add('active');
-      backButtons[1].style.display = 'block';
-      if (footerMenu) footerMenu.style.display = 'none';
-    } else {
-      showStep(3);
-    }
-  } else if (step === 3) {
-    calcStep3.style.display = 'flex';
-    calcStep3.classList.add('active');
-    progressCircles[3].classList.add('active');
-    backButtons[2].style.display = 'block';
-    document.getElementById('nome').focus();
-    if (footerMenu) footerMenu.style.display = 'none';
-    if (whatsappLink) {
-      whatsappLink.style.display = 'inline-block'; // Exibe o botão no Passo 3
-      setTimeout(() => {
-        whatsappLink.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 200);
-    }
-  }
-};
+      if (step === 0) {
+        calcStep0.style.display = 'flex';
+        calcStep0.classList.add('active');
+        progressCircles[0].classList.add('active');
+        document.getElementById('obra-name').focus();
+        if (footerMenu) footerMenu.style.display = 'flex';
+      } else if (step === 1) {
+        calcStep1.style.display = 'flex';
+        calcStep1.classList.add('active');
+        progressCircles[1].classList.add('active');
+        backButtons[0].style.display = 'block';
+        document.getElementById('tipo-laje').focus();
+        if (footerMenu) footerMenu.style.display = 'flex';
+      } else if (step === 2) {
+        if (calcData.tipoLaje !== 'solicitar-medicao') {
+          calcStep2.style.display = 'flex';
+          calcStep2.classList.add('active');
+          progressCircles[2].classList.add('active');
+          backButtons[1].style.display = 'block';
+          if (footerMenu) footerMenu.style.display = 'none';
+        } else {
+          showStep(3);
+        }
+      } else if (step === 3) {
+        calcStep3.style.display = 'flex';
+        calcStep3.classList.add('active');
+        progressCircles[3].classList.add('active');
+        backButtons[2].style.display = 'block';
+        document.getElementById('nome').focus();
+        if (footerMenu) footerMenu.style.display = 'none';
+        if (whatsappLink) {
+          whatsappLink.style.display = 'inline-block'; // Exibe o botão no Passo 3
+          setTimeout(() => {
+            whatsappLink.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }, 200);
+        }
+      }
+    };
 
     // Passo 0: Nome da Obra
     nextButtons[0].addEventListener('click', () => {
@@ -213,7 +212,6 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         comodosContainer.appendChild(comodoDiv);
 
-        // Toast notification para adição
         const toast = document.createElement('div');
         toast.className = 'toast';
         toast.textContent = 'Cômodo adicionado!';
@@ -224,7 +222,6 @@ document.addEventListener('DOMContentLoaded', () => {
           toast.remove();
         }, 3000);
 
-        // Garantir que o primeiro cômodo tenha botão "Remover" escondido
         const removeButtons = document.querySelectorAll('.remove-comodo');
         if (removeButtons.length > 0) {
           removeButtons[0].style.display = 'none';
@@ -244,7 +241,6 @@ document.addEventListener('DOMContentLoaded', () => {
           const removeButton = document.querySelector('.remove-comodo');
           if (removeButton) removeButton.style.display = 'none';
         }
-        // Toast notification para remoção
         const toast = document.createElement('div');
         toast.className = 'toast';
         toast.textContent = 'Cômodo removido!';
@@ -262,7 +258,7 @@ document.addEventListener('DOMContentLoaded', () => {
       console.log('Passo 2: Calculando resultado.');
       let totalArea = 0;
       const comodos = [];
-      const comodoItems = comodosContainer.getElementsByClassName("comodo-item");
+      const comodoItems = comodosContainer.getElementsByClassName('comodo-item');
       const tipoLaje = calcData.tipoLaje;
       let espacamento = (tipoLaje === 'trelicada-eps') ? 0.50 : 0.43;
 
@@ -281,11 +277,11 @@ document.addEventListener('DOMContentLoaded', () => {
           } else {
             const areaComodo = largura * comprimento;
             if (tipoLaje.includes('eps-h733')) {
-              quantidadeBlocos = Math.ceil(areaComodo * 2.2); // 2.2 blocos por m²
+              quantidadeBlocos = Math.ceil(areaComodo * 2.2);
             } else if (tipoLaje.includes('eps-h740')) {
-              quantidadeBlocos = Math.ceil(areaComodo * 2); // 2 blocos por m²
-            } else { // Tijolo H8
-              quantidadeBlocos = Math.ceil(areaComodo * 12 * 1.01); // 12 blocos por m² + 1% de perda
+              quantidadeBlocos = Math.ceil(areaComodo * 2);
+            } else {
+              quantidadeBlocos = Math.ceil(areaComodo * 12 * 1.01);
             }
           }
 
@@ -309,84 +305,90 @@ document.addEventListener('DOMContentLoaded', () => {
       showStep(3);
     });
 
-  // Passo 3: Revisão e Orçamento
-whatsappLink.addEventListener('click', (e) => {
-  console.log('Passo 3: Gerando orçamento.');
-  const nome = document.getElementById('nome').value.trim();
-  const telefone = document.getElementById('telefone').value;
-  const email = document.getElementById('email').value.trim();
-  const observacoes = document.getElementById('observacoes').value.trim();
+    // Passo 3: Revisão e Orçamento
+    whatsappLink.addEventListener('click', (e) => {
+      console.log('Clique no whatsappLink detectado');
+      e.preventDefault(); // Impede o comportamento padrão do href
+      const nome = document.getElementById('nome').value.trim();
+      const telefone = document.getElementById('telefone').value;
+      const email = document.getElementById('email').value.trim();
+      const observacoes = document.getElementById('observacoes').value.trim();
 
-  if (!nome || !/^[0-9]{10,11}$/.test(telefone) || !email.includes('@')) {
-    alert('Por favor, preencha todos os campos de contato corretamente.');
-    e.preventDefault();
-    return;
-  }
+      if (!nome || !/^[0-9]{10,11}$/.test(telefone) || !email.includes('@')) {
+        alert('Por favor, preencha todos os campos de contato corretamente.');
+        return;
+      }
 
-  calcData.nome = nome;
-  calcData.telefone = telefone;
-  calcData.email = email;
-  calcData.observacoes = observacoes;
+      calcData.nome = nome;
+      calcData.telefone = telefone;
+      calcData.email = email;
+      calcData.observacoes = observacoes;
 
-  const tipoLaje = calcData.tipoLaje;
-  let comodosList;
-  if (tipoLaje === 'solicitar-medicao') {
-    comodosList = ['Gostaria de solicitar uma visita para medição.'];
-  } else {
-    comodosList = calcData.comodos.map(comodo => 
-      `${comodo.name}: ${comodo.largura}m x ${comodo.comprimento}m | ` +
-      `${comodo.quantidadeVigotas} trilhos de ${comodo.vigotaComprimento} metros ` +
-      (comodo.quantidadeBlocos !== null ? `+ ${comodo.quantidadeBlocos} blocos ${comodo.tipoBloco}` : '')
-    );
-  }
+      const tipoLaje = calcData.tipoLaje;
+      let comodosList;
+      if (tipoLaje === 'solicitar-medicao') {
+        comodosList = ['Gostaria de solicitar uma visita para medição.'];
+      } else {
+        comodosList = calcData.comodos.map(comodo => 
+          `${comodo.name}: ${comodo.largura}m x ${comodo.comprimento}m | ` +
+          `${comodo.quantidadeVigotas} trilhos de ${comodo.vigotaComprimento} metros ` +
+          (comodo.quantidadeBlocos !== null ? `+ ${comodo.quantidadeBlocos} blocos ${comodo.tipoBloco}` : '')
+        );
+      }
 
-  // Formatação com quebras de linha no modal
-  modalContact.innerHTML = `${nome}<br>${telefone}<br>${email}`.replace(/\n/g, '<br>');
-  modalObraName.innerHTML = `Solicita ${tipoLaje === 'solicitar-medicao' ? 'medição para' : 'orçamento para'}:<br>${calcData.obraName}`.replace(/\n/g, '<br>');
-  modalComodosList.innerHTML = comodosList.map(comodo => `<li>${comodo}</li>`).join('');
-  modalTotalArea.innerHTML = tipoLaje === 'solicitar-medicao' ? '' : `Total em metros quadrados:<br>${calcData.totalArea.toFixed(2)}m²`.replace(/\n/g, '<br>');
-  modalObservacoes.innerHTML = observacoes ? `Observações:<br>${observacoes}`.replace(/\n/g, '<br>') : '';
+      // Formatação com quebras de linha no modal
+      modalContact.innerHTML = `${nome}<br>${telefone}<br>${email}`.replace(/\n/g, '<br>');
+      modalObraName.innerHTML = `Solicita ${tipoLaje === 'solicitar-medicao' ? 'medição para' : 'orçamento para'}:<br>${calcData.obraName}`.replace(/\n/g, '<br>');
+      modalComodosList.innerHTML = comodosList.map(comodo => `<li>${comodo}</li>`).join('');
+      modalTotalArea.innerHTML = tipoLaje === 'solicitar-medicao' ? '' : `Total em metros quadrados:<br>${calcData.totalArea.toFixed(2)}m²`.replace(/\n/g, '<br>');
+      modalObservacoes.innerHTML = observacoes ? `Observações:<br>${observacoes}`.replace(/\n/g, '<br>') : '';
 
-  modal.style.display = 'flex';
-  e.preventDefault();
+      modal.style.display = 'flex';
+      console.log('Modal exibido');
+    });
 
-  const confirmBudget = document.getElementById('confirm-budget');
-  confirmBudget.onclick = (e) => {
-    e.preventDefault(); // Impede qualquer comportamento padrão
-    const mensagem = [
-      `Contato:\n${nome}\n${telefone}\n${email}`,
-      '- - -',
-      `Solicitação: ${tipoLaje === 'solicitar-medicao' ? 'Medição para' : 'Orçamento para'} ${calcData.obraName}`,
-      '- - -',
-      `Detalhes dos cômodos:\n${comodosList.join('\n')}`,
-      '- - -',
-      tipoLaje === 'solicitar-medicao' ? '' : `Área total: ${calcData.totalArea.toFixed(2)}m²`,
-      observacoes ? '- - -' : '',
-      observacoes ? `Observações adicionais:\n${observacoes}` : ''
-    ].filter(line => line).join('\n');
+    const confirmBudget = document.getElementById('confirm-budget');
+    confirmBudget.addEventListener('click', (e) => {
+      console.log('Clique no confirmBudget detectado');
+      e.preventDefault();
+      const nome = document.getElementById('nome').value.trim();
+      const telefone = document.getElementById('telefone').value;
+      const email = document.getElementById('email').value.trim();
+      const observacoes = document.getElementById('observacoes').value.trim();
+      const tipoLaje = calcData.tipoLaje;
+      let comodosList;
+      if (tipoLaje === 'solicitar-medicao') {
+        comodosList = ['Gostaria de solicitar uma visita para medição.'];
+      } else {
+        comodosList = calcData.comodos.map(comodo => 
+          `${comodo.name}: ${comodo.largura}m x ${comodo.comprimento}m | ` +
+          `${comodo.quantidadeVigotas} trilhos de ${comodo.vigotaComprimento} metros ` +
+          (comodo.quantidadeBlocos !== null ? `+ ${comodo.quantidadeBlocos} blocos ${comodo.tipoBloco}` : '')
+        );
+      }
 
-    const whatsappUrl = `https://wa.me/5585992712043?text=${encodeURIComponent(mensagem)}`;
-    console.log('URL gerada:', whatsappUrl); // Depuração
-    whatsappLink.href = whatsappUrl; // Define o href dinamicamente
-    const whatsappWindow = window.open(whatsappLink.href, '_blank');
-    if (whatsappWindow) {
-      modal.style.display = 'none'; // Fecha o modal apenas se o WhatsApp abrir
-    } else {
-      alert('Não foi possível abrir o WhatsApp. Verifique as configurações de popup.');
-    }
-  };
+      const mensagem = [
+        `Contato:\n${nome}\n${telefone}\n${email}`,
+        '- - -',
+        `Solicitação: ${tipoLaje === 'solicitar-medicao' ? 'Medição para' : 'Orçamento para'} ${calcData.obraName}`,
+        '- - -',
+        `Detalhes dos cômodos:\n${comodosList.join('\n')}`,
+        '- - -',
+        tipoLaje === 'solicitar-medicao' ? '' : `Área total: ${calcData.totalArea.toFixed(2)}m²`,
+        observacoes ? '- - -' : '',
+        observacoes ? `Observações adicionais:\n${observacoes}` : ''
+      ].filter(line => line).join('\n');
 
-  const closeModal = document.querySelector('.close-modal');
-  closeModal.onclick = () => {
-    modal.style.display = 'none';
-  };
-
-  window.onclick = (event) => {
-    if (event.target === modal) {
-      modal.style.display = 'none';
-    }
-  };
-});
+      const whatsappUrl = `https://wa.me/5585992712043?text=${encodeURIComponent(mensagem)}`;
+      console.log('URL gerada:', whatsappUrl);
+      whatsappLink.href = whatsappUrl;
+      const whatsappWindow = window.open(whatsappLink.href, '_blank');
+      if (whatsappWindow) {
+        modal.style.display = 'none';
+      } else {
+        alert('Não foi possível abrir o WhatsApp. Verifique as configurações de popup.');
+      }
+    });
 
     // Navegação com botões Voltar
     backButtons.forEach((button, index) => {
