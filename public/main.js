@@ -308,7 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
       showStep(3);
     });
 
-   // Passo 3: Revisão e Orçamento
+  // Passo 3: Revisão e Orçamento
 whatsappLink.addEventListener('click', (e) => {
   console.log('Passo 3: Gerando orçamento.');
   const nome = document.getElementById('nome').value.trim();
@@ -351,7 +351,7 @@ whatsappLink.addEventListener('click', (e) => {
 
   const confirmBudget = document.getElementById('confirm-budget');
   confirmBudget.onclick = (e) => {
-    e.preventDefault(); // Impede comportamento padrão
+    e.preventDefault(); // Impede qualquer comportamento padrão
     const mensagem = [
       `Contato:\n${nome}\n${telefone}\n${email}`,
       '- - -',
@@ -366,7 +366,7 @@ whatsappLink.addEventListener('click', (e) => {
 
     const whatsappUrl = `https://wa.me/5585992712043?text=${encodeURIComponent(mensagem)}`;
     console.log('URL gerada:', whatsappUrl); // Depuração
-    whatsappLink.href = whatsappUrl;
+    whatsappLink.href = whatsappUrl; // Define o href dinamicamente
     const whatsappWindow = window.open(whatsappLink.href, '_blank');
     if (whatsappWindow) {
       modal.style.display = 'none'; // Fecha o modal apenas se o WhatsApp abrir
