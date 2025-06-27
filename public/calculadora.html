@@ -40,13 +40,13 @@
               <h3>Passo 2: Selecione o Tipo de Laje</h3>
               <label for="tipo-laje">Escolha o tipo de laje:</label>
               <select id="tipo-laje" required>
-  <option value="" disabled selected>Selecione o tipo de laje</option>
-  <option value="eps-h733">EPS H733</option>
-  <option value="eps-h740">EPS H740</option>
-  <option value="tijolo-h8">Tijolo H8</option>
-  <option value="resolver-vendedor">Resolverei com o vendedor</option>
-  <option value="solicitar-medicao">Solicitar Medição</option>
-</select>
+                <option value="" disabled selected>Selecione o tipo de laje</option>
+                <option value="eps-h733">EPS H733</option>
+                <option value="eps-h740">EPS H740</option>
+                <option value="tijolo-h8">Tijolo H8</option>
+                <option value="resolver-vendedor">Resolverei com o vendedor</option>
+                <option value="solicitar-medicao">Solicitar Medição</option>
+              </select>
               <div class="form-actions">
                 <button type="button" class="back-button" style="display: none;">Voltar</button>
                 <button type="button" class="next-button">Próximo</button>
@@ -79,35 +79,34 @@
 
             <!-- Passo 3: Revisão e Orçamento -->
             <form id="calc-step3" class="calc-step">
-              <h3>Passo 4: Receba Seu Orçamento</h3>
-              <label for="nome">Nome:</label>
-              <input type="text" id="nome" name="nome" required aria-required="true" placeholder="Ex.: João Silva">
-              <label for="telefone">Telefone:</label>
-              <input type="tel" id="telefone" name="telefone" pattern="[0-9]{10,11}" placeholder="Ex.: 85999999999" required aria-required="true">
-              <label for="email">E-mail:</label>
-              <input type="email" id="email" name="email" required aria-required="true" placeholder="Ex.: joao@email.com">
-              <label for="observacoes">Observações (opcional):</label>
-              <textarea id="observacoes" name="observacoes" placeholder="Ex.: Preciso de entrega urgente"></textarea>
-              <div class="form-actions">
-                <button type="button" class="back-button">Voltar</button>
-
-                <a id="whatsapp-link" style="display: none;" aria-label="Enviar orçamento pelo WhatsApp">Enviar por WhatsApp</a>              </div>
-
-                <!-- Modal -->
-              <div id="budget-modal" class="modal" style="display: none;">
-                <div class="modal-content">
-                  <span class="close-modal">×</span>
-                  <p id="modal-contact"></p>
-                  <hr>
-                  <h4 id="modal-obra-name"></h4>
-                  <ul id="modal-comodos-list"></ul>
-                  <hr>
-                  <p id="modal-total-area"></p>
-                  <p id="modal-observacoes"></p>
-                  <button id="confirm-budget" class="whatsapp-contact">Confirmar e Enviar</button>
-                </div>
-              </div>
-            </form>
+  <h3>Passo 4: Receba Seu Orçamento</h3>
+  <label for="nome">Nome:</label>
+  <input type="text" id="nome" name="nome" required aria-required="true" placeholder="Ex.: João Silva">
+  <label for="telefone">Telefone:</label>
+  <input type="tel" id="telefone" name="telefone" pattern="[0-9]{10,11}" placeholder="Ex.: 85999999999" required aria-required="true">
+  <label for="email">E-mail:</label>
+  <input type="email" id="email" name="email" required aria-required="true" placeholder="Ex.: joao@email.com">
+  <label for="observacoes">Observações (opcional):</label>
+  <textarea id="observacoes" name="observacoes" placeholder="Ex.: Preciso de entrega urgente"></textarea>
+  <a id="whatsapp-link" href="#" class="whatsapp-contact" aria-label="Enviar orçamento pelo WhatsApp">Enviar por WhatsApp</a>
+  <!-- Modal -->
+  <div id="budget-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal">×</span>
+      <p id="modal-contact"></p>
+      <hr>
+      <h4 id="modal-obra-name"></h4>
+      <ul id="modal-comodos-list"></ul>
+      <hr>
+      <p id="modal-total-area"></p>
+      <p id="modal-observacoes"></p>
+      <button id="confirm-budget" class="whatsapp-contact">Confirmar e Enviar</button>
+    </div>
+  </div>
+  <div class="form-actions">
+    <button type="button" class="back-button">Voltar</button>
+  </div>
+</form>
           </div>
         </div>
       </div>

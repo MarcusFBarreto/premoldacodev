@@ -126,53 +126,54 @@ document.addEventListener('DOMContentLoaded', () => {
   if (calcStep0 && calcStep1 && calcStep2 && calcStep3 && whatsappLink && progressCircles.length === 4 && backButtons.length === 3 && nextButtons.length === 3 && addComodo && comodosContainer && calculateButton) {
     console.log('Todos os elementos da calculadora encontrados.');
     const showStep = (step) => {
-      console.log(`Mostrando passo ${step}`);
-      const footerMenu = document.querySelector('.footer-menu');
-      [calcStep0, calcStep1, calcStep2, calcStep3].forEach(s => {
-        s.style.display = 'none';
-        s.classList.remove('active');
-      });
-      progressCircles.forEach(c => c.classList.remove('active'));
-      backButtons.forEach(b => b.style.display = 'none');
+  console.log(`Mostrando passo ${step}`);
+  const footerMenu = document.querySelector('.footer-menu');
+  [calcStep0, calcStep1, calcStep2, calcStep3].forEach(s => {
+    s.style.display = 'none';
+    s.classList.remove('active');
+  });
+  progressCircles.forEach(c => c.classList.remove('active'));
+  backButtons.forEach(b => b.style.display = 'none');
+  if (whatsappLink) whatsappLink.style.display = 'none'; // Oculta o botão por padrão
 
-      if (step === 0) {
-        calcStep0.style.display = 'flex';
-        calcStep0.classList.add('active');
-        progressCircles[0].classList.add('active');
-        document.getElementById('obra-name').focus();
-        if (footerMenu) footerMenu.style.display = 'flex';
-      } else if (step === 1) {
-        calcStep1.style.display = 'flex';
-        calcStep1.classList.add('active');
-        progressCircles[1].classList.add('active');
-        backButtons[0].style.display = 'block';
-        document.getElementById('tipo-laje').focus();
-        if (footerMenu) footerMenu.style.display = 'flex';
-      } else if (step === 2) {
-        if (calcData.tipoLaje !== 'solicitar-medicao') {
-          calcStep2.style.display = 'flex';
-          calcStep2.classList.add('active');
-          progressCircles[2].classList.add('active');
-          backButtons[1].style.display = 'block';
-          if (footerMenu) footerMenu.style.display = 'none';
-        } else {
-          showStep(3); // Pula direto para o Passo 3 se for "Solicitar Medição"
-        }
-      } else if (step === 3) {
-        calcStep3.style.display = 'flex';
-        calcStep3.classList.add('active');
-        progressCircles[3].classList.add('active');
-        backButtons[2].style.display = 'block';
-        document.getElementById('nome').focus();
-        if (footerMenu) footerMenu.style.display = 'none';
-        const whatsappButton = document.getElementById('whatsapp-link');
-        if (whatsappButton) {
-          setTimeout(() => {
-            whatsappButton.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }, 200);
-        }
-      }
-    };
+  if (step === 0) {
+    calcStep0.style.display = 'flex';
+    calcStep0.classList.add('active');
+    progressCircles[0].classList.add('active');
+    document.getElementById('obra-name').focus();
+    if (footerMenu) footerMenu.style.display = 'flex';
+  } else if (step === 1) {
+    calcStep1.style.display = 'flex';
+    calcStep1.classList.add('active');
+    progressCircles[1].classList.add('active');
+    backButtons[0].style.display = 'block';
+    document.getElementById('tipo-laje').focus();
+    if (footerMenu) footerMenu.style.display = 'flex';
+  } else if (step === 2) {
+    if (calcData.tipoLaje !== 'solicitar-medicao') {
+      calcStep2.style.display = 'flex';
+      calcStep2.classList.add('active');
+      progressCircles[2].classList.add('active');
+      backButtons[1].style.display = 'block';
+      if (footerMenu) footerMenu.style.display = 'none';
+    } else {
+      showStep(3);
+    }
+  } else if (step === 3) {
+    calcStep3.style.display = 'flex';
+    calcStep3.classList.add('active');
+    progressCircles[3].classList.add('active');
+    backButtons[2].style.display = 'block';
+    document.getElementById('nome').focus();
+    if (footerMenu) footerMenu.style.display = 'none';
+    if (whatsappLink) {
+      whatsappLink.style.display = 'inline-block'; // Exibe o botão no Passo 3
+      setTimeout(() => {
+        whatsappLink.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 200);
+    }
+  }
+};
 
     // Passo 0: Nome da Obra
     nextButtons[0].addEventListener('click', () => {
