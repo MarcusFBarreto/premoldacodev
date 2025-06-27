@@ -329,9 +329,11 @@ document.addEventListener('DOMContentLoaded', () => {
         comodosList = ['Gostaria de solicitar uma visita para medição.'];
       } else {
         comodosList = calcData.comodos.map(comodo => 
-          `${comodo.name}: ${comodo.largura}m x ${comodo.comprimento}m | ` +
-          `${comodo.quantidadeVigotas} trilhos de ${comodo.vigotaComprimento} metros ` +
-          (comodo.quantidadeBlocos !== null ? `+ ${comodo.quantidadeBlocos} blocos ${comodo.tipoBloco}` : '')
+          `${comodo.name}:` +
+          `'Largura ='${comodo.largura}m x ${comodo.comprimento}m | ` +
+          `${comodo.quantidadeVigotas} trilhos de ${comodo.largura} metros ` +
+          (comodo.quantidadeBlocos !== null ? `+ ${comodo.quantidadeBlocos} blocos ${comodo.tipoBloco}` : '' +
+             '____________')
         );
       }
       const modal = document.getElementById('budget-modal');
