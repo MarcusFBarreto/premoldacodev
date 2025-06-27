@@ -330,9 +330,9 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         comodosList = calcData.comodos.map(comodo => 
           `${comodo.name}:\n` +
-          `Largura =${comodo.largura}m x ${comodo.comprimento}m | ` +
+          `${comodo.largura}m de Largura  x ${comodo.comprimento}m \n` +
           `${comodo.quantidadeVigotas} trilhos de ${comodo.largura} metros ` +
-          (comodo.quantidadeBlocos !== null ? `+ ${comodo.quantidadeBlocos} blocos ${comodo.tipoBloco}` : '\n')
+          (comodo.quantidadeBlocos !== null ? `+ ${comodo.quantidadeBlocos} blocos ${comodo.tipoBloco}` : '\n\n')
         );
       }
       const modal = document.getElementById('budget-modal');
