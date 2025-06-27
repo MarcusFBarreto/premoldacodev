@@ -331,8 +331,7 @@ document.addEventListener('DOMContentLoaded', () => {
         comodosList = calcData.comodos.map(comodo => 
           `${comodo.name}: ${comodo.largura}m x ${comodo.comprimento}m | ` +
           `${comodo.quantidadeVigotas} trilhos de ${comodo.vigotaComprimento} metros ` +
-          (comodo.quantidadeBlocos !== null ? `+ ${comodo.quantidadeBlocos} blocos ${comodo.tipoBloco}` : '' +
-            '¨ ¨ ¨')
+          (comodo.quantidadeBlocos !== null ? `+ ${comodo.quantidadeBlocos} blocos ${comodo.tipoBloco}` : '')
         );
       }
       const modal = document.getElementById('budget-modal');
@@ -366,7 +365,7 @@ document.addEventListener('DOMContentLoaded', () => {
           observacoes ? '- - -' : '',
           observacoes ? `Observações: ${observacoes}` : ''
         ].filter(line => line).join('\n');
-        whatsappLink.href = `https://wa.me/5585992712043?text=${encodeURIComponent(mensagem)}`;
+        whatsappLink.href = `https://wa.me/5585992947431?text=${encodeURIComponent(mensagem)}`;
         window.open(whatsappLink.href, '_blank');
         modal.style.display = 'none';
       };
