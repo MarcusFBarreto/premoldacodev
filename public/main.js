@@ -331,8 +331,7 @@ whatsappLink.addEventListener('click', (e) => {
     comodosList = calcData.comodos.map(comodo => 
       `${comodo.name}:\n` +
       `${comodo.largura}m de Largura x ${comodo.comprimento}m de Comprimento\n` +
-      `${comodo.quantidadeVigotas} trilhos de ${comodo.tamanhoTrilho}m ` +
-      (comodo.quantidadeBlocos !== null ? `+ ${comodo.quantidadeBlocos} blocos ${comodo.tipoBloco}` : '\n')
+      `${comodo.quantidadeVigotas} trilhos de ${comodo.tamanhoTrilho}m`
     );
   }
   const modal = document.getElementById('budget-modal');
