@@ -329,11 +329,11 @@ whatsappLink.addEventListener('click', (e) => {
     comodosList = ['Gostaria de solicitar uma visita para medição.'];
   } else {
     comodosList = calcData.comodos.map(comodo => 
-      `${comodo.name}:\n` +
-      `${comodo.largura}m de Largura x ${comodo.comprimento}m de Comprimento` + 
-      '\n <br>' +
-      `${comodo.quantidadeVigotas} trilhos de ${comodo.tamanhoTrilho}m` + 
-      `___`
+      '${comodo.name}:\n' +
+      '${comodo.largura}m de Largura x ${comodo.comprimento}m de Comprimento' + 
+      '\n ' +
+      '${comodo.quantidadeVigotas} trilhos de ${comodo.tamanhoTrilho}m' + 
+      '\n ___'
     );
   }
   const modal = document.getElementById('budget-modal');
