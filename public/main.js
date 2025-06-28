@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('nome').focus();
         if (footerMenu) footerMenu.style.display = 'none';
         if (whatsappLink) {
-          whatsappLink.style.display = 'inline-block'; // Garante que o botão seja exibido
+          whatsappLink.style.display = 'inline-block';
           setTimeout(() => {
             whatsappLink.scrollIntoView({ behavior: 'smooth', block: 'center' });
           }, 200);
@@ -266,11 +266,11 @@ calculateButton.addEventListener('click', () => {
       totalArea += area;
       const quantidadeVigotas = Math.ceil(comprimento / espacamento);
       let quantidadeBlocos = null;
-      let comodoTipoBloco = null; // Variável para o tipo de bloco deste cômodo
+      let comodoTipoBloco = null;
 
       if (tipoLaje === 'resolver-vendedor' || tipoLaje === 'solicitar-medicao') {
         quantidadeBlocos = null;
-        comodoTipoBloco = null; // Sem tipo específico, ou 'N/A'
+        comodoTipoBloco = null;
       } else {
         const areaComodo = largura * comprimento;
         if (tipoLaje.includes('eps-h733')) {
@@ -279,9 +279,9 @@ calculateButton.addEventListener('click', () => {
         } else if (tipoLaje.includes('eps-h740')) {
           quantidadeBlocos = Math.ceil(areaComodo * 2);
           comodoTipoBloco = 'EPS H740';
-        } else { // Presume tijolo-h8 ou outros que usam 12 blocos/m²
+        } else {
           quantidadeBlocos = Math.ceil(areaComodo * 12 * 1.01);
-          comodoTipoBloco = 'Cerâmico'; // Ou Tijolo H8, se for mais específico
+          comodoTipoBloco = 'Cerâmico';
         }
       }
 
@@ -293,7 +293,7 @@ calculateButton.addEventListener('click', () => {
         tamanhoTrilho: largura.toFixed(2),
         quantidadeVigotas,
         quantidadeBlocos,
-        tipoBloco: comodoTipoBloco // Usamos a variável local
+        tipoBloco: comodoTipoBloco
       });
     } else {
       alert(`Por favor, preencha corretamente as dimensões do ${name}.`);
@@ -336,7 +336,6 @@ whatsappLink.addEventListener('click', (e) => {
     comodosListDisplay = calcData.comodos.map(comodo =>
       `${comodo.name}: Largura ${comodo.largura}m x Comp. ${comodo.comprimento}m (Área: ${comodo.area}m²)` +
       `<br>Vigotas: ${comodo.quantidadeVigotas} (${comodo.tamanhoTrilho}m)`
-      // Blocos removidos daqui
     );
 
     // Formatação para mensagem do WHATSAPP, com espaçamento e separador
@@ -344,7 +343,7 @@ whatsappLink.addEventListener('click', (e) => {
       `*${comodo.name}:*\n` +
       `Largura ${comodo.largura}m x Comp. ${comodo.comprimento}m (Area: ${comodo.area}m²)\n` +
       `Vigotas: ${comodo.quantidadeVigotas} (${comodo.tamanhoTrilho}m)\n` +
-      `___` // Adiciona o separador com uma nova linha
+      `___`
     );
   }
 
@@ -360,16 +359,19 @@ whatsappLink.addEventListener('click', (e) => {
   modalObraName.innerHTML = `Solicita ${tipoLaje === 'solicitar-medicao' ? 'medição para' : 'orçamento para'}:<br>${calcData.obraName}`;
   modalComodosList.innerHTML = comodosListDisplay.map(item => `<li>${item}</li>`).join('');
 
-  // Calcula total de blocos e determina o tipo de bloco para o resumo final
+  // Lógica para calcular e exibir total de blocos e tipo de bloco no resumo final
   let totalBlocos = 0;
-  let tipoBlocoResumo = ''; // Esta variável guardará o tipo de bloco para o resumo
-  let blocosInfo = ''; // String para a informação de blocos no final
+  let tipoBlocoResumo = '';
+  let blocosInfo = '';
 
   if (tipoLaje === 'resolver-vendedor' || tipoLaje === 'solicitar-medicao') {
-      blocosInfo = 'Blocos: Não inclusos'; // Texto específico para "resolver com o vendedor" ou "solicitar medição"
+      blocosInfo = 'Blocos: Não inclusos';
   } else if (calcData.comodos && calcData.comodos.length > 0) {
       totalBlocos = calcData.comodos.reduce((sum, comodo) => sum + (comodo.quantidadeBlocos || 0), 0);
-      tipoBlocoResumo = calcData.comodos[0].tipoBloco || ''; // Pega o tipo do primeiro cômodo
+      // Pega o tipo de bloco do primeiro cômodo, se existir
+      if (calcData.comodos[0].tipoBloco) {
+          tipoBlocoResumo = calcData.comodos[0].tipoBloco;
+      }
       blocosInfo = `Total de Blocos: ${totalBlocos || 'N/A'} ${tipoBlocoResumo ? `(${tipoBlocoResumo})` : ''}`;
   }
 
@@ -377,7 +379,7 @@ whatsappLink.addEventListener('click', (e) => {
     `Área Total: ${calcData.totalArea.toFixed(2)}m²`;
   // Adiciona a informação de blocos em uma nova linha no modal, se aplicável
   if (blocosInfo) {
-      modalTotalArea.innerHTML += `<br>${blocosInfo}`; // Usa a string formatada
+      modalTotalArea.innerHTML += `<br>${blocosInfo}`;
   }
 
   modalObservacoes.innerHTML = observacoes ? `Observações:<br>${observacoes}` : '';
@@ -394,11 +396,10 @@ whatsappLink.addEventListener('click', (e) => {
       '- - -',
       `Solicitação: ${tipoLaje === 'solicitar-medicao' ? 'Medição para' : 'Orçamento para'} ${calcData.obraName}`,
       '- - -',
-      comodosListWhatsapp.join('\n'), // Cada item já tem seu próprio "___" e quebra de linha
+      comodosListWhatsapp.join('\n'),
       '- - -',
       tipoLaje === 'solicitar-medicao' ? '' : `Área Total: ${calcData.totalArea.toFixed(2)}m²`,
-      // Informação de blocos e tipo de bloco aqui, abaixo da área total
-      blocosInfo, // Usa a string formatada
+      blocosInfo, // Usa a string formatada final que já contempla "Não inclusos" ou o total
       observacoes ? '- - -' : '',
       observacoes ? `Observações: ${observacoes}` : ''
     ].filter(line => line.trim()).join('\n');
