@@ -222,8 +222,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 3000);
 
         const removeButtons = document.querySelectorAll('.remove-comodo');
-        if (removeButtons.length > 0) {
-          removeButtons[0].style.display = 'none';
+        if (removeButtons.length > 0) { // Garante que o primeiro botão de remover do primeiro cômodo seja oculto se necessário
+          // Ajuste: Apenas o primeiro item na lista de botões encontrados (que será o do primeiro cômodo se ele for o único)
+          // deveria ter o display none, se essa for a lógica inicial.
+          // A lógica no innerHTML já cuida do display para os novos cômodos.
+          // Se o primeiro cômodo *sempre* deve ter o botão oculto, garanta que no HTML original ele já esteja hidden,
+          // ou que esta lógica seja mais precisa para selecionar apenas o botão do primeiro item.
+          // Por enquanto, vou manter a correção anterior que removeu a linha desnecessária,
+          // confiando na lógica do innerHTML e no ajuste abaixo para quando resta apenas um.
         }
       } catch (error) {
         console.error('Erro ao adicionar cômodo:', error);
@@ -237,7 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
         e.target.parentElement.remove();
         comodoCount--;
         if (comodoCount === 1) {
-          const removeButton = document.querySelector('.remove-comodo');
+          const removeButton = document.querySelector('.comodo-item .remove-comodo'); // Seleciona o botão de remover do único cômodo restante
           if (removeButton) removeButton.style.display = 'none';
         }
         const toast = document.createElement('div');
@@ -279,7 +285,7 @@ calculateButton.addEventListener('click', () => {
           quantidadeBlocos = Math.ceil(areaComodo * 2.2);
         } else if (tipoLaje.includes('eps-h740')) {
           quantidadeBlocos = Math.ceil(areaComodo * 2);
-        } else {
+        } else { // Presume tijolo-h8 ou outros que usam 12 blocos/m²
           quantidadeBlocos = Math.ceil(areaComodo * 12 * 1.01);
         }
       }
@@ -289,10 +295,10 @@ calculateButton.addEventListener('click', () => {
         comprimento: comprimento.toFixed(2),
         largura: largura.toFixed(2),
         area: area.toFixed(2),
-        tamanhoTrilho: largura.toFixed(2), // Novo nome
+        tamanhoTrilho: largura.toFixed(2),
         quantidadeVigotas,
         quantidadeBlocos,
-        tipoBloco: tipoLaje.includes('eps') ? 'EPS ' + tipoLaje.replace('eps-', '') : tipoLaje === 'tijolo-h8' ? 'Tijolo H8' : null
+        tipoBloco: tipoLaje.includes('eps') ? 'EPS ' + tipoLaje.replace('eps-', '').toUpperCase() : tipoLaje === 'tijolo-h8' ? 'Tijolo H8' : 'Cerâmico'
       });
     } else {
       alert(`Por favor, preencha corretamente as dimensões do ${name}.`);
@@ -324,18 +330,30 @@ whatsappLink.addEventListener('click', (e) => {
   calcData.observacoes = observacoes;
 
   const tipoLaje = calcData.tipoLaje;
-  let comodosList;
+  let comodosListDisplay; // Usado para exibir no modal
+  let comodosListWhatsapp; // Usado para a mensagem do WhatsApp
+
   if (tipoLaje === 'solicitar-medicao') {
-    comodosList = ['Gostaria de solicitar uma visita para medição.'];
+    comodosListDisplay = ['Gostaria de solicitar uma visita para medição.'];
+    comodosListWhatsapp = ['Gostaria de solicitar uma visita para medição.'];
   } else {
-    comodosList = calcData.comodos.map(comodo => 
-      `${comodo.name}:\n` +
-      `${comodo.largura}m de Largura x ${comodo.comprimento}m de Comprimento` + 
-      `\n ` +
-      `${comodo.quantidadeVigotas} trilhos de ${comodo.tamanhoTrilho}m`+ 
-      `n ___`
+    // Formatação para exibir no MODAL
+    comodosListDisplay = calcData.comodos.map(comodo =>
+      `${comodo.name}: Largura ${comodo.largura}m x Comp. ${comodo.comprimento}m (Área: ${comodo.area}m²)` +
+      `<br>Vigotas: ${comodo.quantidadeVigotas} (${comodo.tamanhoTrilho}m)` +
+      `<br>Blocos: ${comodo.quantidadeBlocos || 'N/A'} ${comodo.tipoBloco ? `(${comodo.tipoBloco})` : ''}`
+    );
+
+    // Formatação para mensagem do WHATSAPP, com espaçamento e separador
+    comodosListWhatsapp = calcData.comodos.map(comodo =>
+      `*${comodo.name}:*\n` +
+      `Largura ${comodo.largura}m x Comp. ${comodo.comprimento}m (Area: ${comodo.area}m²)\n` +
+      `Vigotas: ${comodo.quantidadeVigotas} (${comodo.tamanhoTrilho}m)\n` +
+      `Blocos: ${comodo.quantidadeBlocos || 'N/A'} ${comodo.tipoBloco ? `(${comodo.tipoBloco})` : ''}\n` +
+      `___` // Adiciona o separador com uma nova linha
     );
   }
+
   const modal = document.getElementById('budget-modal');
   const modalObraName = document.getElementById('modal-obra-name');
   const modalComodosList = document.getElementById('modal-comodos-list');
@@ -343,18 +361,31 @@ whatsappLink.addEventListener('click', (e) => {
   const modalContact = document.getElementById('modal-contact');
   const modalObservacoes = document.getElementById('modal-observacoes');
 
+  // Preenche o modal
   modalContact.innerHTML = `Contato:<br>${nome}<br>Telefone: ${telefone}<br>E-mail: ${email}`;
   modalObraName.innerHTML = `Solicita ${tipoLaje === 'solicitar-medicao' ? 'medição para' : 'orçamento para'}:<br>${calcData.obraName}`;
-  modalComodosList.innerHTML = comodosList.map(comodo => `<li>${comodo}</li>`).join('');
-  
-  // Calcular total de blocos
+  modalComodosList.innerHTML = comodosListDisplay.map(item => `<li>${item}</li>`).join(''); // Usando comodosListDisplay para o modal
+
+  // Calcula total de blocos e determina o tipo de bloco para o resumo final
   let totalBlocos = 0;
-  if (tipoLaje !== 'solicitar-medicao' && tipoLaje !== 'resolver-vendedor') {
+  let tipoBlocoResumo = ''; // Esta variável guardará o tipo de bloco para o resumo
+  if (tipoLaje !== 'solicitar-medicao' && tipoLaje !== 'resolver-vendedor' && calcData.comodos && calcData.comodos.length > 0) {
     totalBlocos = calcData.comodos.reduce((sum, comodo) => sum + (comodo.quantidadeBlocos || 0), 0);
+    // Tenta pegar o tipo de bloco do primeiro cômodo. Se todos forem do mesmo tipo, isso funcionará.
+    // Se houver mistura de tipos de bloco (o que seria estranho para uma mesma laje), a lógica precisaria ser mais complexa.
+    if (calcData.comodos[0].tipoBloco) {
+      tipoBlocoResumo = calcData.comodos[0].tipoBloco;
+    }
   }
 
-  modalTotalArea.innerHTML = tipoLaje === 'solicitar-medicao' ? '' : 
-    `Área Total: ${calcData.totalArea.toFixed(2)}m²<br>Total de Blocos: ${totalBlocos || 'N/A'} ${tipoBloco.toFixed()}`;
+  modalTotalArea.innerHTML = tipoLaje === 'solicitar-medicao' ? '' :
+    `Área Total: ${calcData.totalArea.toFixed(2)}m²`; // Remove blocos daqui para colocar abaixo
+  // Adiciona a informação de blocos em uma nova linha no modal, se aplicável
+  if (totalBlocos > 0 || tipoBlocoResumo) { // Garante que só mostra se houver blocos calculados ou tipo definido
+      modalTotalArea.innerHTML += `<br>Total de Blocos: ${totalBlocos || 'N/A'} ${tipoBlocoResumo ? `(${tipoBlocoResumo})` : ''}`;
+  }
+
+
   modalObservacoes.innerHTML = observacoes ? `Observações:<br>${observacoes}` : '';
 
   modal.style.display = 'flex';
@@ -369,13 +400,15 @@ whatsappLink.addEventListener('click', (e) => {
       '- - -',
       `Solicitação: ${tipoLaje === 'solicitar-medicao' ? 'Medição para' : 'Orçamento para'} ${calcData.obraName}`,
       '- - -',
-      comodosList.join('\n'),
+      // Usa comodosListWhatsapp para a mensagem, com o separador já incluído em cada item
+      comodosListWhatsapp.join('\n'), // Cada item já tem seu próprio "___" e quebra de linha
       '- - -',
       tipoLaje === 'solicitar-medicao' ? '' : `Área Total: ${calcData.totalArea.toFixed(2)}m²`,
-      tipoLaje === 'solicitar-medicao' ? '' : `Total de Blocos: ${totalBlocos || 'N/A'}`,
+      // Informação de blocos e tipo de bloco aqui, abaixo da área total
+      (tipoLaje === 'solicitar-medicao' || tipoLaje === 'resolver-vendedor') ? '' : `Total de Blocos: ${totalBlocos || 'N/A'} ${tipoBlocoResumo ? `(${tipoBlocoResumo})` : ''}`,
       observacoes ? '- - -' : '',
       observacoes ? `Observações: ${observacoes}` : ''
-    ].filter(line => line).join('\n');
+    ].filter(line => line.trim()).join('\n'); // Adicionado trim() no filter para linhas puramente vazias
     whatsappLink.href = `https://wa.me/5585992947431?text=${encodeURIComponent(mensagem)}`;
     window.open(whatsappLink.href, '_blank');
     modal.style.display = 'none';
@@ -408,8 +441,15 @@ backButtons.forEach((button, index) => {
       circle.addEventListener('click', () => {
         console.log('Círculo clicado:', circle.getAttribute('data-step'));
         const step = parseInt(circle.getAttribute('data-step'));
-        if (step === 0 || (step === 1 && calcData.obraName) || (step === 2 && calcData.tipoLaje) || (step === 3 && calcData.totalArea)) {
-          showStep(step);
+        // Verifica se os dados necessários para avançar para o passo clicado já existem
+        if (step === 0) {
+            showStep(step);
+        } else if (step === 1 && calcData.obraName) {
+            showStep(step);
+        } else if (step === 2 && calcData.tipoLaje) {
+             showStep(step);
+        } else if (step === 3 && calcData.comodos && calcData.comodos.length > 0 && calcData.totalArea) {
+            showStep(step);
         }
       });
     });
