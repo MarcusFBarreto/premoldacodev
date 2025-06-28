@@ -345,7 +345,15 @@ whatsappLink.addEventListener('click', (e) => {
   modalContact.innerHTML = `Contato:<br>${nome}<br>Telefone: ${telefone}<br>E-mail: ${email}`;
   modalObraName.innerHTML = `Solicita ${tipoLaje === 'solicitar-medicao' ? 'medição para' : 'orçamento para'}:<br>${calcData.obraName}`;
   modalComodosList.innerHTML = comodosList.map(comodo => `<li>${comodo}</li>`).join('');
-  modalTotalArea.innerHTML = tipoLaje === 'solicitar-medicao' ? '' : `Total em metros quadrados:<br>${calcData.totalArea.toFixed(2)}m²`;
+  
+  // Calcular total de blocos
+  let totalBlocos = 0;
+  if (tipoLaje !== 'solicitar-medicao' && tipoLaje !== 'resolver-vendedor') {
+    totalBlocos = calcData.comodos.reduce((sum, comodo) => sum + (comodo.quantidadeBlocos || 0), 0);
+  }
+
+  modalTotalArea.innerHTML = tipoLaje === 'solicitar-medicao' ? '' : 
+    `Área Total: ${calcData.totalArea.toFixed(2)}m²<br>Total de Blocos: ${totalBlocos || 'N/A'}`;
   modalObservacoes.innerHTML = observacoes ? `Observações:<br>${observacoes}` : '';
 
   modal.style.display = 'flex';
@@ -363,6 +371,7 @@ whatsappLink.addEventListener('click', (e) => {
       comodosList.join('\n'),
       '- - -',
       tipoLaje === 'solicitar-medicao' ? '' : `Área Total: ${calcData.totalArea.toFixed(2)}m²`,
+      tipoLaje === 'solicitar-medicao' ? '' : `Total de Blocos: ${totalBlocos || 'N/A'}`,
       observacoes ? '- - -' : '',
       observacoes ? `Observações: ${observacoes}` : ''
     ].filter(line => line).join('\n');
@@ -383,15 +392,15 @@ whatsappLink.addEventListener('click', (e) => {
   };
 });
 
-    // Navegação com botões Voltar
-    backButtons.forEach((button, index) => {
-      button.addEventListener('click', () => {
-        console.log('Botão Voltar clicado:', index);
-        if (index === 0 && calcStep1.classList.contains('active')) showStep(0);
-        else if (index === 1 && calcStep2.classList.contains('active')) showStep(1);
-        else if (index === 2 && calcStep3.classList.contains('active')) showStep(2);
-      });
-    });
+// Navegação com botões Voltar
+backButtons.forEach((button, index) => {
+  button.addEventListener('click', () => {
+    console.log('Botão Voltar clicado:', index);
+    if (index === 0 && calcStep1.classList.contains('active')) showStep(0);
+    else if (index === 1 && calcStep2.classList.contains('active')) showStep(1);
+    else if (index === 2 && calcStep3.classList.contains('active')) showStep(2);
+  });
+});
 
     // Navegação com círculos
     progressCircles.forEach(circle => {
