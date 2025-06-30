@@ -332,18 +332,15 @@ whatsappLink.addEventListener('click', (e) => {
     comodosListDisplay = ['Gostaria de solicitar uma visita para medição.'];
     comodosListWhatsapp = ['Gostaria de solicitar uma visita para medição.'];
   } else {
-    // Formatação para exibir no MODAL - remove info de blocos por cômodo
     comodosListDisplay = calcData.comodos.map(comodo =>
       `${comodo.name}: Largura ${comodo.largura}m x Comp. ${comodo.comprimento}m (Área: ${comodo.area}m²)` +
       `<br>Vigotas: ${comodo.quantidadeVigotas} (${comodo.tamanhoTrilho}m)`
     );
 
-    // Formatação para mensagem do WHATSAPP, com espaçamento e separador
     comodosListWhatsapp = calcData.comodos.map(comodo =>
       `*${comodo.name}:*\n` +
-      `Largura ${comodo.largura}m x Comp. ${comodo.comprimento}m (Area: ${comodo.area}m²)\n` +
-      `Vigotas: ${comodo.quantidadeVigotas} (${comodo.tamanhoTrilho}m)\n` +
-      `___`
+      `Largura ${comodo.largura}m x Comp. ${comodo.comprimento}m (Área: ${comodo.area}m²)\n` +
+      `Vigotas: ${comodo.quantidadeVigotas} (${comodo.tamanhoTrilho}m)\n`
     );
   }
 
@@ -354,32 +351,27 @@ whatsappLink.addEventListener('click', (e) => {
   const modalContact = document.getElementById('modal-contact');
   const modalObservacoes = document.getElementById('modal-observacoes');
 
-  // Preenche o modal
   modalContact.innerHTML = `Contato:<br>${nome}<br>Telefone: ${telefone}<br>E-mail: ${email}`;
   modalObraName.innerHTML = `Solicita ${tipoLaje === 'solicitar-medicao' ? 'medição para' : 'orçamento para'}:<br>${calcData.obraName}`;
   modalComodosList.innerHTML = comodosListDisplay.map(item => `<li>${item}</li>`).join('');
 
-  // Lógica para calcular e exibir total de blocos e tipo de bloco no resumo final
   let totalBlocos = 0;
-  let tipoBlocoResumo = '';
   let blocosInfo = '';
-
   if (tipoLaje === 'resolver-vendedor' || tipoLaje === 'solicitar-medicao') {
-      blocosInfo = 'Blocos: Não inclusos';
-  } else if (calcData.comodos && calcData.comodos.length > 0) {
-      totalBlocos = calcData.comodos.reduce((sum, comodo) => sum + (comodo.quantidadeBlocos || 0), 0);
-      // Pega o tipo de bloco do primeiro cômodo, se existir
-      if (calcData.comodos[0].tipoBloco) {
-          tipoBlocoResumo = calcData.comodos[0].tipoBloco;
-      }
-      blocosInfo = `Total de Blocos: ${totalBlocos || 'N/A'} ${tipoBlocoResumo ? `(${tipoBlocoResumo})` : ''}`;
+    blocosInfo = 'Blocos: Não inclusos';
+  } else {
+    totalBlocos = calcData.comodos.reduce((sum, comodo) => sum + (comodo.quantidadeBlocos || 0), 0);
+    let tipoBlocoResumo = '';
+    if (tipoLaje.includes('eps-h733')) tipoBlocoResumo = 'EPS H733';
+    else if (tipoLaje.includes('eps-h740')) tipoBlocoResumo = 'EPS H740';
+    else if (tipoLaje === 'tijolo-h8') tipoBlocoResumo = 'Cerâmico';
+    blocosInfo = `Total de Blocos: ${totalBlocos || 'N/A'} ${tipoBlocoResumo ? `(${tipoBlocoResumo})` : ''}`;
   }
 
-  modalTotalArea.innerHTML = tipoLaje === 'solicitar-medicao' ? '' :
+  modalTotalArea.innerHTML = tipoLaje === 'solicitar-medicao' ? '' : 
     `Área Total: ${calcData.totalArea.toFixed(2)}m²`;
-  // Adiciona a informação de blocos em uma nova linha no modal, se aplicável
   if (blocosInfo) {
-      modalTotalArea.innerHTML += `<br>${blocosInfo}`;
+    modalTotalArea.innerHTML += `<br>${blocosInfo}`;
   }
 
   modalObservacoes.innerHTML = observacoes ? `Observações:<br>${observacoes}` : '';
@@ -396,10 +388,10 @@ whatsappLink.addEventListener('click', (e) => {
       '- - -',
       `Solicitação: ${tipoLaje === 'solicitar-medicao' ? 'Medição para' : 'Orçamento para'} ${calcData.obraName}`,
       '- - -',
-      comodosListWhatsapp.join('\n'),
+      comodosListWhatsapp.join(''),
       '- - -',
       tipoLaje === 'solicitar-medicao' ? '' : `Área Total: ${calcData.totalArea.toFixed(2)}m²`,
-      blocosInfo, // Usa a string formatada final que já contempla "Não inclusos" ou o total
+      blocosInfo,
       observacoes ? '- - -' : '',
       observacoes ? `Observações: ${observacoes}` : ''
     ].filter(line => line.trim()).join('\n');
@@ -430,40 +422,40 @@ backButtons.forEach((button, index) => {
   });
 });
 
-    // Navegação com círculos
-    progressCircles.forEach(circle => {
-      circle.addEventListener('click', () => {
-        console.log('Círculo clicado:', circle.getAttribute('data-step'));
-        const step = parseInt(circle.getAttribute('data-step'));
-        if (step === 0) {
-            showStep(step);
-        } else if (step === 1 && calcData.obraName) {
-            showStep(step);
-        } else if (step === 2 && calcData.tipoLaje) {
-             showStep(step);
-        } else if (step === 3 && calcData.comodos && calcData.comodos.length > 0 && calcData.totalArea) {
-            showStep(step);
-        }
-      });
-    });
+// Navegação com círculos
+progressCircles.forEach(circle => {
+  circle.addEventListener('click', () => {
+    console.log('Círculo clicado:', circle.getAttribute('data-step'));
+    const step = parseInt(circle.getAttribute('data-step'));
+    if (step === 0) {
+      showStep(step);
+    } else if (step === 1 && calcData.obraName) {
+      showStep(step);
+    } else if (step === 2 && calcData.tipoLaje) {
+      showStep(step);
+    } else if (step === 3 && calcData.comodos && calcData.comodos.length > 0 && calcData.totalArea) {
+      showStep(step);
+    }
+  });
+});
 
-    showStep(0); // Inicia no Passo 0
-  } else {
-    console.error('Erro: Elementos da calculadora não encontrados:', {
-      calcStep0, calcStep1, calcStep2, calcStep3, whatsappLink, progressCircles, backButtons, nextButtons, addComodo, comodosContainer, calculateButton
-    });
-  }
+showStep(0); // Inicia no Passo 0
+} else {
+  console.error('Erro: Elementos da calculadora não encontrados:', {
+    calcStep0, calcStep1, calcStep2, calcStep3, whatsappLink, progressCircles, backButtons, nextButtons, addComodo, comodosContainer, calculateButton
+  });
+}
 
-  // Formulário de Contato
-  const contactForm = document.getElementById('contact-form');
-  if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const nome = e.target.nome.value;
-      const email = e.target.email.value;
-      const mensagem = e.target.mensagem.value;
-      alert(`Mensagem enviada!\nNome: ${nome}\nE-mail: ${email}\nMensagem: ${mensagem}`);
-      e.target.reset();
-    });
-  }
+// Formulário de Contato
+const contactForm = document.getElementById('contact-form');
+if (contactForm) {
+  contactForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const nome = e.target.nome.value;
+    const email = e.target.email.value;
+    const mensagem = e.target.mensagem.value;
+    alert(`Mensagem enviada!\nNome: ${nome}\nE-mail: ${email}\nMensagem: ${mensagem}`);
+    e.target.reset();
+  });
+}
 });
