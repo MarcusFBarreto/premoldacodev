@@ -337,12 +337,22 @@ whatsappLink.addEventListener('click', (e) => {
       `<br>Vigotas: ${comodo.quantidadeVigotas} (${comodo.tamanhoTrilho}m)`
     );
 
-    comodosListWhatsapp = calcData.comodos.map(comodo =>
-      `*${comodo.name}:*\n` +
-      `Largura ${comodo.largura}m x Comp. ${comodo.comprimento}m (Área: ${comodo.area}m²)\n` +
-      `Vigotas: ${comodo.quantidadeVigotas} (${comodo.tamanhoTrilho}m)\n`
-    );
-  }
+   comodosListWhatsapp = calcData.comodos.map(comodo =>
+  `*${comodo.name}:*\n` +
+  `Largura ${comodo.largura}m x Comp. ${comodo.comprimento}m (Área: ${comodo.area}m²)\n` +
+  `Vigotas: ${comodo.quantidadeVigotas} (${comodo.tamanhoTrilho}m)`
+);
+
+/* // Opção 2: Restaurar ___ com Espaçamento
+ 
+comodosListWhatsapp = calcData.comodos.map(comodo =>
+  `*${comodo.name}:*\n` +
+  `Largura ${comodo.largura}m x Comp. ${comodo.comprimento}m (Área: ${comodo.area}m²)\n` +
+  `Vigotas: ${comodo.quantidadeVigotas} (${comodo.tamanhoTrilho}m)\n` +
+  `___`
+);
+
+*/
 
   const modal = document.getElementById('budget-modal');
   const modalObraName = document.getElementById('modal-obra-name');
