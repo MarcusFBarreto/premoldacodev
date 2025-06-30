@@ -337,22 +337,12 @@ whatsappLink.addEventListener('click', (e) => {
       `<br>Vigotas: ${comodo.quantidadeVigotas} (${comodo.tamanhoTrilho}m)`
     );
 
-   comodosListWhatsapp = calcData.comodos.map(comodo =>
-  `*${comodo.name}:*\n` +
-  `Largura ${comodo.largura}m x Comp. ${comodo.comprimento}m (Área: ${comodo.area}m²)\n` +
-  `Vigotas: ${comodo.quantidadeVigotas} (${comodo.tamanhoTrilho}m)`
-);
-
-/* // Opção 2: Restaurar ___ com Espaçamento
- 
-comodosListWhatsapp = calcData.comodos.map(comodo =>
-  `*${comodo.name}:*\n` +
-  `Largura ${comodo.largura}m x Comp. ${comodo.comprimento}m (Área: ${comodo.area}m²)\n` +
-  `Vigotas: ${comodo.quantidadeVigotas} (${comodo.tamanhoTrilho}m)\n` +
-  `___`
-);
-
-*/
+    comodosListWhatsapp = calcData.comodos.map(comodo =>
+      `*${comodo.name}:*\n` +
+      `Largura ${comodo.largura}m x Comp. ${comodo.comprimento}m (Área: ${comodo.area}m²)\n` +
+      `Vigotas: ${comodo.quantidadeVigotas} (${comodo.tamanhoTrilho}m)`
+    );
+  }
 
   const modal = document.getElementById('budget-modal');
   const modalObraName = document.getElementById('modal-obra-name');
@@ -398,7 +388,7 @@ comodosListWhatsapp = calcData.comodos.map(comodo =>
       '- - -',
       `Solicitação: ${tipoLaje === 'solicitar-medicao' ? 'Medição para' : 'Orçamento para'} ${calcData.obraName}`,
       '- - -',
-      comodosListWhatsapp.join(''),
+      comodosListWhatsapp.join('\n\n'), // Duas quebras de linha para separação
       '- - -',
       tipoLaje === 'solicitar-medicao' ? '' : `Área Total: ${calcData.totalArea.toFixed(2)}m²`,
       blocosInfo,
