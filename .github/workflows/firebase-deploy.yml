@@ -1,25 +1,43 @@
-name: Deploy to Firebase Hosting on push
+# Nome do nosso fluxo de trabalho de deploy
+name: Deploy to Firebase Hosting on merge
 
+# Gatilho: Este fluxo roda sempre que houver um push no ramo 'main'
 on:
   push:
     branches:
-      - main # ou master, dependendo da sua branch principal
+      - main
 
+# Tarefas a serem executadas
 jobs:
   build_and_deploy:
+    # O tipo de máquina que vai rodar o script
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      - name: Use Node.js
+    # Passos da tarefa
+    steps:
+      # 1. Baixa o código do seu repositório para a máquina virtual
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Configura o ambiente Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18' # Ou a versão do Node.js que você usa
+          node-version: '20' # Usa a mesma versão do Node que você tem
 
-      - name: Install Firebase CLI
-        run: npm install -g firebase-tools
+      # 3. Instala todas as dependências do projeto
+      - name: Install dependencies
+        run: npm install
 
+      # 4. Roda o comando de build para gerar a pasta 'dist'
+      - name: Build project
+        run: npm run build
+
+      # 5. Faz o deploy para o Firebase
       - name: Deploy to Firebase
-        run: firebase deploy --only hosting --project premoldaco-webapp # Substitua pelo ID do seu projeto Firebase
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_PREMOLDACODEV }} # O nome do secret que você criou
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_PREMOLDACODEV }}'
+          channelId: live
+          projectId: premoldaco-webapp # <--- VERIFIQUE SE ESTE É O ID DO SEU PROJETO
