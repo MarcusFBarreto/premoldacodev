@@ -1,22 +1,14 @@
-// vite.config.js - VERSÃO FINAL E CORRETA
-import { resolve } from 'path';
+// vite.config.js
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  // Define a pasta 'src' como a raiz do nosso site para o Vite
+  // Diga ao Vite que a raiz do seu projeto é a pasta 'src'.
   root: 'src',
 
   build: {
-    // Define o diretório de saída como 'dist' na raiz do projeto
+    // Diga ao Vite para colocar o resultado do build na pasta 'dist' na raiz do projeto.
     outDir: '../dist',
+    // Limpa o diretório de build antes de compilar.
     emptyOutDir: true,
-    rollupOptions: {
-      // Especifica todos os arquivos HTML como pontos de entrada
-      input: {
-        main: resolve(__dirname, 'src/index.html'),
-        calculadora: resolve(__dirname, 'src/calculadora.html'),
-        404: resolve(__dirname, 'src/404.html'),
-      },
-    },
   },
 });
