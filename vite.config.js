@@ -9,6 +9,7 @@ export default defineConfig({
     // Diga ao Vite para colocar o resultado do build na pasta 'dist' na raiz do projeto.
     outDir: '../dist',
     // Limpa o diretório de build antes de compilar.
+    // para permiir novo deploy - desconsiderar
     emptyOutDir: true,
   },
 });
