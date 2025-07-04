@@ -15,6 +15,7 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, 'src/index.html'),
         calculadora: resolve(__dirname, 'src/calculadora.html'),
+        pushin: resolve(__dirname, 'src/pushin.html'), // <-- ADICIONE ESTA LINHA
         404: resolve(__dirname, 'src/404.html'),
       },
     },
