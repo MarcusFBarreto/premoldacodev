@@ -247,8 +247,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 3000);
       }
     });
-
-   // Passo 2: Inserção de Cômodos
+/* Backup de caĺculos já testados  
+  
+// Passo 2: Inserção de Cômodos
 calculateButton.addEventListener('click', () => {
   console.log('Passo 2: Calculando resultado.');
   let totalArea = 0;
@@ -304,6 +305,90 @@ calculateButton.addEventListener('click', () => {
   calcData.comodos = comodos;
   showStep(3);
 });
+
+// Passo 2: Inserção de Cômodos
+calculateButton.addEventListener('click', () => {
+  console.log('Passo 2: Calculando resultado com nova lógica.');
+  let totalArea = 0;
+  const comodos = [];
+  const comodoItems = comodosContainer.getElementsByClassName('comodo-item');
+  const tipoLaje = calcData.tipoLaje;
+  
+  // 1. Define o espaçamento correto para cada tipo de laje
+  let espacamento;
+  if (tipoLaje === 'eps-h740') {
+    espacamento = 0.50;
+  } else {
+    // Para H733 e Tijolo H8, o espaçamento é 0.42
+    espacamento = 0.42;
+  }
+
+  for (let i = 0; i < comodoItems.length; i++) {
+    // Usamos um seletor mais robusto para encontrar os inputs dentro de cada cômodo
+    const comodoItem = comodoItems[i];
+    const nameInput = comodoItem.querySelector('input[id^="comodo-name-"]');
+    const larguraInput = comodoItem.querySelector('input[id^="largura-"]');
+    const comprimentoInput = comodoItem.querySelector('input[id^="comprimento-"]');
+    
+    const name = nameInput.value.trim() || `Cômodo ${i + 1}`;
+    const largura = parseFloat(larguraInput.value);
+    const comprimento = parseFloat(comprimentoInput.value);
+
+    if (comprimento && largura && !isNaN(comprimento) && !isNaN(largura)) {
+      const area = comprimento * largura;
+      totalArea += area;
+
+      // 2. Nova lógica de arredondamento para a quantidade de vigotas (trilhos)
+      const resultadoVigotas = comprimento / espacamento;
+      
+      // Opção A: A nova regra que você solicitou (arredondamento padrão)
+      const quantidadeVigotas = Math.round(resultadoVigotas);
+      
+      // Opção B: A regra mais segura (sempre arredonda para cima). Recomendo discutir esta opção.
+      // const quantidadeVigotas = Math.ceil(resultadoVigotas);
+
+      let quantidadeBlocos = null;
+      let comodoTipoBloco = null;
+
+      if (tipoLaje === 'resolver-vendedor' || tipoLaje === 'solicitar-medicao') {
+        quantidadeBlocos = null;
+        comodoTipoBloco = null;
+      } else {
+        const areaComodo = largura * comprimento;
+        if (tipoLaje.includes('eps-h733')) {
+          quantidadeBlocos = Math.ceil(areaComodo * 2.2);
+          comodoTipoBloco = 'EPS H733';
+        } else if (tipoLaje.includes('eps-h740')) {
+          quantidadeBlocos = Math.ceil(areaComodo * 2);
+          comodoTipoBloco = 'EPS H740';
+        } else { // tijolo-h8
+          quantidadeBlocos = Math.ceil(areaComodo * 12 * 1.01);
+          comodoTipoBloco = 'Cerâmico';
+        }
+      }
+
+      comodos.push({
+        name,
+        comprimento: comprimento.toFixed(2),
+        largura: largura.toFixed(2),
+        area: area.toFixed(2),
+        tamanhoTrilho: largura.toFixed(2),
+        quantidadeVigotas,
+        quantidadeBlocos,
+        tipoBloco: comodoTipoBloco
+      });
+    } else {
+      alert(`Por favor, preencha corretamente as dimensões do ${name}.`);
+      return;
+    }
+  }
+  calcData.totalArea = totalArea;
+  calcData.comodos = comodos;
+  showStep(3);
+});
+
+*/
+
 
 // Passo 3: Revisão e Orçamento
 whatsappLink.addEventListener('click', (e) => {
