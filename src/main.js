@@ -255,7 +255,7 @@ calculateButton.addEventListener('click', () => {
   const comodos = [];
   const comodoItems = comodosContainer.getElementsByClassName('comodo-item');
   const tipoLaje = calcData.tipoLaje;
-  let espacamento = (tipoLaje === 'trelicada-eps') ? 0.50 : 0.43;
+  let espacamento = (tipoLaje === 'trelicada-eps') ? 0.50 : 0.42;
 
   for (let i = 1; i <= comodoItems.length; i++) {
     const name = document.getElementById(`comodo-name-${i}`)?.value.trim() || `Cômodo ${i}`;
@@ -274,7 +274,7 @@ calculateButton.addEventListener('click', () => {
       } else {
         const areaComodo = largura * comprimento;
         if (tipoLaje.includes('eps-h733')) {
-          quantidadeBlocos = Math.ceil(areaComodo * 2.2);
+          quantidadeBlocos = Math.ceil(areaComodo * 2.3);
           comodoTipoBloco = 'EPS H733';
         } else if (tipoLaje.includes('eps-h740')) {
           quantidadeBlocos = Math.ceil(areaComodo * 2);
