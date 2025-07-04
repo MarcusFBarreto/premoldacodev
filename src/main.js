@@ -488,6 +488,14 @@ whatsappLink.addEventListener('click', (e) => {
     modal.style.display = 'none';
   };
 
+   // --- NOVO CÓDIGO: Chamando a função do app Android ---
+    // Verificamos se a nossa "ponte" (o objeto 'Android') existe antes de chamá-la.
+    // Isso garante que o site não quebre se for aberto em um navegador normal.
+    if (window.Android && typeof window.Android.playSound === 'function') {
+        console.log('Chamando a função playSound() do Android.');
+        window.Android.playSound();
+    }
+
   const closeModal = document.querySelector('.close-modal');
   closeModal.onclick = () => {
     modal.style.display = 'none';
