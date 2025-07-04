@@ -306,6 +306,9 @@ calculateButton.addEventListener('click', () => {
   showStep(3);
 });
 
+*/
+
+
 // Passo 2: Inserção de Cômodos
 calculateButton.addEventListener('click', () => {
   console.log('Passo 2: Calculando resultado com nova lógica.');
@@ -387,7 +390,7 @@ calculateButton.addEventListener('click', () => {
   showStep(3);
 });
 
-*/
+
 
 
 // Passo 3: Revisão e Orçamento
