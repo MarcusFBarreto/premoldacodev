@@ -106,24 +106,24 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('Nenhum carrossel encontrado.');
   }
 
-  // Calculadora em 4 Passos
-  const calcStep0 = document.getElementById('calc-step0');
-  const calcStep1 = document.getElementById('calc-step1');
-  const calcStep2 = document.getElementById('calc-step2');
-  const calcStep3 = document.getElementById('calc-step3');
-  const whatsappLink = document.getElementById('whatsapp-link');
-  const progressCircles = document.querySelectorAll('.progress-circle');
-  const backButtons = document.querySelectorAll('.back-button');
-  const nextButtons = document.querySelectorAll('.next-button');
-  const addComodo = document.getElementById('add-comodo');
-  const comodosContainer = document.getElementById('comodos-container');
-  const calculateButton = document.getElementById('calculate-button');
+  // --- INÍCIO DA LÓGICA DA CALCULADORA ---
+  const calculatorPanel = document.getElementById('calculator');
+  if (calculatorPanel) {
+    const calcStep0 = document.getElementById('calc-step0');
+    const calcStep1 = document.getElementById('calc-step1');
+    const calcStep2 = document.getElementById('calc-step2');
+    const calcStep3 = document.getElementById('calc-step3');
+    const progressCircles = document.querySelectorAll('.progress-circle');
+    const backButtons = document.querySelectorAll('.back-button');
+    const nextButtons = document.querySelectorAll('.next-button');
+    const addComodo = document.getElementById('add-comodo');
+    const comodosContainer = document.getElementById('comodos-container');
+    const calculateButton = document.getElementById('calculate-button');
+    const submitQuoteBtn = document.getElementById('submit-quote-btn');
 
-  let calcData = {};
-  let comodoCount = 1;
+    let calcData = {};
+    let comodoCount = 1;
 
-  if (calcStep0 && calcStep1 && calcStep2 && calcStep3 && whatsappLink && progressCircles.length === 4 && backButtons.length === 3 && nextButtons.length === 3 && addComodo && comodosContainer && calculateButton) {
-    console.log('Todos os elementos da calculadora encontrados.');
     const showStep = (step) => {
       console.log(`Mostrando passo ${step}`);
       const footerMenu = document.querySelector('.footer-menu');
@@ -164,18 +164,16 @@ document.addEventListener('DOMContentLoaded', () => {
         backButtons[2].style.display = 'block';
         document.getElementById('nome').focus();
         if (footerMenu) footerMenu.style.display = 'none';
-        if (whatsappLink) {
-          whatsappLink.style.display = 'inline-block';
-          setTimeout(() => {
-            whatsappLink.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }, 200);
+        if (submitQuoteBtn) {
+            submitQuoteBtn.style.display = 'inline-block';
+             setTimeout(() => {
+                submitQuoteBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 200);
         }
       }
     };
 
-    // Passo 0: Nome da Obra
     nextButtons[0].addEventListener('click', () => {
-      console.log('Passo 0: Validando nome da obra.');
       const obraInput = document.getElementById('obra-name');
       if (!obraInput.value.trim()) {
         alert('Por favor, insira um nome para a obra.');
@@ -185,320 +183,194 @@ document.addEventListener('DOMContentLoaded', () => {
       showStep(1);
     });
 
-    // Passo 1: Tipo de Laje
     nextButtons[1].addEventListener('click', () => {
-      console.log('Passo 1: Salvando tipo de laje.');
       const tipoLaje = document.getElementById('tipo-laje').value;
+      if (!tipoLaje) {
+        alert('Por favor, selecione um tipo de laje.');
+        return;
+      }
       calcData.tipoLaje = tipoLaje;
       showStep(2);
     });
 
-    // Adicionar Cômodo
     addComodo.addEventListener('click', () => {
-      console.log('Adicionando cômodo. Contagem atual:', comodoCount);
-      try {
-        comodoCount++;
-        const comodoDiv = document.createElement('div');
-        comodoDiv.classList.add('comodo-item');
-        comodoDiv.innerHTML = `
-          <label for="comodo-name-${comodoCount}">Nome do Cômodo (opcional):</label>
-          <input type="text" id="comodo-name-${comodoCount}" placeholder="Ex.: Sala">
-          <label for="largura-${comodoCount}">Largura (m):</label>
-          <input type="number" id="largura-${comodoCount}" min="0.1" max="20" step="0.01" required aria-required="true" placeholder="Ex.: 4.00">
-          <label for="comprimento-${comodoCount}">Comprimento (m):</label>
-          <input type="number" id="comprimento-${comodoCount}" min="0.1" max="20" step="0.01" required aria-required="true" placeholder="Ex.: 5.00">
-          <button type="button" class="remove-comodo" style="display: ${comodoCount > 1 ? 'block' : 'none'};">Remover</button>
-        `;
-        comodosContainer.appendChild(comodoDiv);
-
-        const toast = document.createElement('div');
-        toast.className = 'toast';
-        toast.textContent = 'Cômodo adicionado!';
-        document.body.appendChild(toast);
-        toast.hidden = false;
-        setTimeout(() => {
-          toast.hidden = true;
-          toast.remove();
-        }, 3000);
-
-      } catch (error) {
-        console.error('Erro ao adicionar cômodo:', error);
-      }
+      comodoCount++;
+      const comodoDiv = document.createElement('div');
+      comodoDiv.classList.add('comodo-item');
+      comodoDiv.innerHTML = `
+        <label for="comodo-name-${comodoCount}">Nome do Cômodo (opcional):</label>
+        <input type="text" id="comodo-name-${comodoCount}" placeholder="Ex.: Sala">
+        <label for="largura-${comodoCount}">Largura (m):</label>
+        <input type="number" id="largura-${comodoCount}" min="0.1" max="20" step="0.01" required aria-required="true" placeholder="Ex.: 4.00">
+        <label for="comprimento-${comodoCount}">Comprimento (m):</label>
+        <input type="number" id="comprimento-${comodoCount}" min="0.1" max="20" step="0.01" required aria-required="true" placeholder="Ex.: 5.00">
+        <button type="button" class="remove-comodo">Remover</button>
+      `;
+      comodosContainer.appendChild(comodoDiv);
     });
 
-    // Remover Cômodo
     comodosContainer.addEventListener('click', (e) => {
-      if (e.target.classList.contains('remove-comodo')) {
-        console.log('Removendo cômodo.');
+      if (e.target.classList.contains('remove-comodo') && comodosContainer.children.length > 1) {
         e.target.parentElement.remove();
-        comodoCount--;
-        if (comodoCount === 1) {
-          const removeButton = document.querySelector('.comodo-item .remove-comodo');
-          if (removeButton) removeButton.style.display = 'none';
-        }
-        const toast = document.createElement('div');
-        toast.className = 'toast';
-        toast.textContent = 'Cômodo removido!';
-        document.body.appendChild(toast);
-        toast.hidden = false;
-        setTimeout(() => {
-          toast.hidden = true;
-          toast.remove();
-        }, 3000);
       }
     });
-/* Backup de caĺculos já testados  
-  
-// Passo 2: Inserção de Cômodos
-calculateButton.addEventListener('click', () => {
-  console.log('Passo 2: Calculando resultado.');
-  let totalArea = 0;
-  const comodos = [];
-  const comodoItems = comodosContainer.getElementsByClassName('comodo-item');
-  const tipoLaje = calcData.tipoLaje;
-  let espacamento = (tipoLaje === 'trelicada-eps') ? 0.50 : 0.42;
 
-  for (let i = 1; i <= comodoItems.length; i++) {
-    const name = document.getElementById(`comodo-name-${i}`)?.value.trim() || `Cômodo ${i}`;
-    const largura = parseFloat(document.getElementById(`largura-${i}`).value);
-    const comprimento = parseFloat(document.getElementById(`comprimento-${i}`).value);
-    if (comprimento && largura && !isNaN(comprimento) && !isNaN(largura)) {
-      const area = comprimento * largura;
-      totalArea += area;
-      const quantidadeVigotas = Math.ceil(comprimento / espacamento);
-      let quantidadeBlocos = null;
-      let comodoTipoBloco = null;
+    calculateButton.addEventListener('click', () => {
+      let totalArea = 0;
+      const comodos = [];
+      const comodoItems = comodosContainer.getElementsByClassName('comodo-item');
+      const tipoLaje = calcData.tipoLaje;
+      let espacamento = tipoLaje === 'eps-h740' ? 0.50 : 0.42;
 
-      if (tipoLaje === 'resolver-vendedor' || tipoLaje === 'solicitar-medicao') {
-        quantidadeBlocos = null;
-        comodoTipoBloco = null;
-      } else {
-        const areaComodo = largura * comprimento;
-        if (tipoLaje.includes('eps-h733')) {
-          quantidadeBlocos = Math.ceil(areaComodo * 2.3);
-          comodoTipoBloco = 'EPS H733';
-        } else if (tipoLaje.includes('eps-h740')) {
-          quantidadeBlocos = Math.ceil(areaComodo * 2);
-          comodoTipoBloco = 'EPS H740';
+      for (let i = 0; i < comodoItems.length; i++) {
+        const comodoItem = comodoItems[i];
+        const nameInput = comodoItem.querySelector('input[id^="comodo-name-"]');
+        const larguraInput = comodoItem.querySelector('input[id^="largura-"]');
+        const comprimentoInput = comodoItem.querySelector('input[id^="comprimento-"]');
+        const name = nameInput.value.trim() || `Cômodo ${i + 1}`;
+        const largura = parseFloat(larguraInput.value);
+        const comprimento = parseFloat(comprimentoInput.value);
+
+        if (!isNaN(largura) && !isNaN(comprimento) && largura > 0 && comprimento > 0) {
+          const area = comprimento * largura;
+          totalArea += area;
+          const quantidadeVigotas = Math.round(comprimento / espacamento);
+          let quantidadeBlocos = null;
+          let comodoTipoBloco = null;
+          
+          if (!['resolver-vendedor', 'solicitar-medicao'].includes(tipoLaje)) {
+            if (tipoLaje.includes('eps-h733')) {
+              quantidadeBlocos = Math.ceil(area * 2.2);
+              comodoTipoBloco = 'EPS H733';
+            } else if (tipoLaje.includes('eps-h740')) {
+              quantidadeBlocos = Math.ceil(area * 2);
+              comodoTipoBloco = 'EPS H740';
+            } else {
+              quantidadeBlocos = Math.ceil(area * 12 * 1.01);
+              comodoTipoBloco = 'Cerâmico';
+            }
+          }
+          comodos.push({ name, comprimento: comprimento.toFixed(2), largura: largura.toFixed(2), area: area.toFixed(2), tamanhoTrilho: largura.toFixed(2), quantidadeVigotas, quantidadeBlocos, tipoBloco: comodoTipoBloco });
         } else {
-          quantidadeBlocos = Math.ceil(areaComodo * 12 * 1.01);
-          comodoTipoBloco = 'Cerâmico';
+          alert(`Por favor, preencha corretamente as dimensões do ${name}.`);
+          return;
         }
       }
+      calcData.totalArea = totalArea;
+      calcData.comodos = comodos;
+      showStep(3);
+    });
 
-      comodos.push({
-        name,
-        comprimento: comprimento.toFixed(2),
-        largura: largura.toFixed(2),
-        area: area.toFixed(2),
-        tamanhoTrilho: largura.toFixed(2),
-        quantidadeVigotas,
-        quantidadeBlocos,
-        tipoBloco: comodoTipoBloco
-      });
-    } else {
-      alert(`Por favor, preencha corretamente as dimensões do ${name}.`);
-      return;
+    /**
+     * Função para controlar o estado visual do botão de envio.
+     * Chamada pelo Kotlin para dar feedback real ao usuário.
+     * @param {'idle' | 'sending' | 'success' | 'error'} state - O estado desejado.
+     * @param {string} [message=''] - Uma mensagem de erro opcional.
+     */
+    function updateSubmitButton(state, message = '') {
+        if (!submitQuoteBtn) return;
+        let errorMsgEl = document.getElementById('submit-error-msg');
+        if (!errorMsgEl) {
+            errorMsgEl = document.createElement('p');
+            errorMsgEl.id = 'submit-error-msg';
+            errorMsgEl.style.color = 'red';
+            errorMsgEl.style.marginTop = '10px';
+            submitQuoteBtn.after(errorMsgEl);
+        }
+        errorMsgEl.textContent = '';
+
+        switch (state) {
+            case 'sending':
+                submitQuoteBtn.textContent = 'Aguardando envio...';
+                submitQuoteBtn.disabled = true;
+                break;
+            case 'success':
+                submitQuoteBtn.textContent = 'Enviado! ✅';
+                submitQuoteBtn.disabled = true;
+                break;
+            case 'error':
+                submitQuoteBtn.textContent = 'Tente Novamente';
+                submitQuoteBtn.disabled = false;
+                errorMsgEl.textContent = message || 'Falha no envio. Verifique sua conexão e tente novamente.';
+                break;
+            case 'idle':
+            default:
+                submitQuoteBtn.textContent = 'Enviar Orçamento';
+                submitQuoteBtn.disabled = false;
+                break;
+        }
     }
-  }
-  calcData.totalArea = totalArea;
-  calcData.comodos = comodos;
-  showStep(3);
-});
-
-*/
+    // Disponibiliza a função globalmente para ser chamada pelo Kotlin
+    window.updateSubmitButton = updateSubmitButton;
 
 
-// Passo 2: Inserção de Cômodos
-calculateButton.addEventListener('click', () => {
-  console.log('Passo 2: Calculando resultado com nova lógica.');
-  let totalArea = 0;
-  const comodos = [];
-  const comodoItems = comodosContainer.getElementsByClassName('comodo-item');
-  const tipoLaje = calcData.tipoLaje;
-  
-  // 1. Define o espaçamento correto para cada tipo de laje
-  let espacamento;
-  if (tipoLaje === 'eps-h740') {
-    espacamento = 0.50;
+    if (submitQuoteBtn) {
+      submitQuoteBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        console.log('Botão "Enviar Orçamento" clicado.');
+
+        const nome = document.getElementById('nome').value.trim();
+        const telefone = document.getElementById('telefone').value;
+        const email = document.getElementById('email').value.trim();
+        const observacoes = document.getElementById('observacoes').value.trim();
+
+        if (!nome || !/^[0-9]{10,11}$/.test(telefone) || !email.includes('@')) {
+          alert('Por favor, preencha todos os campos de contato corretamente.');
+          return;
+        }
+
+        updateSubmitButton('idle'); // Limpa mensagens de erro antes de tentar enviar
+
+        const orcamentoData = {
+            clienteNome: nome,
+            clienteTelefone: telefone,
+            clienteEmail: email,
+            clienteObservacoes: observacoes,
+            obraName: calcData.obraName,
+            tipoLaje: calcData.tipoLaje,
+            totalArea: calcData.totalArea.toFixed(2),
+            comodos: calcData.comodos,
+            status: 'ENVIADO'
+        };
+
+        if (window.Android && typeof window.Android.submitQuote === 'function') {
+            updateSubmitButton('sending'); // Muda o estado para "enviando"
+            window.Android.submitQuote(JSON.stringify(orcamentoData));
+        } else {
+            alert('Esta função está disponível apenas no aplicativo Premoldaço.');
+        }
+      });
+    }
+
+    backButtons.forEach((button, index) => {
+      button.addEventListener('click', () => {
+        showStep(index);
+      });
+    });
+
+    progressCircles.forEach(circle => {
+        circle.addEventListener('click', () => {
+            const step = parseInt(circle.getAttribute('data-step'));
+            // Adicione aqui a lógica de validação para permitir saltar para os passos
+            showStep(step);
+        });
+    });
+
+    showStep(0);
   } else {
-    // Para H733 e Tijolo H8, o espaçamento é 0.42
-    espacamento = 0.42;
+    console.log('Calculadora não encontrada nesta página.');
   }
 
-  for (let i = 0; i < comodoItems.length; i++) {
-    // Usamos um seletor mais robusto para encontrar os inputs dentro de cada cômodo
-    const comodoItem = comodoItems[i];
-    const nameInput = comodoItem.querySelector('input[id^="comodo-name-"]');
-    const larguraInput = comodoItem.querySelector('input[id^="largura-"]');
-    const comprimentoInput = comodoItem.querySelector('input[id^="comprimento-"]');
-    
-    const name = nameInput.value.trim() || `Cômodo ${i + 1}`;
-    const largura = parseFloat(larguraInput.value);
-    const comprimento = parseFloat(comprimentoInput.value);
-
-    if (comprimento && largura && !isNaN(comprimento) && !isNaN(largura)) {
-      const area = comprimento * largura;
-      totalArea += area;
-
-      // 2. Nova lógica de arredondamento para a quantidade de vigotas (trilhos)
-      const resultadoVigotas = comprimento / espacamento;
-      
-      // Opção A: A nova regra que você solicitou (arredondamento padrão)
-      const quantidadeVigotas = Math.round(resultadoVigotas);
-      
-      // Opção B: A regra mais segura (sempre arredonda para cima). Recomendo discutir esta opção.
-      // const quantidadeVigotas = Math.ceil(resultadoVigotas);
-
-      let quantidadeBlocos = null;
-      let comodoTipoBloco = null;
-
-      if (tipoLaje === 'resolver-vendedor' || tipoLaje === 'solicitar-medicao') {
-        quantidadeBlocos = null;
-        comodoTipoBloco = null;
-      } else {
-        const areaComodo = largura * comprimento;
-        if (tipoLaje.includes('eps-h733')) {
-          quantidadeBlocos = Math.ceil(areaComodo * 2.2);
-          comodoTipoBloco = 'EPS H733';
-        } else if (tipoLaje.includes('eps-h740')) {
-          quantidadeBlocos = Math.ceil(areaComodo * 2);
-          comodoTipoBloco = 'EPS H740';
-        } else { // tijolo-h8
-          quantidadeBlocos = Math.ceil(areaComodo * 12 * 1.01);
-          comodoTipoBloco = 'Cerâmico';
-        }
-      }
-
-      comodos.push({
-        name,
-        comprimento: comprimento.toFixed(2),
-        largura: largura.toFixed(2),
-        area: area.toFixed(2),
-        tamanhoTrilho: largura.toFixed(2),
-        quantidadeVigotas,
-        quantidadeBlocos,
-        tipoBloco: comodoTipoBloco
-      });
-    } else {
-      alert(`Por favor, preencha corretamente as dimensões do ${name}.`);
-      return;
-    }
+  // Formulário de Contato
+  const contactForm = document.getElementById('contact-form');
+  if (contactForm) {
+    contactForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const nome = e.target.nome.value;
+      const email = e.target.email.value;
+      const mensagem = e.target.mensagem.value;
+      alert(`Mensagem enviada!\nNome: ${nome}\nE-mail: ${email}\nMensagem: ${mensagem}`);
+      e.target.reset();
+    });
   }
-  calcData.totalArea = totalArea;
-  calcData.comodos = comodos;
-  showStep(3);
-});
-
-
-
-
-// Passo 3: Revisão e Orçamento
-const submitQuoteBtn = document.getElementById('submit-quote-btn');
-
-submitQuoteBtn.addEventListener('click', (e) => {
-    console.log('Botão "Enviar Orçamento" clicado.');
-    e.preventDefault();
-
-    // 1. Validação dos campos (mesma lógica que você já tem)
-    const nome = document.getElementById('nome').value.trim();
-    const telefone = document.getElementById('telefone').value;
-    const email = document.getElementById('email').value.trim();
-    const observacoes = document.getElementById('observacoes').value.trim();
-
-    if (!nome || !/^[0-9]{10,11}$/.test(telefone) || !email.includes('@')) {
-        alert('Por favor, preencha todos os campos de contato corretamente.');
-        return;
-    }
-    
-    // 2. Monta o objeto JSON com todos os dados
-    const orcamentoData = {
-        clienteNome: nome,
-        clienteTelefone: telefone,
-        clienteEmail: email,
-        clienteObservacoes: observacoes,
-        obraName: calcData.obraName,
-        tipoLaje: calcData.tipoLaje,
-        totalArea: calcData.totalArea.toFixed(2),
-        comodos: calcData.comodos.map(c => ({
-            name: c.name,
-            largura: c.largura,
-            comprimento: c.comprimento,
-            area: c.area,
-            tamanhoTrilho: c.tamanhoTrilho,
-            quantidadeVigotas: c.quantidadeVigotas,
-            quantidadeBlocos: c.quantidadeBlocos,
-            tipoBloco: c.tipoBloco
-        })),
-        status: 'ENVIADO' // Nosso status inicial
-    };
-
-    // 3. Verifica se está no App e chama a função nativa
-    if (window.Android && typeof window.Android.submitQuote === 'function') {
-        console.log('Enviando dados para o App Android...');
-        // Converte o objeto para uma string JSON e envia
-        window.Android.submitQuote(JSON.stringify(orcamentoData));
-        
-        // Exibe um feedback visual imediato
-        submitQuoteBtn.textContent = 'Enviado!';
-        submitQuoteBtn.disabled = true;
-
-    } else {
-        // Fallback para o navegador (pode ser um alerta ou o link do WhatsApp)
-        console.log('Não está no App. Usando fallback.');
-        alert('Função de envio direto disponível apenas no aplicativo Premoldaço. Por favor, use o compartilhamento via WhatsApp.');
-        
-        // Aqui podemos reativar a lógica do WhatsApp como fallback
-        const whatsappLink = document.getElementById('whatsapp-link');
-        whatsappLink.style.display = 'inline-block'; // Mostra o link do WhatsApp
-        // Você pode chamar a função que gera o link do WhatsApp aqui
-    }
-});
-
-// Navegação com botões Voltar
-backButtons.forEach((button, index) => {
-  button.addEventListener('click', () => {
-    console.log('Botão Voltar clicado:', index);
-    if (index === 0 && calcStep1.classList.contains('active')) showStep(0);
-    else if (index === 1 && calcStep2.classList.contains('active')) showStep(1);
-    else if (index === 2 && calcStep3.classList.contains('active')) showStep(2);
-  });
-});
-
-// Navegação com círculos
-progressCircles.forEach(circle => {
-  circle.addEventListener('click', () => {
-    console.log('Círculo clicado:', circle.getAttribute('data-step'));
-    const step = parseInt(circle.getAttribute('data-step'));
-    if (step === 0) {
-      showStep(step);
-    } else if (step === 1 && calcData.obraName) {
-      showStep(step);
-    } else if (step === 2 && calcData.tipoLaje) {
-      showStep(step);
-    } else if (step === 3 && calcData.comodos && calcData.comodos.length > 0 && calcData.totalArea) {
-      showStep(step);
-    }
-  });
-});
-
-showStep(0); // Inicia no Passo 0
-} else {
-  console.error('Erro: Elementos da calculadora não encontrados:', {
-    calcStep0, calcStep1, calcStep2, calcStep3, whatsappLink, progressCircles, backButtons, nextButtons, addComodo, comodosContainer, calculateButton
-  });
-}
-
-// Formulário de Contato
-const contactForm = document.getElementById('contact-form');
-if (contactForm) {
-  contactForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const nome = e.target.nome.value;
-    const email = e.target.email.value;
-    const mensagem = e.target.mensagem.value;
-    alert(`Mensagem enviada!\nNome: ${nome}\nE-mail: ${email}\nMensagem: ${mensagem}`);
-    e.target.reset();
-  });
-}
 });
