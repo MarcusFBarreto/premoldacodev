@@ -394,118 +394,65 @@ calculateButton.addEventListener('click', () => {
 
 
 // Passo 3: Revisão e Orçamento
-whatsappLink.addEventListener('click', (e) => {
-  console.log('Passo 3: Gerando orçamento. Evento disparado:', e.type);
-  e.preventDefault();
-  const nome = document.getElementById('nome').value.trim();
-  const telefone = document.getElementById('telefone').value;
-  const email = document.getElementById('email').value.trim();
-  const observacoes = document.getElementById('observacoes').value.trim();
+const submitQuoteBtn = document.getElementById('submit-quote-btn');
 
-  if (!nome || !/^[0-9]{10,11}$/.test(telefone) || !email.includes('@')) {
-    alert('Por favor, preencha todos os campos de contato corretamente.');
-    return;
-  }
+submitQuoteBtn.addEventListener('click', (e) => {
+    console.log('Botão "Enviar Orçamento" clicado.');
+    e.preventDefault();
 
-  calcData.nome = nome;
-  calcData.telefone = telefone;
-  calcData.email = email;
-  calcData.observacoes = observacoes;
+    // 1. Validação dos campos (mesma lógica que você já tem)
+    const nome = document.getElementById('nome').value.trim();
+    const telefone = document.getElementById('telefone').value;
+    const email = document.getElementById('email').value.trim();
+    const observacoes = document.getElementById('observacoes').value.trim();
 
-  const tipoLaje = calcData.tipoLaje;
-  let comodosListDisplay;
-  let comodosListWhatsapp;
-
-  if (tipoLaje === 'solicitar-medicao') {
-    comodosListDisplay = ['Gostaria de solicitar uma visita para medição.'];
-    comodosListWhatsapp = ['Gostaria de solicitar uma visita para medição.'];
-  } else {
-    comodosListDisplay = calcData.comodos.map(comodo =>
-      `${comodo.name}: Largura ${comodo.largura}m x Comp. ${comodo.comprimento}m (Área: ${comodo.area}m²)` +
-      `<br>Vigotas: ${comodo.quantidadeVigotas} (${comodo.tamanhoTrilho}m)`
-    );
-
-    comodosListWhatsapp = calcData.comodos.map(comodo =>
-      `*${comodo.name}:*\n` +
-      `Largura ${comodo.largura}m x Comp. ${comodo.comprimento}m (Área: ${comodo.area}m²)\n` +
-      `Vigotas: ${comodo.quantidadeVigotas} (${comodo.tamanhoTrilho}m)`
-    );
-  }
-
-  const modal = document.getElementById('budget-modal');
-  const modalObraName = document.getElementById('modal-obra-name');
-  const modalComodosList = document.getElementById('modal-comodos-list');
-  const modalTotalArea = document.getElementById('modal-total-area');
-  const modalContact = document.getElementById('modal-contact');
-  const modalObservacoes = document.getElementById('modal-observacoes');
-
-  modalContact.innerHTML = `Contato:<br>${nome}<br>Telefone: ${telefone}<br>E-mail: ${email}`;
-  modalObraName.innerHTML = `Solicita ${tipoLaje === 'solicitar-medicao' ? 'medição para' : 'orçamento para'}:<br>${calcData.obraName}`;
-  modalComodosList.innerHTML = comodosListDisplay.map(item => `<li>${item}</li>`).join('');
-
-  let totalBlocos = 0;
-  let blocosInfo = '';
-  if (tipoLaje === 'resolver-vendedor' || tipoLaje === 'solicitar-medicao') {
-    blocosInfo = 'Blocos: Não inclusos';
-  } else {
-    totalBlocos = calcData.comodos.reduce((sum, comodo) => sum + (comodo.quantidadeBlocos || 0), 0);
-    let tipoBlocoResumo = '';
-    if (tipoLaje.includes('eps-h733')) tipoBlocoResumo = 'EPS H733';
-    else if (tipoLaje.includes('eps-h740')) tipoBlocoResumo = 'EPS H740';
-    else if (tipoLaje === 'tijolo-h8') tipoBlocoResumo = 'Cerâmico';
-    blocosInfo = `Total de Blocos: ${totalBlocos || 'N/A'} ${tipoBlocoResumo ? `(${tipoBlocoResumo})` : ''}`;
-  }
-
-  modalTotalArea.innerHTML = tipoLaje === 'solicitar-medicao' ? '' : 
-    `Área Total: ${calcData.totalArea.toFixed(2)}m²`;
-  if (blocosInfo) {
-    modalTotalArea.innerHTML += `<br>${blocosInfo}`;
-  }
-
-  modalObservacoes.innerHTML = observacoes ? `Observações:<br>${observacoes}` : '';
-
-  modal.style.display = 'flex';
-  console.log('Modal exibido');
-
-  const confirmBudget = document.getElementById('confirm-budget');
-  confirmBudget.onclick = () => {
-    console.log('Confirmando orçamento');
-    const mensagem = [
-      `${nome}`,
-      `Telefone: ${telefone}\nE-mail: ${email}`,
-      '- - -',
-      `Solicitação: ${tipoLaje === 'solicitar-medicao' ? 'Medição para' : 'Orçamento para'} ${calcData.obraName}`,
-      '- - -',
-      comodosListWhatsapp.join('\n\n'), // Duas quebras de linha para separação
-      '- - -',
-      tipoLaje === 'solicitar-medicao' ? '' : `Área Total: ${calcData.totalArea.toFixed(2)}m²`,
-      blocosInfo,
-      observacoes ? '- - -' : '',
-      observacoes ? `Observações: ${observacoes}` : ''
-    ].filter(line => line.trim()).join('\n');
-    whatsappLink.href = `https://wa.me/5585992947431?text=${encodeURIComponent(mensagem)}`;
-    window.open(whatsappLink.href, '_blank');
-    modal.style.display = 'none';
-  };
-
-   // --- NOVO CÓDIGO: Chamando a função do app Android ---
-    // Verificamos se a nossa "ponte" (o objeto 'Android') existe antes de chamá-la.
-    // Isso garante que o site não quebre se for aberto em um navegador normal.
-    if (window.Android && typeof window.Android.playSound === 'function') {
-        console.log('Chamando a função playSound() do Android.');
-        window.Android.playSound();
+    if (!nome || !/^[0-9]{10,11}$/.test(telefone) || !email.includes('@')) {
+        alert('Por favor, preencha todos os campos de contato corretamente.');
+        return;
     }
+    
+    // 2. Monta o objeto JSON com todos os dados
+    const orcamentoData = {
+        clienteNome: nome,
+        clienteTelefone: telefone,
+        clienteEmail: email,
+        clienteObservacoes: observacoes,
+        obraName: calcData.obraName,
+        tipoLaje: calcData.tipoLaje,
+        totalArea: calcData.totalArea.toFixed(2),
+        comodos: calcData.comodos.map(c => ({
+            name: c.name,
+            largura: c.largura,
+            comprimento: c.comprimento,
+            area: c.area,
+            tamanhoTrilho: c.tamanhoTrilho,
+            quantidadeVigotas: c.quantidadeVigotas,
+            quantidadeBlocos: c.quantidadeBlocos,
+            tipoBloco: c.tipoBloco
+        })),
+        status: 'ENVIADO' // Nosso status inicial
+    };
 
-  const closeModal = document.querySelector('.close-modal');
-  closeModal.onclick = () => {
-    modal.style.display = 'none';
-  };
+    // 3. Verifica se está no App e chama a função nativa
+    if (window.Android && typeof window.Android.submitQuote === 'function') {
+        console.log('Enviando dados para o App Android...');
+        // Converte o objeto para uma string JSON e envia
+        window.Android.submitQuote(JSON.stringify(orcamentoData));
+        
+        // Exibe um feedback visual imediato
+        submitQuoteBtn.textContent = 'Enviado!';
+        submitQuoteBtn.disabled = true;
 
-  window.onclick = (event) => {
-    if (event.target === modal) {
-      modal.style.display = 'none';
+    } else {
+        // Fallback para o navegador (pode ser um alerta ou o link do WhatsApp)
+        console.log('Não está no App. Usando fallback.');
+        alert('Função de envio direto disponível apenas no aplicativo Premoldaço. Por favor, use o compartilhamento via WhatsApp.');
+        
+        // Aqui podemos reativar a lógica do WhatsApp como fallback
+        const whatsappLink = document.getElementById('whatsapp-link');
+        whatsappLink.style.display = 'inline-block'; // Mostra o link do WhatsApp
+        // Você pode chamar a função que gera o link do WhatsApp aqui
     }
-  };
 });
 
 // Navegação com botões Voltar
