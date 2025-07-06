@@ -44,7 +44,6 @@ auth.onAuthStateChanged(user => {
     }
 });
 
-btnAdminLogin.addEventListener('click', () => { /* ...código sem alteração... */ });
 btnAdminLogout.addEventListener('click', () => { /* ...código sem alteração... */ });
 
 
