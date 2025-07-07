@@ -94,6 +94,22 @@
         color: #555;
     }
 
+    .admin-header {
+    display: flex;
+    justify-content: space-between; /* Mágica: empurra os filhos para as extremidades */
+    align-items: center;          /* Alinha verticalmente ao centro */
+}
+
+.admin-header h2 {
+    margin: 0; /* Remove margem extra do título para um alinhamento perfeito */
+}
+
+.admin-user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem; /* Adiciona um espaço elegante entre o e-mail e o botão */
+}
+
 </style>
     
 </head>
@@ -109,12 +125,13 @@
 
     <div id="admin-panel" class="admin-container" style="display: none;">
         <div class="admin-header">
-            <h2>Orçamentos Recebidos</h2>
-            <div>
-                <span id="admin-user-email" style="margin-right: 20px;"></span>
-                <button id="btn-admin-logout">Sair</button>
-            </div>
-        </div>
+    <h2>Orçamentos Recebidos</h2>
+
+    <div class="admin-user-info">
+        <span id="admin-user-email"></span>
+        <button id="btn-admin-logout">Sair</button>
+    </div>
+</div>
         
         <div id="loader">Carregando orçamentos...</div>
         
