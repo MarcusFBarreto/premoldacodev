@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css"> <style>
         /* Estilos específicos para o painel */
     
-    /* Estilos gerais */
+     /* Estilos gerais */
     :root {
         --cor-primaria: #005a9c;
         --cor-fundo: #f4f6f9;
@@ -17,6 +17,11 @@
         --status-enviado: #0d6efd;
         --status-analise: #ffc107;
         --status-aprovado: #198754;
+        --status-producao: #6f42c1; /* Roxo */
+        --status-pronto: #0dcaf0;   /* Ciano */
+        --status-finalizado: #6c757d;   /* Cinza */
+        --cor-perigo: #dc3545; /* Vermelho */
+        --cor-perigo-hover: #c82333; /* Vermelho mais escuro */
     }
     body {
         background-color: var(--cor-fundo);
@@ -24,30 +29,6 @@
         margin: 0;
         color: var(--cor-texto);
     }
-
-    /* Estilos para a Área de Ações do Card */
-.quote-actions {
-    margin-top: 1.5rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--cor-borda);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.quote-actions label {
-    font-weight: bold;
-    font-size: 0.9rem;
-}
-
-.status-select {
-    padding: 0.5rem;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    font-size: 0.9rem;
-}
-/* Estilos do Painel Administrativo */
     .admin-container {
         max-width: 1200px;
         margin: 2rem auto;
@@ -63,6 +44,12 @@
         border-bottom: 1px solid var(--cor-borda);
         padding-bottom: 1rem;
         margin-bottom: 2rem;
+    }
+    .admin-header h2 { margin: 0; }
+    .admin-user-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
     }
     #loader {
         text-align: center;
@@ -92,6 +79,49 @@
     .quote-header h3 {
         margin: 0;
         color: var(--cor-primaria);
+
+.quote-actions {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--cor-borda);
+    display: flex;
+    justify-content: space-between; /* Alinha itens nas extremidades */
+    align-items: center;
+}
+
+.status-changer {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.status-changer label {
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.status-select {
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    font-size: 0.9rem;
+}
+
+.cancel-button {
+    padding: 0.5rem 1rem;
+    border: none;
+    background-color: var(--cor-perigo);
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+.cancel-button:hover {
+    background-color: var(--cor-perigo-hover);
+}
+
     }
     .status-badge {
         padding: 0.3rem 0.8rem;
@@ -100,38 +130,45 @@
         font-weight: bold;
         color: #fff;
         text-transform: uppercase;
+        white-space: nowrap;
     }
-    .status-enviado { background-color: var(--status-enviado); }
-    .status-em-análise { background-color: var(--status-analise); color: #000; }
-    .status-aprovado { background-color: var(--status-aprovado); }
-
     .quote-details {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         gap: 1rem;
         font-size: 0.9rem;
     }
-    .quote-details p {
-        margin: 0.25rem 0;
+    .quote-details p { margin: 0.25rem 0; }
+    .quote-details strong { color: #555; }
+    .quote-actions {
+        margin-top: 1.5rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--cor-borda);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
     }
-    .quote-details strong {
-        color: #555;
+    .quote-actions label {
+        font-weight: bold;
+        font-size: 0.9rem;
     }
-
-    .admin-header {
-    display: flex;
-    justify-content: space-between; /* Mágica: empurra os filhos para as extremidades */
-    align-items: center;          /* Alinha verticalmente ao centro */
-}
-
-.admin-header h2 {
-    margin: 0; /* Remove margem extra do título para um alinhamento perfeito */
-}
-
-.admin-user-info {
-    display: flex;
-    align-items: center;
-    gap: 1rem; /* Adiciona um espaço elegante entre o e-mail e o botão */
+    .status-select {
+        padding: 0.5rem;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        background-color: #fff;
+        font-size: 0.9rem;
+    }
+    
+    /* Cores para cada Status */
+    .status-enviado { background-color: var(--status-enviado); }
+    .status-em-análise { background-color: var(--status-analise); color: #000; }
+    .status-aprovado { background-color: var(--status-aprovado); }
+    .status-em-produção { background-color: var(--status-producao); }
+    .status-pronto-p-entrega { background-color: var(--status-pronto); color: #000; }
+    .status-finalizado { background-color: var(--status-finalizado); }
+    .status-cancelado { 
+    background-color: var(--cor-perigo); 
 }
 
 </style>
