@@ -303,15 +303,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
 window.preencherDadosUsuario = function(email, nome, telefone) {
     console.log(`Recebendo dados para pré-preenchimento: ${email}, ${nome}, ${telefone}`);
-    const campoNome = document.getElementById('nome');
     const campoEmail = document.getElementById('email');
+    const campoNome = document.getElementById('nome');
     const campoTelefone = document.getElementById('telefone');
 
-    if (campoNome && nome) {
-        campoNome.value = nome;
-    }
     if (campoEmail && email) {
         campoEmail.value = email;
+    }
+    if (campoNome && nome) {
+        campoNome.value = nome;
     }
     if (campoTelefone && telefone) {
         campoTelefone.value = telefone;
@@ -351,9 +351,16 @@ window.preencherDadosUsuario = function(email, nome, telefone) {
             status: 'ENVIADO'
         };
 
-        if (window.Android && typeof window.Android.submitQuote === 'function') {
-            updateSubmitButton('sending'); // Muda o estado para "enviando"
-            window.Android.submitQuote(JSON.stringify(orcamentoData));
+      if (window.Android && typeof window.Android.submitQuote === 'function') {
+    updateSubmitButton('sending');
+    window.Android.submitQuote(JSON.stringify(orcamentoData));
+    // --- NOVA LINHA DE SEGURANÇA ---
+    // Após 7 segundos, reseta o botão, caso a resposta do app não chegue a tempo.
+    // O feedback principal para o usuário será o Toast do Android.
+    setTimeout(() => {
+        updateSubmitButton('idle');
+    }, 7000);
+
         } else {
             alert('Esta função está disponível apenas no aplicativo Premoldaço.');
         }
