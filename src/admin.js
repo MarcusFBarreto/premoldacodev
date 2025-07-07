@@ -2,13 +2,14 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log("admin.js: Script iniciado.");
 
     const firebaseConfig = {
-      apiKey: "SUA_API_KEY",
-      authDomain: "SEU_AUTH_DOMAIN",
-      projectId: "SEU_PROJECT_ID",
-      storageBucket: "SEU_STORAGE_BUCKET",
-      messagingSenderId: "SEU_MESSAGING_SENDER_ID",
-      appId: "SEU_APP_ID"
-    };
+    apiKey: "AIzaSyBbcXKzor-xgsQzip6c7gZbn4iRVFr2Tfo",
+  authDomain: "premoldaco-webapp.firebaseapp.com",
+  projectId: "premoldaco-webapp",
+  storageBucket: "premoldaco-webapp.firebasestorage.app",
+  messagingSenderId: "918710823829",
+  appId: "1:918710823829:web:b41e60568d4b0d30c9a49c",
+  measurementId: "G-VJ4ETSMZT7"
+    };  
 
     try {
         firebase.initializeApp(firebaseConfig);
