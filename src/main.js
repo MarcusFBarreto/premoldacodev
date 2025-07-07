@@ -300,6 +300,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 break;
         }
     }
+
+function preencherDadosUsuario(email, nome, telefone) {
+    console.log(`Recebendo dados para pré-preenchimento: ${email}, ${nome}, ${telefone}`);
+    const campoNome = document.getElementById('nome');
+    const campoEmail = document.getElementById('email');
+    const campoTelefone = document.getElementById('telefone');
+
+    if (campoNome && nome) {
+        campoNome.value = nome;
+    }
+    if (campoEmail && email) {
+        campoEmail.value = email;
+    }
+    if (campoTelefone && telefone) {
+        campoTelefone.value = telefone;
+    }
+}
+
     // Disponibiliza a função globalmente para ser chamada pelo Kotlin
     window.updateSubmitButton = updateSubmitButton;
 
