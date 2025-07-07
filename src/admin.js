@@ -39,7 +39,32 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        btnAdminLogin.addEventListener('click', () => { /* ...código de login sem alteração... */ });
+       // 5. Listener do Botão de Login
+btnAdminLogin.addEventListener('click', () => {
+    console.log("admin.js: Botão de login CLICADO.");
+    const email = document.getElementById('admin-email').value;
+    const password = document.getElementById('admin-password').value;
+    loginError.textContent = '';
+
+    if (!email || !password) {
+        loginError.textContent = "Por favor, preencha ambos os campos.";
+        return;
+    }
+
+    console.log(`admin.js: Tentando login com E-mail: ${email}`);
+    
+    auth.signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+            // Este bloco é executado em caso de SUCESSO.
+            // Apenas registramos no console, pois o 'onAuthStateChanged' já cuidará de mudar a tela.
+            console.log("admin.js: SUCESSO! Login bem-sucedido. Usuário:", userCredential.user);
+        })
+        .catch(error => {
+            // Este bloco é executado em caso de FALHA.
+            console.error("admin.js: FALHA no login:", error);
+            loginError.textContent = `Falha no login. Código: ${error.code}`;
+        });
+});
         btnAdminLogout.addEventListener('click', () => auth.signOut());
 
         function updateQuoteStatus(quoteId, newStatus, cardElement) {
