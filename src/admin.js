@@ -83,6 +83,41 @@ document.addEventListener('DOMContentLoaded', () => {
             auth.signOut();
         });
 
+        // --- LÓGICA DE ATUALIZAÇÃO DE STATUS ---
+
+/**
+ * Atualiza o status de um orçamento no Firestore.
+ * @param {string} quoteId O ID do documento do orçamento.
+ * @param {string} newStatus O novo status a ser salvo.
+ */
+function updateQuoteStatus(quoteId, newStatus) {
+    const quoteRef = db.collection("orcamentos").doc(quoteId);
+
+    quoteRef.update({
+        status: newStatus
+    })
+    .then(() => {
+        console.log(`Status do orçamento ${quoteId} atualizado para ${newStatus}`);
+        // No futuro, podemos adicionar um Toast de sucesso aqui.
+        // Por enquanto, a mudança será refletida na próxima vez que a lista carregar.
+    })
+    .catch(error => {
+        console.error("Erro ao atualizar status: ", error);
+        alert("Não foi possível atualizar o status. Verifique o console para mais detalhes.");
+    });
+}
+
+// Usamos "event delegation" para ouvir mudanças em qualquer menu da lista
+quotesListContainer.addEventListener('change', (e) => {
+    // Verifica se o elemento que mudou foi um menu de status
+    if (e.target.classList.contains('status-select')) {
+        const quoteId = e.target.dataset.id; // Pega o ID do atributo data-id
+        const newStatus = e.target.value;
+        console.log(`Mudança detectada no orçamento ${quoteId}. Novo status selecionado: ${newStatus}`);
+        updateQuoteStatus(quoteId, newStatus);
+    }
+});
+
         // 7. Função para Buscar e Exibir os Orçamentos
         function fetchQuotes() {
             loader.style.display = 'block';
@@ -104,29 +139,41 @@ document.addEventListener('DOMContentLoaded', () => {
                       const card = document.createElement('div');
                       card.className = 'quote-card';
                       
-                      const data = quote.dataCriacao ? quote.dataCriacao.toDate().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Data indisponível';
-                      const statusClass = (quote.status || 'enviado').toLowerCase().replace(/\s+/g, '-');
+                     const data = quote.dataCriacao ? quote.dataCriacao.toDate().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Data indisponível';
+                     const statusAtual = quote.status || 'ENVIADO';
+                     const statusClass = statusAtual.toLowerCase().replace(/\s+/g, '-')
 
                       card.innerHTML = `
-                          <div class="quote-header">
-                              <h3>${quote.obraName || 'Orçamento sem nome'}</h3>
-                              <span class="status-badge status-${statusClass}">${quote.status || 'ENVIADO'}</span>
-                          </div>
-                          <p style="font-size: 0.8em; color: #888; margin-top: -0.5rem; margin-bottom: 1rem;">ID: ${quoteId}</p>
-                          <div class="quote-details">
-                              <div>
-                                  <p><strong>Cliente:</strong> ${quote.clienteNome || 'Não informado'}</p>
-                                  <p><strong>Telefone:</strong> ${quote.clienteTelefone || 'Não informado'}</p>
-                                  <p><strong>E-mail:</strong> ${quote.clienteEmail || 'Não informado'}</p>
-                              </div>
-                              <div>
-                                  <p><strong>Data:</strong> ${data}</p>
-                                  <p><strong>Tipo de Laje:</strong> ${quote.tipoLaje || 'N/A'}</p>
-                                  <p><strong>Área Total:</strong> ${quote.totalArea || 'N/A'} m²</p>
-                              </div>
-                          </div>
-                          <p style="margin-top: 1rem;"><strong>Observações:</strong> ${quote.clienteObservacoes || 'Nenhuma'}</p>
-                          `;
+                           <div class="quote-header">
+        <h3>${quote.obraName || 'Orçamento sem nome'}</h3>
+        <span class="status-badge status-${statusClass}">${statusAtual}</span>
+    </div>
+    <p style="font-size: 0.8em; color: #888; margin-top: -0.5rem; margin-bottom: 1rem;">ID: ${quoteId}</p>
+    <div class="quote-details">
+        <div>
+            <p><strong>Cliente:</strong> ${quote.clienteNome || 'Não informado'}</p>
+            <p><strong>Telefone:</strong> ${quote.clienteTelefone || 'Não informado'}</p>
+            <p><strong>E-mail:</strong> ${quote.clienteEmail || 'Não informado'}</p>
+        </div>
+        <div>
+            <p><strong>Data:</strong> ${data}</p>
+            <p><strong>Tipo de Laje:</strong> ${quote.tipoLaje || 'N/A'}</p>
+            <p><strong>Área Total:</strong> ${quote.totalArea || 'N/A'} m²</p>
+        </div>
+    </div>
+    <p style="margin-top: 1rem;"><strong>Observações:</strong> ${quote.clienteObservacoes || 'Nenhuma'}</p>
+    
+    <div class="quote-actions">
+        <label for="status-select-${quoteId}">Alterar Status:</label>
+        <select class="status-select" data-id="${quoteId}">
+            <option value="ENVIADO" ${statusAtual === 'ENVIADO' ? 'selected' : ''}>Enviado</option>
+            <option value="EM ANÁLISE" ${statusAtual === 'EM ANÁLISE' ? 'selected' : ''}>Em Análise</option>
+            <option value="APROVADO" ${statusAtual === 'APROVADO' ? 'selected' : ''}>Aprovado</option>
+            <option value="EM PRODUÇÃO" ${statusAtual === 'EM PRODUÇÃO' ? 'selected' : ''}>Em Produção</option>
+            <option value="PRONTO P/ ENTREGA" ${statusAtual === 'PRONTO P/ ENTREGA' ? 'selected' : ''}>Pronto p/ Entrega</option>
+            <option value="FINALIZADO" ${statusAtual === 'FINALIZADO' ? 'selected' : ''}>Finalizado</option>
+        </select>
+    </div> `;
                       quotesListContainer.appendChild(card);
                   });
               })
