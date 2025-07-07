@@ -301,7 +301,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-function preencherDadosUsuario(email, nome, telefone) {
+window.preencherDadosUsuario = function(email, nome, telefone) {
     console.log(`Recebendo dados para pré-preenchimento: ${email}, ${nome}, ${telefone}`);
     const campoNome = document.getElementById('nome');
     const campoEmail = document.getElementById('email');
