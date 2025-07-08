@@ -151,7 +151,7 @@ btnAdminLogin.addEventListener('click', () => {
                               <div class="status-changer">
                                   <label for="status-select-${quoteId}">Alterar Status:</label>
                                   <select class="status-select" data-id="${quoteId}">
-                                      <option value="ENVIADO" ${statusAtual === 'ENVIADO' ? 'selected' : ''}>ENVIADO</option>
+                                      <option value="ENVIADO" ${statusAtual === 'ENVIADO' ? 'selected' : ''}>Enviado</option>
                                       <option value="EM ANÁLISE" ${statusAtual === 'EM ANÁLISE' ? 'selected' : ''}>Em Análise</option>
                                       <option value="APROVADO" ${statusAtual === 'APROVADO' ? 'selected' : ''}>Aprovado</option>
                                       <option value="EM PRODUÇÃO" ${statusAtual === 'EM PRODUÇÃO' ? 'selected' : ''}>Em Produção</option>
