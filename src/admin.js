@@ -36,16 +36,18 @@ function fetchQuotes(role) {
     loader.style.display = 'block';
     quotesListContainer.innerHTML = '';
 
-    // Começamos com a referência base da coleção
     let query = db.collection("orcamentos");
 
-    // LÓGICA DA PRANCHETA DE VENDAS:
-    // Adicionamos um filtro SE E SOMENTE SE a função for 'vendas'
+    // LÓGICA DA PRANCHETA: Filtra os orçamentos que cada função pode ver.
     if (role === 'vendas') {
         query = query.where('status', 'in', ['NOVO', 'EM ANÁLISE']);
+    } else if (role === 'producao') {
+        // CORREÇÃO: Garante que a produção veja os aprovados e os que já estão em produção.
+        query = query.where('status', 'in', ['APROVADO', 'EM PRODUÇÃO']);
+    } else if (role === 'transporte') {
+        query = query.where('status', 'in', ['PRONTO P/ ENTREGA']);
     }
 
-    // A ordenação é aplicada a todas as buscas
     query = query.orderBy("dataCriacao", "desc");
 
     query.get().then(querySnapshot => {
@@ -64,39 +66,48 @@ function fetchQuotes(role) {
             const statusAtual = quote.status || 'NOVO';
             const statusClass = statusAtual.toLowerCase().replace(/\s+/g, '-');
 
+            const getStatusOptions = (userRole, currentStatus) => {
+                const allStatuses = ['NOVO', 'EM ANÁLISE', 'APROVADO', 'EM PRODUÇÃO', 'PRONTO P/ ENTREGA', 'FINALIZADO'];
+                let allowedTransitions = [];
+
+                if (userRole === 'vendas') {
+                    if (currentStatus === 'NOVO') allowedTransitions = ['EM ANÁLISE', 'APROVADO'];
+                    else if (currentStatus === 'EM ANÁLISE') allowedTransitions = ['APROVADO'];
+                
+                // --- LÓGICA CORRIGIDA PARA PRODUÇÃO ---
+                } else if (userRole === 'producao') {
+                    if (currentStatus === 'APROVADO') allowedTransitions = ['EM PRODUÇÃO'];
+                    else if (currentStatus === 'EM PRODUÇÃO') allowedTransitions = ['PRONTO P/ ENTREGA'];
+                
+                } else if (userRole === 'transporte') {
+                    if (currentStatus === 'PRONTO P/ ENTREGA') allowedTransitions = ['FINALIZADO'];
+                
+                } else if (userRole === 'superadmin' || userRole === 'gerencia') {
+                    allowedTransitions = allStatuses;
+                }
+
+                let optionsHTML = `<option value="${currentStatus}" selected>${currentStatus}</option>`;
+                allowedTransitions.forEach(status => {
+                    if (status !== currentStatus) {
+                        optionsHTML += `<option value="${status}">${status}</option>`;
+                    }
+                });
+                return optionsHTML;
+            };
+
+            const statusOptionsHTML = getStatusOptions(role, statusAtual);
+            
             let cancelButtonHTML = '';
             if (role === 'superadmin') {
                 cancelButtonHTML = `<button class="cancel-button" data-id="${quoteId}">Cancelar</button>`;
             }
 
             card.innerHTML = `
-                <div class="quote-header">
-                    <h3>${quote.obraName || 'Orçamento sem nome'}</h3>
-                    <span class="status-badge status-${statusClass}">${statusAtual}</span>
-                </div>
-                <p style="font-size: 0.8em; color: #888; margin-top: -0.5rem; margin-bottom: 1rem;">ID: ${quoteId}</p>
-                <div class="quote-details">
-                    <div>
-                        <p><strong>Cliente:</strong> ${quote.clienteNome || 'Não informado'}</p>
-                        <p><strong>Telefone:</strong> ${quote.clienteTelefone || 'Não informado'}</p>
-                        <p><strong>E-mail:</strong> ${quote.clienteEmail || 'Não informado'}</p>
-                    </div>
-                    <div>
-                        <p><strong>Data:</strong> ${data}</p>
-                        <p><strong>Tipo de Laje:</strong> ${quote.tipoLaje || 'N/A'}</p>
-                        <p><strong>Área Total:</strong> ${quote.totalArea || 'N/A'} m²</p>
-                    </div>
-                </div>
                 <div class="quote-actions">
                     <div class="status-changer">
                         <label for="status-select-${quoteId}">Alterar Status:</label>
                         <select class="status-select" data-id="${quoteId}">
-                            <option value="NOVO" ${statusAtual === 'NOVO' ? 'selected' : ''}>Novo</option>
-                            <option value="EM ANÁLISE" ${statusAtual === 'EM ANÁLISE' ? 'selected' : ''}>Em Análise</option>
-                            <option value="APROVADO" ${statusAtual === 'APROVADO' ? 'selected' : ''}>Aprovado</option>
-                            <option value="EM PRODUÇÃO" ${statusAtual === 'EM PRODUÇÃO' ? 'selected' : ''}>Em Produção</option>
-                            <option value="PRONTO P/ ENTREGA" ${statusAtual === 'PRONTO P/ ENTREGA' ? 'selected' : ''}>Pronto p/ Entrega</option>
-                            <option value="FINALIZADO" ${statusAtual === 'FINALIZADO' ? 'selected' : ''}>Finalizado</option>
+                            ${statusOptionsHTML}
                         </select>
                     </div>
                     ${cancelButtonHTML}
@@ -109,30 +120,6 @@ function fetchQuotes(role) {
         loader.style.display = 'none';
         console.error("Erro ao buscar orçamentos: ", error);
         quotesListContainer.innerHTML = `<p style="color: red;">Ocorreu um erro ao carregar os orçamentos. Verifique o console (F12) para um link de criação de índice.</p>`;
-    });
-}
-
-/**
- * Atualiza o status de um orçamento no banco de dados.
- * @param {string} quoteId - O ID do documento.
- * @param {string} newStatus - O novo status.
- * @param {HTMLElement} cardElement - O elemento do card na tela para atualização visual.
- */
-function updateQuoteStatus(quoteId, newStatus, cardElement) {
-    const quoteRef = db.collection("orcamentos").doc(quoteId);
-    quoteRef.update({ status: newStatus })
-    .then(() => {
-        console.log(`Status do orçamento ${quoteId} atualizado para ${newStatus}`);
-        const statusBadge = cardElement.querySelector('.status-badge');
-        if (statusBadge) {
-            const statusClass = newStatus.toLowerCase().replace(/\s+/g, '-');
-            statusBadge.className = `status-badge status-${statusClass}`;
-            statusBadge.textContent = newStatus;
-        }
-    })
-    .catch(error => {
-        console.error("Erro ao atualizar status: ", error);
-        alert("Não foi possível atualizar o status.");
     });
 }
 
