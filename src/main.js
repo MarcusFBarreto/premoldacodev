@@ -13,6 +13,7 @@ window.preencherDadosUsuario = function(email, nome, telefone) {
 };
 
 window.updateSubmitButton = function(state, message = '') {
+    // CORREÇÃO: Usando o ID correto do HTML
     const submitQuoteBtn = document.getElementById('submit-quote-btn');
     if (!submitQuoteBtn) return;
     let errorMsgEl = document.getElementById('submit-error-msg');
