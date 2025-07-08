@@ -1,4 +1,4 @@
-// A configuração do Firebase vem no topo do arquivo.
+// A configuração do Firebase vem primeiro
 const firebaseConfig = {
   apiKey: "AIzaSyBbcXKzor-xgsQzip6c7gZbn4iRVFr2Tfo",
   authDomain: "premoldaco-webapp.firebaseapp.com",
@@ -14,16 +14,18 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-// --- FUNÇÕES DE LÓGICA ---
+// --- FUNÇÕES GLOBAIS DE LÓGICA ---
 
-let quotesListener = null;
+let quotesListener = null; // Variável para controlar nosso ouvinte
 
-function fetchQuotes(role) {
-    console.log(`Buscando orçamentos para a função: ${role}`);
+// CORREÇÃO: A função agora se chama attachQuotesListener
+function attachQuotesListener(role) {
+    console.log(`Anexando ouvinte para a função: ${role}`);
     const loader = document.getElementById('loader');
     const quotesListContainer = document.getElementById('quotes-list');
     
     loader.style.display = 'block';
+    
     if (quotesListener) quotesListener();
 
     let query = db.collection("orcamentos");
@@ -53,7 +55,7 @@ function fetchQuotes(role) {
             const quoteId = doc.id;
             const card = document.createElement('div');
             card.className = 'quote-card';
-            
+
             const data = quote.dataCriacao ? quote.dataCriacao.toDate().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Data indisponível';
             const statusAtual = quote.status || 'NOVO';
             const statusClass = statusAtual.toLowerCase().replace(/\s+/g, '-');
@@ -72,16 +74,17 @@ function fetchQuotes(role) {
                     allowedTransitions = ['NOVO', 'EM ANÁLISE', 'APROVADO', 'EM PRODUÇÃO', 'PRONTO P/ ENTREGA', 'FINALIZADO'];
                 }
 
-                let optionsHTML = `<option value="${currentStatus}" selected>${currentStatus.replace(/-/g, ' ')}</option>`;
+                let optionsHTML = `<option value="${currentStatus}" selected>${currentStatus}</option>`;
                 allowedTransitions.forEach(status => {
                     if (status !== currentStatus) {
-                        optionsHTML += `<option value="${status}">${status.replace(/-/g, ' ')}</option>`;
+                        optionsHTML += `<option value="${status}">${status}</option>`;
                     }
                 });
                 return optionsHTML;
             };
 
             const statusOptionsHTML = getStatusOptions(role, statusAtual);
+            
             let cancelButtonHTML = '';
             if (role === 'superadmin') {
                 cancelButtonHTML = `<button class="cancel-button" data-id="${quoteId}">Cancelar</button>`;
@@ -92,14 +95,18 @@ function fetchQuotes(role) {
                 <h3>${quote.obraName || 'Orçamento sem nome'}</h3>
                 <span class="status-badge status-${statusClass}">${statusAtual}</span>
               </div>
-              <p class="quote-id">ID: ${quoteId}</p>
+              <p style="font-size: 0.8em; color: #888; margin-top: -0.5rem; margin-bottom: 1rem;">ID: ${quoteId}</p>
               <div class="quote-details">
-                <p><strong>Cliente:</strong> ${quote.clienteNome || 'Não informado'}</p>
-                <p><strong>Telefone:</strong> ${quote.clienteTelefone || 'Não informado'}</p>
-                <p><strong>E-mail:</strong> ${quote.clienteEmail || 'Não informado'}</p>
-                <p><strong>Data:</strong> ${data}</p>
-                <p><strong>Tipo de Laje:</strong> ${quote.tipoLaje || 'N/A'}</p>
-                <p><strong>Área Total:</strong> ${quote.totalArea || 'N/A'} m²</p>
+                <div>
+                  <p><strong>Cliente:</strong> ${quote.clienteNome || 'Não informado'}</p>
+                  <p><strong>Telefone:</strong> ${quote.clienteTelefone || 'Não informado'}</p>
+                  <p><strong>E-mail:</strong> ${quote.clienteEmail || 'Não informado'}</p>
+                </div>
+                <div>
+                  <p><strong>Data:</strong> ${data}</p>
+                  <p><strong>Tipo de Laje:</strong> ${quote.tipoLaje || 'N/A'}</p>
+                  <p><strong>Área Total:</strong> ${quote.totalArea || 'N/A'} m²</p>
+                </div>
               </div>
               <div class="quote-actions">
                 <div class="status-changer">
@@ -136,7 +143,6 @@ function updateQuoteStatus(quoteId, newStatus) {
 document.addEventListener('DOMContentLoaded', () => {
     console.log("DOM carregado, iniciando script...");
 
-    // Seletores de UI que estão dentro do DOM
     const loginContainer = document.getElementById('login-container');
     const adminPanel = document.getElementById('admin-panel');
     const loginError = document.getElementById('login-error');
@@ -145,18 +151,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const adminUserEmail = document.getElementById('admin-user-email');
     const quotesListContainer = document.getElementById('quotes-list');
 
-    // O "maestro" da autenticação
     auth.onAuthStateChanged(user => {
         if (user) {
             const userRef = db.collection("equipe").doc(user.uid);
             userRef.get().then((doc) => {
                 if (doc.exists) {
                     const userRole = doc.data().funcao;
-                    user.role = userRole;
+                    user.role = userRole; 
+                    
                     adminUserEmail.textContent = `${user.email} (${userRole})`;
                     loginContainer.style.display = 'none';
                     adminPanel.style.display = 'block';
+                    
+                    // CORREÇÃO: A chamada agora corresponde ao nome da função
                     attachQuotesListener(userRole);
+
                 } else {
                     alert("Você não tem permissão para acessar este painel.");
                     auth.signOut();
@@ -173,7 +182,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Listeners dos botões
     btnAdminLogin.addEventListener('click', () => {
         const email = document.getElementById('admin-email').value;
         const password = document.getElementById('admin-password').value;
@@ -183,6 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         auth.signInWithEmailAndPassword(email, password)
             .catch(error => {
+                console.error("FALHA no login:", error);
                 loginError.textContent = `Falha no login. Código: ${error.code}`;
             });
     });
@@ -195,18 +204,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target.classList.contains('status-select')) {
             const quoteId = e.target.dataset.id;
             const newStatus = e.target.value;
-            const cardElement = e.target.closest('.quote-card');
-            updateQuoteStatus(quoteId, newStatus, cardElement);
+            updateQuoteStatus(quoteId, newStatus);
         }
     });
-
+    
     quotesListContainer.addEventListener('click', (e) => {
         if (e.target.classList.contains('cancel-button')) {
             const quoteId = e.target.dataset.id;
-            const cardElement = e.target.closest('.quote-card');
-            const obraName = cardElement.querySelector('h3').textContent;
+            const obraName = e.target.closest('.quote-card').querySelector('h3').textContent;
             if (confirm(`Tem certeza que deseja CANCELAR o orçamento para a obra "${obraName}"?`)) {
-                updateQuoteStatus(quoteId, 'CANCELADO', cardElement);
+                updateQuoteStatus(quoteId, 'CANCELADO');
             }
         }
     });
