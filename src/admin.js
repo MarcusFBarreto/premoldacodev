@@ -30,13 +30,16 @@ function attachQuotesListener(role) {
 
     let query = db.collection("orcamentos");
 
-    // LÓGICA DAS PRANCHETAS
+    
+    // LÓGICA DAS PRANCHETAS: Filtra o que cada um vê
     if (role === 'vendas') {
         query = query.where('status', 'in', ['NOVO', 'EM ANÁLISE']);
     } else if (role === 'producao') {
-        query = query.where('status', 'in', ['APROVADO', 'EM PRODUÇÃO']);
+        // Produção vê o que foi aprovado e o que está sendo produzido
+        query = query.where('status', 'in', ['APROVADO', 'AGUARDANDO PRODUÇÃO', 'EM PRODUÇÃO']);
     } else if (role === 'transporte') {
-        query = query.where('status', 'in', ['PRONTO P/ ENTREGA']);
+        // Transporte vê tudo relacionado à logística
+        query = query.where('status', 'in', ['PRONTO P/ ENTREGA', 'AGUARDANDO CARGA', 'CARREGANDO', 'EM ROTA']);
     }
 
     query = query.orderBy("dataCriacao", "desc");
@@ -61,17 +64,26 @@ function attachQuotesListener(role) {
             const statusClass = statusAtual.toLowerCase().replace(/\s+/g, '-');
 
             const getStatusOptions = (userRole, currentStatus) => {
-                let allowedTransitions = [];
+                const allStatuses =  [
+                    'NOVO', 'EM ANÁLISE', 'APROVADO', 
+                    'AGUARDANDO PRODUÇÃO', 'EM PRODUÇÃO', 'PRONTO P/ ENTREGA',
+                    'AGUARDANDO CARGA', 'CARREGANDO', 'EM ROTA', 'ENTREGUE',
+                    'FINALIZADO'];
+
                 if (userRole === 'vendas') {
                     if (currentStatus === 'NOVO') allowedTransitions = ['EM ANÁLISE', 'APROVADO'];
                     else if (currentStatus === 'EM ANÁLISE') allowedTransitions = ['APROVADO'];
                 } else if (userRole === 'producao') {
-                    if (currentStatus === 'APROVADO') allowedTransitions = ['EM PRODUÇÃO'];
+                    if (currentStatus === 'APROVADO') allowedTransitions = ['AGUARDANDO PRODUÇÃO'];
+                    else if (currentStatus === 'AGUARDANDO PRODUÇÃO') allowedTransitions = ['EM PRODUÇÃO'];
                     else if (currentStatus === 'EM PRODUÇÃO') allowedTransitions = ['PRONTO P/ ENTREGA'];
                 } else if (userRole === 'transporte') {
-                    if (currentStatus === 'PRONTO P/ ENTREGA') allowedTransitions = ['FINALIZADO'];
+                    if (currentStatus === 'PRONTO P/ ENTREGA') allowedTransitions = ['AGUARDANDO CARGA'];
+                    else if (currentStatus === 'AGUARDANDO CARGA') allowedTransitions = ['CARREGANDO'];
+                    else if (currentStatus === 'CARREGANDO') allowedTransitions = ['EM ROTA'];
+                    else if (currentStatus === 'EM ROTA') allowedTransitions = ['ENTREGUE'];
                 } else if (userRole === 'superadmin' || userRole === 'gerencia') {
-                    allowedTransitions = ['NOVO', 'EM ANÁLISE', 'APROVADO', 'EM PRODUÇÃO', 'PRONTO P/ ENTREGA', 'FINALIZADO'];
+                    allowedTransitions = allStatuses;
                 }
 
                 let optionsHTML = `<option value="${currentStatus}" selected>${currentStatus}</option>`;

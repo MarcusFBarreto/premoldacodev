@@ -9,20 +9,26 @@
     <style>
     /* 1. Estilos Gerais e Variáveis de Cor */
     :root {
-        --cor-primaria: #005a9c; /* Azul Premoldaço */
-        --cor-fundo: #f4f6f9;    /* Cinza bem claro */
-        --cor-texto: #333;
-        --cor-borda: #e0e0e0;
-        --cor-sombra: rgba(0, 0, 0, 0.08);
-        --cor-perigo: #dc3545;
-        /* Cores de Status */
-        --status-novo: #0d6efd;
-        --status-em-analise: #ffc107;
-        --status-aprovado: #198754;
-        --status-producao: #6f42c1;
-        --status-pronto-p-entrega: #0dcaf0;
-        --status-finalizado: #6c757d;
-        --status-cancelado: var(--cor-perigo);
+        --cor-primaria: #005a9c;
+    --cor-fundo: #f4f6f9;
+    --cor-texto: #333;
+    --cor-borda: #e0e0e0;
+    --cor-sombra: rgba(0, 0, 0, 0.08);
+    --cor-perigo: #dc3545;
+    /* Cores de Status */
+    --status-novo: #0d6efd;
+    --status-em-analise: #ffc107;
+    --status-aprovado: #198754;
+    /* --- NOVAS CORES --- */
+    --status-aguardando-producao: #6c757d; /* Cinza escuro */
+    --status-em-producao: #6f42c1;
+    --status-pronto-p-entrega: #fd7e14; /* Laranja */
+    --status-aguardando-carga: #0dcaf0; /* Ciano */
+    --status-carregando: #0d6efd; /* Azul novamente */
+    --status-em-rota: #20c997; /* Verde-água */
+    --status-entregue: #198754; /* Verde do sucesso */
+    --status-finalizado: #6c757d;
+    --status-cancelado: var(--cor-perigo);
     }
     body {
         background-color: var(--cor-fundo);
@@ -138,9 +144,15 @@
     .status-em-análise { background-color: var(--status-em-analise); color: #000; }
     .status-aprovado { background-color: var(--status-aprovado); }
     .status-em-produção { background-color: var(--status-producao); }
-    .status-pronto-p-entrega { background-color: var(--status-pronto); color: #000; }
-    .status-finalizado { background-color: var(--status-finalizado); }
-    .status-cancelado { background-color: var(--status-cancelado); }
+    .status-aguardando-produção { background-color: var(--status-aguardando-producao); }
+.status-pronto-p-entrega { background-color: var(--status-pronto-p-entrega); }
+.status-aguardando-carga { background-color: var(--status-aguardando-carga); color: #000; }
+.status-carregando { background-color: var(--status-carregando); }
+.status-em-rota { background-color: var(--status-em-rota); }
+.status-entregue { background-color: var(--status-entregue); }
+
+.status-finalizado { background-color: var(--status-finalizado); }
+.status-cancelado { background-color: var(--status-cancelado); }
 </style>
     
 </head>
