@@ -10,7 +10,7 @@ const firebaseConfig = {
 };
 */
 
-// A configuração do Firebase vem primeiro
+// A configuração do Firebase vem primeiro.
 const firebaseConfig = {
   apiKey: "AIzaSyBbcXKzor-xgsQzip6c7gZbn4iRVFr2Tfo",
   authDomain: "premoldaco-webapp.firebaseapp.com",
@@ -28,20 +28,19 @@ const db = firebase.firestore();
 
 // --- FUNÇÕES GLOBAIS DE LÓGICA ---
 
-let quotesListener = null; // Variável para controlar nosso ouvinte
+let quotesListener = null; // Variável para controlar nosso ouvinte em tempo real
 
-
-function fetchQuotes(role) {
-    console.log(`Buscando orçamentos para a função: ${role}`);
+function attachQuotesListener(role) {
+    console.log(`Anexando ouvinte para a função: ${role}`);
     const loader = document.getElementById('loader');
     const quotesListContainer = document.getElementById('quotes-list');
     
     loader.style.display = 'block';
-    
-    if (quotesListener) quotesListener();
+    if (quotesListener) quotesListener(); // Remove ouvintes antigos para evitar duplicação
 
     let query = db.collection("orcamentos");
 
+    // LÓGICA DAS PRANCHETAS
     if (role === 'vendas') {
         query = query.where('status', 'in', ['NOVO', 'EM ANÁLISE']);
     } else if (role === 'producao') {
@@ -66,8 +65,7 @@ function fetchQuotes(role) {
             const quoteId = doc.id;
             const card = document.createElement('div');
             card.className = 'quote-card';
-
-            // --- INÍCIO DAS DEFINIÇÕES CORRIGIDAS ---
+            
             const data = quote.dataCriacao ? quote.dataCriacao.toDate().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Data indisponível';
             const statusAtual = quote.status || 'NOVO';
             const statusClass = statusAtual.toLowerCase().replace(/\s+/g, '-');
@@ -96,40 +94,38 @@ function fetchQuotes(role) {
             };
 
             const statusOptionsHTML = getStatusOptions(role, statusAtual);
-            
             let cancelButtonHTML = '';
             if (role === 'superadmin') {
                 cancelButtonHTML = `<button class="cancel-button" data-id="${quoteId}">Cancelar</button>`;
             }
-            // --- FIM DAS DEFINIÇÕES CORRIGIDAS ---
 
             card.innerHTML = `
-              <div class="quote-header">
-                <h3>${quote.obraName || 'Orçamento sem nome'}</h3>
-                <span class="status-badge status-${statusClass}">${statusAtual}</span>
-              </div>
-              <p style="font-size: 0.8em; color: #888; margin-top: -0.5rem; margin-bottom: 1rem;">ID: ${quoteId}</p>
-              <div class="quote-details">
-                <div>
-                  <p><strong>Cliente:</strong> ${quote.clienteNome || 'Não informado'}</p>
-                  <p><strong>Telefone:</strong> ${quote.clienteTelefone || 'Não informado'}</p>
-                  <p><strong>E-mail:</strong> ${quote.clienteEmail || 'Não informado'}</p>
+                <div class="quote-header">
+                    <h3>${quote.obraName || 'Orçamento sem nome'}</h3>
+                    <span class="status-badge status-${statusClass}">${statusAtual}</span>
                 </div>
-                <div>
-                  <p><strong>Data:</strong> ${data}</p>
-                  <p><strong>Tipo de Laje:</strong> ${quote.tipoLaje || 'N/A'}</p>
-                  <p><strong>Área Total:</strong> ${quote.totalArea || 'N/A'} m²</p>
+                <p style="font-size: 0.8em; color: #888; margin-top: -0.5rem; margin-bottom: 1rem;">ID: ${quoteId}</p>
+                <div class="quote-details">
+                    <div>
+                        <p><strong>Cliente:</strong> ${quote.clienteNome || 'Não informado'}</p>
+                        <p><strong>Telefone:</strong> ${quote.clienteTelefone || 'Não informado'}</p>
+                        <p><strong>E-mail:</strong> ${quote.clienteEmail || 'Não informado'}</p>
+                    </div>
+                    <div>
+                        <p><strong>Data:</strong> ${data}</p>
+                        <p><strong>Tipo de Laje:</strong> ${quote.tipoLaje || 'N/A'}</p>
+                        <p><strong>Área Total:</strong> ${quote.totalArea || 'N/A'} m²</p>
+                    </div>
                 </div>
-              </div>
-              <div class="quote-actions">
-                <div class="status-changer">
-                  <label for="status-select-${quoteId}">Alterar Status:</label>
-                  <select class="status-select" data-id="${quoteId}">
-                    ${statusOptionsHTML}
-                  </select>
+                <div class="quote-actions">
+                    <div class="status-changer">
+                        <label for="status-select-${quoteId}">Alterar Status:</label>
+                        <select class="status-select" data-id="${quoteId}">
+                            ${statusOptionsHTML}
+                        </select>
+                    </div>
+                    ${cancelButtonHTML}
                 </div>
-                ${cancelButtonHTML}
-              </div>
             `;
             quotesListContainer.appendChild(card);
         });
@@ -139,13 +135,13 @@ function fetchQuotes(role) {
         quotesListContainer.innerHTML = `<p style="color: red;">Ocorreu um erro. Verifique o console (F12).</p>`;
     });
 }
+
 function updateQuoteStatus(quoteId, newStatus, cardElement) {
     const quoteRef = db.collection("orcamentos").doc(quoteId);
     quoteRef.update({ status: newStatus })
     .then(() => {
         console.log(`Status do orçamento ${quoteId} atualizado para ${newStatus}`);
-        // A atualização da UI é tratada pelo onSnapshot, não precisamos fazer nada aqui.
-        // A lista se atualizará sozinha.
+        // Não precisamos fazer nada aqui, o onSnapshot cuida da atualização da UI.
     })
     .catch(error => {
         console.error("Erro ao atualizar status: ", error);
@@ -157,7 +153,7 @@ function updateQuoteStatus(quoteId, newStatus, cardElement) {
 document.addEventListener('DOMContentLoaded', () => {
     console.log("DOM carregado, iniciando script...");
 
-    // Seleciona os elementos da página
+    // Seletores de UI que estão dentro do DOM
     const loginContainer = document.getElementById('login-container');
     const adminPanel = document.getElementById('admin-panel');
     const loginError = document.getElementById('login-error');
@@ -173,8 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
             userRef.get().then((doc) => {
                 if (doc.exists) {
                     const userRole = doc.data().funcao;
-                    user.role = userRole; // Anexa a função ao objeto do usuário
-                    
+                    user.role = userRole;
                     adminUserEmail.textContent = `${user.email} (${userRole})`;
                     loginContainer.style.display = 'none';
                     adminPanel.style.display = 'block';
@@ -183,55 +178,53 @@ document.addEventListener('DOMContentLoaded', () => {
                     alert("Você não tem permissão para acessar este painel.");
                     auth.signOut();
                 }
+            }).catch(error => {
+                console.error("Erro ao buscar função do usuário:", error);
+                alert("Ocorreu um erro ao verificar suas permissões.");
+                auth.signOut();
             });
         } else {
-            if (quotesListener) quotesListener(); // Desconecta o ouvinte ao fazer logout
+            if (quotesListener) quotesListener();
             loginContainer.style.display = 'block';
             adminPanel.style.display = 'none';
         }
     });
 
-// DAQUI PRA CIMA 08/07/25 16:21
-
-
-
-// Listener para o botão de Login
-btnAdminLogin.addEventListener('click', () => {
-    const email = document.getElementById('admin-email').value;
-    const password = document.getElementById('admin-password').value;
-    if (!email || !password) {
-        loginError.textContent = "Preencha e-mail e senha.";
-        return;
-    }
-    auth.signInWithEmailAndPassword(email, password)
-        .catch(error => {
-            console.error("FALHA no login:", error);
-            loginError.textContent = `Falha no login. Código: ${error.code}`;
-        });
-});
-
-// Listener para o botão de Logout
-btnAdminLogout.addEventListener('click', () => {
-    auth.signOut();
-});
-
-// Listener para as ações na lista de orçamentos (Mudar status ou Cancelar)
-quotesListContainer.addEventListener('change', (e) => {
-    if (e.target.classList.contains('status-select')) {
-        const quoteId = e.target.dataset.id;
-        const newStatus = e.target.value;
-        const cardElement = e.target.closest('.quote-card');
-        updateQuoteStatus(quoteId, newStatus, cardElement);
-    }
-});
-quotesListContainer.addEventListener('click', (e) => {
-    if (e.target.classList.contains('cancel-button')) {
-        const quoteId = e.target.dataset.id;
-        const cardElement = e.target.closest('.quote-card');
-        const obraName = cardElement.querySelector('h3').textContent;
-        if (confirm(`Tem certeza que deseja CANCELAR o orçamento para a obra "${obraName}"?`)) {
-            updateQuoteStatus(quoteId, 'CANCELADO', cardElement);
+    // Listeners dos botões
+    btnAdminLogin.addEventListener('click', () => {
+        const email = document.getElementById('admin-email').value;
+        const password = document.getElementById('admin-password').value;
+        if (!email || !password) {
+            loginError.textContent = "Preencha e-mail e senha.";
+            return;
         }
-    }
-  });
+        auth.signInWithEmailAndPassword(email, password)
+            .catch(error => {
+                loginError.textContent = `Falha no login. Código: ${error.code}`;
+            });
+    });
+
+    btnAdminLogout.addEventListener('click', () => {
+        auth.signOut();
+    });
+
+    quotesListContainer.addEventListener('change', (e) => {
+        if (e.target.classList.contains('status-select')) {
+            const quoteId = e.target.dataset.id;
+            const newStatus = e.target.value;
+            const cardElement = e.target.closest('.quote-card');
+            updateQuoteStatus(quoteId, newStatus, cardElement);
+        }
+    });
+
+    quotesListContainer.addEventListener('click', (e) => {
+        if (e.target.classList.contains('cancel-button')) {
+            const quoteId = e.target.dataset.id;
+            const cardElement = e.target.closest('.quote-card');
+            const obraName = cardElement.querySelector('h3').textContent;
+            if (confirm(`Tem certeza que deseja CANCELAR o orçamento para a obra "${obraName}"?`)) {
+                updateQuoteStatus(quoteId, 'CANCELADO', cardElement);
+            }
+        }
+    });
 });
