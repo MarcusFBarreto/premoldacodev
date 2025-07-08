@@ -32,20 +32,30 @@ const loader = document.getElementById('loader');
  * @param {string} role - A função do usuário logado (ex: 'superadmin')
  */
 function fetchQuotes(role) {
-    console.log(`Buscando orçamentos com a função: ${role}`);
+    console.log(`Buscando orçamentos com base na função: ${role}`);
     loader.style.display = 'block';
     quotesListContainer.innerHTML = '';
 
-     let query = db.collection("orcamentos").orderBy("dataCriacao", "desc");
+    // Começamos com a referência base da coleção
+    let query = db.collection("orcamentos");
+
+    // LÓGICA DA PRANCHETA DE VENDAS:
+    // Adicionamos um filtro SE E SOMENTE SE a função for 'vendas'
+    if (role === 'vendas') {
+        query = query.where('status', 'in', ['NOVO', 'EM ANÁLISE']);
+    }
+
+    // A ordenação é aplicada a todas as buscas
+    query = query.orderBy("dataCriacao", "desc");
 
     query.get().then(querySnapshot => {
         loader.style.display = 'none';
         if (querySnapshot.empty) {
-            quotesListContainer.innerHTML = '<p>Nenhum orçamento encontrado.</p>';
+            quotesListContainer.innerHTML = '<p>Nenhum orçamento encontrado para esta prancheta.</p>';
             return;
         }
 
-            querySnapshot.forEach(doc => {
+        querySnapshot.forEach(doc => {
             const quote = doc.data();
             const quoteId = doc.id;
             const card = document.createElement('div');
@@ -54,16 +64,11 @@ function fetchQuotes(role) {
             const statusAtual = quote.status || 'NOVO';
             const statusClass = statusAtual.toLowerCase().replace(/\s+/g, '-');
 
-              // --- LÓGICA DE PERMISSÃO PARA O BOTÃO CANCELAR ---
-            // 1. Criamos uma variável para o HTML do botão.
             let cancelButtonHTML = '';
-            
-            // 2. Verificamos se a função do usuário é 'superadmin'.
             if (role === 'superadmin') {
                 cancelButtonHTML = `<button class="cancel-button" data-id="${quoteId}">Cancelar</button>`;
             }
 
-                // 3. Inserimos a variável no HTML do card. Se não for superadmin, ela estará vazia.
             card.innerHTML = `
                 <div class="quote-header">
                     <h3>${quote.obraName || 'Orçamento sem nome'}</h3>
@@ -103,7 +108,7 @@ function fetchQuotes(role) {
     .catch(error => {
         loader.style.display = 'none';
         console.error("Erro ao buscar orçamentos: ", error);
-        quotesListContainer.innerHTML = '<p style="color: red;">Erro ao carregar orçamentos. Verifique as regras e o índice do Firestore.</p>';
+        quotesListContainer.innerHTML = `<p style="color: red;">Ocorreu um erro ao carregar os orçamentos. Verifique o console (F12) para um link de criação de índice.</p>`;
     });
 }
 
