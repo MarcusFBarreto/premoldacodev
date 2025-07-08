@@ -1,7 +1,19 @@
+/*
+const firebaseConfig = {
+  apiKey: "AIzaSyBbcXKzor-xgsQzip6c7gZbn4iRVFr2Tfo",
+  authDomain: "premoldaco-webapp.firebaseapp.com",
+  projectId: "premoldaco-webapp",
+  storageBucket: "premoldaco-webapp.appspot.com",
+  messagingSenderId: "918710823829",
+  appId: "1:918710823829:web:b41e60568d4b0d30c9a49c",
+  measurementId: "G-VJ4ETSMZT7"
+};
+*/
+
 // A configuração do Firebase vem primeiro.
 // Use as chaves reais do seu projeto aqui.
 const firebaseConfig = {
-  apiKey: "AIzaSyBbcXKzor-xgsQzip6c7gZbn4iRVFr2Tfo",
+apiKey: "AIzaSyBbcXKzor-xgsQzip6c7gZbn4iRVFr2Tfo",
   authDomain: "premoldaco-webapp.firebaseapp.com",
   projectId: "premoldaco-webapp",
   storageBucket: "premoldaco-webapp.appspot.com",
@@ -28,8 +40,8 @@ const loader = document.getElementById('loader');
 // --- FUNÇÕES DE LÓGICA ---
 
 /**
- * Busca e exibe os orçamentos do Firestore.
- * @param {string} role - A função do usuário logado (ex: 'superadmin')
+ * Busca e exibe os orçamentos do Firestore, aplicando filtros baseados na função do usuário.
+ * @param {string} role - A função do usuário logado (ex: 'superadmin', 'vendas')
  */
 function fetchQuotes(role) {
     console.log(`Buscando orçamentos com base na função: ${role}`);
@@ -38,11 +50,10 @@ function fetchQuotes(role) {
 
     let query = db.collection("orcamentos");
 
-    // LÓGICA DA PRANCHETA: Filtra os orçamentos que cada função pode ver.
+    // LÓGICA DAS PRANCHETAS: Filtra os orçamentos que cada função pode ver.
     if (role === 'vendas') {
         query = query.where('status', 'in', ['NOVO', 'EM ANÁLISE']);
     } else if (role === 'producao') {
-        // CORREÇÃO: Garante que a produção veja os aprovados e os que já estão em produção.
         query = query.where('status', 'in', ['APROVADO', 'EM PRODUÇÃO']);
     } else if (role === 'transporte') {
         query = query.where('status', 'in', ['PRONTO P/ ENTREGA']);
@@ -67,23 +78,17 @@ function fetchQuotes(role) {
             const statusClass = statusAtual.toLowerCase().replace(/\s+/g, '-');
 
             const getStatusOptions = (userRole, currentStatus) => {
-                const allStatuses = ['NOVO', 'EM ANÁLISE', 'APROVADO', 'EM PRODUÇÃO', 'PRONTO P/ ENTREGA', 'FINALIZADO'];
                 let allowedTransitions = [];
-
                 if (userRole === 'vendas') {
                     if (currentStatus === 'NOVO') allowedTransitions = ['EM ANÁLISE', 'APROVADO'];
                     else if (currentStatus === 'EM ANÁLISE') allowedTransitions = ['APROVADO'];
-                
-                // --- LÓGICA CORRIGIDA PARA PRODUÇÃO ---
                 } else if (userRole === 'producao') {
                     if (currentStatus === 'APROVADO') allowedTransitions = ['EM PRODUÇÃO'];
                     else if (currentStatus === 'EM PRODUÇÃO') allowedTransitions = ['PRONTO P/ ENTREGA'];
-                
                 } else if (userRole === 'transporte') {
                     if (currentStatus === 'PRONTO P/ ENTREGA') allowedTransitions = ['FINALIZADO'];
-                
                 } else if (userRole === 'superadmin' || userRole === 'gerencia') {
-                    allowedTransitions = allStatuses;
+                    allowedTransitions = ['NOVO', 'EM ANÁLISE', 'APROVADO', 'EM PRODUÇÃO', 'PRONTO P/ ENTREGA', 'FINALIZADO'];
                 }
 
                 let optionsHTML = `<option value="${currentStatus}" selected>${currentStatus}</option>`;
@@ -96,13 +101,29 @@ function fetchQuotes(role) {
             };
 
             const statusOptionsHTML = getStatusOptions(role, statusAtual);
-            
             let cancelButtonHTML = '';
             if (role === 'superadmin') {
                 cancelButtonHTML = `<button class="cancel-button" data-id="${quoteId}">Cancelar</button>`;
             }
 
             card.innerHTML = `
+                <div class="quote-header">
+                    <h3>${quote.obraName || 'Orçamento sem nome'}</h3>
+                    <span class="status-badge status-${statusClass}">${statusAtual}</span>
+                </div>
+                <p style="font-size: 0.8em; color: #888; margin-top: -0.5rem; margin-bottom: 1rem;">ID: ${quoteId}</p>
+                <div class="quote-details">
+                    <div>
+                        <p><strong>Cliente:</strong> ${quote.clienteNome || 'Não informado'}</p>
+                        <p><strong>Telefone:</strong> ${quote.clienteTelefone || 'Não informado'}</p>
+                        <p><strong>E-mail:</strong> ${quote.clienteEmail || 'Não informado'}</p>
+                    </div>
+                    <div>
+                        <p><strong>Data:</strong> ${data}</p>
+                        <p><strong>Tipo de Laje:</strong> ${quote.tipoLaje || 'N/A'}</p>
+                        <p><strong>Área Total:</strong> ${quote.totalArea || 'N/A'} m²</p>
+                    </div>
+                </div>
                 <div class="quote-actions">
                     <div class="status-changer">
                         <label for="status-select-${quoteId}">Alterar Status:</label>
@@ -123,8 +144,34 @@ function fetchQuotes(role) {
     });
 }
 
+/**
+ * Atualiza o status de um orçamento no banco de dados.
+ * @param {string} quoteId - O ID do documento.
+ * @param {string} newStatus - O novo status.
+ * @param {HTMLElement} cardElement - O elemento do card na tela para atualização visual.
+ */
+function updateQuoteStatus(quoteId, newStatus, cardElement) {
+    const quoteRef = db.collection("orcamentos").doc(quoteId);
+    quoteRef.update({ status: newStatus })
+    .then(() => {
+        console.log(`Status do orçamento ${quoteId} atualizado para ${newStatus}`);
+        const statusBadge = cardElement.querySelector('.status-badge');
+        if (statusBadge) {
+            const statusClass = newStatus.toLowerCase().replace(/\s+/g, '-');
+            statusBadge.className = `status-badge status-${statusClass}`;
+            statusBadge.textContent = newStatus;
+        }
+        // Para atualizar a lista de acordo com o filtro da prancheta, podemos simplesmente recarregar.
+        setTimeout(() => fetchQuotes(auth.currentUser.role), 1000); // Recarrega após 1s
+    })
+    .catch(error => {
+        console.error("Erro ao atualizar status: ", error);
+        alert("Não foi possível atualizar o status.");
+    });
+}
 
-// --- EVENT LISTENERS (OS "OUVINTES") ---
+
+// --- EVENT LISTENERS ---
 
 // O "maestro" da autenticação.
 auth.onAuthStateChanged(user => {
@@ -132,17 +179,23 @@ auth.onAuthStateChanged(user => {
         const userRef = db.collection("equipe").doc(user.uid);
         userRef.get().then((doc) => {
             if (doc.exists) {
-                const userRole = doc.data().funcao;
-                console.log(`Acesso concedido: ${user.email}, Função: ${userRole}`);
-                adminUserEmail.textContent = `${user.email} (${userRole})`;
+                const userData = doc.data();
+                user.role = userData.funcao; // Anexamos a função ao objeto do usuário
+                
+                console.log(`Acesso concedido. Usuário: ${user.email}, Função: ${user.role}`);
+                adminUserEmail.textContent = `${user.email} (${user.role})`;
                 loginContainer.style.display = 'none';
                 adminPanel.style.display = 'block';
-                fetchQuotes(userRole);
+                fetchQuotes(user.role);
             } else {
-                console.error("ACESSO NEGADO! Usuário não faz parte da equipe.");
+                console.error("ACESSO NEGADO! Usuário não está na coleção 'equipe'.");
                 alert("Você não tem permissão para acessar este painel.");
                 auth.signOut();
             }
+        }).catch(error => {
+            console.error("Erro ao buscar função do usuário:", error);
+            alert("Ocorreu um erro ao verificar suas permissões.");
+            auth.signOut();
         });
     } else {
         console.log("Nenhum usuário logado. Exibindo tela de login.");
