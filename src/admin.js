@@ -125,7 +125,7 @@ btnAdminLogin.addEventListener('click', () => {
                       const card = document.createElement('div');
                       card.className = 'quote-card';
                       const data = quote.dataCriacao ? quote.dataCriacao.toDate().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Data indisponível';
-                      const statusAtual = quote.status || 'ENVIADO';
+                      const statusAtual = quote.status || 'NOVO';
                       const statusClass = statusAtual.toLowerCase().replace(/\s+/g, '-');
 
                       card.innerHTML = `
@@ -151,7 +151,7 @@ btnAdminLogin.addEventListener('click', () => {
                               <div class="status-changer">
                                   <label for="status-select-${quoteId}">Alterar Status:</label>
                                   <select class="status-select" data-id="${quoteId}">
-                                      <option value="ENVIADO" ${statusAtual === 'ENVIADO' ? 'selected' : ''}>Enviado</option>
+                                      <option value="NOVO" ${statusAtual === 'NOVO' ? 'selected' : ''}>Novo</option>
                                       <option value="EM ANÁLISE" ${statusAtual === 'EM ANÁLISE' ? 'selected' : ''}>Em Análise</option>
                                       <option value="APROVADO" ${statusAtual === 'APROVADO' ? 'selected' : ''}>Aprovado</option>
                                       <option value="EM PRODUÇÃO" ${statusAtual === 'EM PRODUÇÃO' ? 'selected' : ''}>Em Produção</option>

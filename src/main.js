@@ -368,7 +368,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     tipoLaje: calcData.tipoLaje,
                     totalArea: calcData.totalArea.toFixed(2),
                     comodos: calcData.comodos,
-                    status: 'ENVIADO'
+                    status: 'NOVO'
                 };
 
                 if (window.Android && typeof window.Android.submitQuote === 'function') {
