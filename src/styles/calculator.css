@@ -1,0 +1,43 @@
+/* src/styles/calculator.css */
+
+.calc-step {
+  display: none;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.calc-step.active {
+  display: flex;
+}
+
+.progress-circle {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: lightgray;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.progress-circle.active {
+  background-color: #0088cc;
+}
+
+.back-button,
+.next-button,
+#calculate-button,
+#submit-quote-btn {
+  padding: 10px 16px;
+  font-weight: bold;
+  border-radius: 4px;
+  border: none;
+  background-color: #0066aa;
+  color: white;
+  cursor: pointer;
+}
+
+.footer-menu {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+}
