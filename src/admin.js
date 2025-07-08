@@ -10,10 +10,9 @@ const firebaseConfig = {
 };
 */
 
-// A configuração do Firebase vem primeiro.
-// Use as chaves reais do seu projeto aqui.
+// A configuração do Firebase vem primeiro
 const firebaseConfig = {
-apiKey: "AIzaSyBbcXKzor-xgsQzip6c7gZbn4iRVFr2Tfo",
+  apiKey: "AIzaSyBbcXKzor-xgsQzip6c7gZbn4iRVFr2Tfo",
   authDomain: "premoldaco-webapp.firebaseapp.com",
   projectId: "premoldaco-webapp",
   storageBucket: "premoldaco-webapp.appspot.com",
@@ -27,30 +26,22 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-// Seleciona os elementos da página
-const loginContainer = document.getElementById('login-container');
-const adminPanel = document.getElementById('admin-panel');
-const loginError = document.getElementById('login-error');
-const btnAdminLogin = document.getElementById('btn-admin-login');
-const btnAdminLogout = document.getElementById('btn-admin-logout');
-const adminUserEmail = document.getElementById('admin-user-email');
-const quotesListContainer = document.getElementById('quotes-list');
-const loader = document.getElementById('loader');
+// --- FUNÇÕES GLOBAIS DE LÓGICA ---
 
-// --- FUNÇÕES DE LÓGICA ---
+let quotesListener = null; // Variável para controlar nosso ouvinte
 
-/**
- * Busca e exibe os orçamentos do Firestore, aplicando filtros baseados na função do usuário.
- * @param {string} role - A função do usuário logado (ex: 'superadmin', 'vendas')
- */
+
 function fetchQuotes(role) {
-    console.log(`Buscando orçamentos com base na função: ${role}`);
+    console.log(`Buscando orçamentos para a função: ${role}`);
+    const loader = document.getElementById('loader');
+    const quotesListContainer = document.getElementById('quotes-list');
+    
     loader.style.display = 'block';
-    quotesListContainer.innerHTML = '';
+    
+    if (quotesListener) quotesListener();
 
     let query = db.collection("orcamentos");
 
-    // LÓGICA DAS PRANCHETAS: Filtra os orçamentos que cada função pode ver.
     if (role === 'vendas') {
         query = query.where('status', 'in', ['NOVO', 'EM ANÁLISE']);
     } else if (role === 'producao') {
@@ -61,8 +52,10 @@ function fetchQuotes(role) {
 
     query = query.orderBy("dataCriacao", "desc");
 
-    query.get().then(querySnapshot => {
+    quotesListener = query.onSnapshot((querySnapshot) => {
         loader.style.display = 'none';
+        quotesListContainer.innerHTML = '';
+        
         if (querySnapshot.empty) {
             quotesListContainer.innerHTML = '<p>Nenhum orçamento encontrado para esta prancheta.</p>';
             return;
@@ -73,6 +66,8 @@ function fetchQuotes(role) {
             const quoteId = doc.id;
             const card = document.createElement('div');
             card.className = 'quote-card';
+
+            // --- INÍCIO DAS DEFINIÇÕES CORRIGIDAS ---
             const data = quote.dataCriacao ? quote.dataCriacao.toDate().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Data indisponível';
             const statusAtual = quote.status || 'NOVO';
             const statusClass = statusAtual.toLowerCase().replace(/\s+/g, '-');
@@ -101,68 +96,56 @@ function fetchQuotes(role) {
             };
 
             const statusOptionsHTML = getStatusOptions(role, statusAtual);
+            
             let cancelButtonHTML = '';
             if (role === 'superadmin') {
                 cancelButtonHTML = `<button class="cancel-button" data-id="${quoteId}">Cancelar</button>`;
             }
+            // --- FIM DAS DEFINIÇÕES CORRIGIDAS ---
 
             card.innerHTML = `
-                <div class="quote-header">
-                    <h3>${quote.obraName || 'Orçamento sem nome'}</h3>
-                    <span class="status-badge status-${statusClass}">${statusAtual}</span>
+              <div class="quote-header">
+                <h3>${quote.obraName || 'Orçamento sem nome'}</h3>
+                <span class="status-badge status-${statusClass}">${statusAtual}</span>
+              </div>
+              <p style="font-size: 0.8em; color: #888; margin-top: -0.5rem; margin-bottom: 1rem;">ID: ${quoteId}</p>
+              <div class="quote-details">
+                <div>
+                  <p><strong>Cliente:</strong> ${quote.clienteNome || 'Não informado'}</p>
+                  <p><strong>Telefone:</strong> ${quote.clienteTelefone || 'Não informado'}</p>
+                  <p><strong>E-mail:</strong> ${quote.clienteEmail || 'Não informado'}</p>
                 </div>
-                <p style="font-size: 0.8em; color: #888; margin-top: -0.5rem; margin-bottom: 1rem;">ID: ${quoteId}</p>
-                <div class="quote-details">
-                    <div>
-                        <p><strong>Cliente:</strong> ${quote.clienteNome || 'Não informado'}</p>
-                        <p><strong>Telefone:</strong> ${quote.clienteTelefone || 'Não informado'}</p>
-                        <p><strong>E-mail:</strong> ${quote.clienteEmail || 'Não informado'}</p>
-                    </div>
-                    <div>
-                        <p><strong>Data:</strong> ${data}</p>
-                        <p><strong>Tipo de Laje:</strong> ${quote.tipoLaje || 'N/A'}</p>
-                        <p><strong>Área Total:</strong> ${quote.totalArea || 'N/A'} m²</p>
-                    </div>
+                <div>
+                  <p><strong>Data:</strong> ${data}</p>
+                  <p><strong>Tipo de Laje:</strong> ${quote.tipoLaje || 'N/A'}</p>
+                  <p><strong>Área Total:</strong> ${quote.totalArea || 'N/A'} m²</p>
                 </div>
-                <div class="quote-actions">
-                    <div class="status-changer">
-                        <label for="status-select-${quoteId}">Alterar Status:</label>
-                        <select class="status-select" data-id="${quoteId}">
-                            ${statusOptionsHTML}
-                        </select>
-                    </div>
-                    ${cancelButtonHTML}
+              </div>
+              <div class="quote-actions">
+                <div class="status-changer">
+                  <label for="status-select-${quoteId}">Alterar Status:</label>
+                  <select class="status-select" data-id="${quoteId}">
+                    ${statusOptionsHTML}
+                  </select>
                 </div>
+                ${cancelButtonHTML}
+              </div>
             `;
             quotesListContainer.appendChild(card);
         });
-    })
-    .catch(error => {
+    }, (error) => {
         loader.style.display = 'none';
-        console.error("Erro ao buscar orçamentos: ", error);
-        quotesListContainer.innerHTML = `<p style="color: red;">Ocorreu um erro ao carregar os orçamentos. Verifique o console (F12) para um link de criação de índice.</p>`;
+        console.error("Erro no listener de orçamentos: ", error);
+        quotesListContainer.innerHTML = `<p style="color: red;">Ocorreu um erro. Verifique o console (F12).</p>`;
     });
 }
-
-/**
- * Atualiza o status de um orçamento no banco de dados.
- * @param {string} quoteId - O ID do documento.
- * @param {string} newStatus - O novo status.
- * @param {HTMLElement} cardElement - O elemento do card na tela para atualização visual.
- */
 function updateQuoteStatus(quoteId, newStatus, cardElement) {
     const quoteRef = db.collection("orcamentos").doc(quoteId);
     quoteRef.update({ status: newStatus })
     .then(() => {
         console.log(`Status do orçamento ${quoteId} atualizado para ${newStatus}`);
-        const statusBadge = cardElement.querySelector('.status-badge');
-        if (statusBadge) {
-            const statusClass = newStatus.toLowerCase().replace(/\s+/g, '-');
-            statusBadge.className = `status-badge status-${statusClass}`;
-            statusBadge.textContent = newStatus;
-        }
-        // Para atualizar a lista de acordo com o filtro da prancheta, podemos simplesmente recarregar.
-        setTimeout(() => fetchQuotes(auth.currentUser.role), 1000); // Recarrega após 1s
+        // A atualização da UI é tratada pelo onSnapshot, não precisamos fazer nada aqui.
+        // A lista se atualizará sozinha.
     })
     .catch(error => {
         console.error("Erro ao atualizar status: ", error);
@@ -170,39 +153,47 @@ function updateQuoteStatus(quoteId, newStatus, cardElement) {
     });
 }
 
+// --- LÓGICA EXECUTADA QUANDO A PÁGINA CARREGA ---
+document.addEventListener('DOMContentLoaded', () => {
+    console.log("DOM carregado, iniciando script...");
 
-// --- EVENT LISTENERS ---
+    // Seleciona os elementos da página
+    const loginContainer = document.getElementById('login-container');
+    const adminPanel = document.getElementById('admin-panel');
+    const loginError = document.getElementById('login-error');
+    const btnAdminLogin = document.getElementById('btn-admin-login');
+    const btnAdminLogout = document.getElementById('btn-admin-logout');
+    const adminUserEmail = document.getElementById('admin-user-email');
+    const quotesListContainer = document.getElementById('quotes-list');
 
-// O "maestro" da autenticação.
-auth.onAuthStateChanged(user => {
-    if (user) {
-        const userRef = db.collection("equipe").doc(user.uid);
-        userRef.get().then((doc) => {
-            if (doc.exists) {
-                const userData = doc.data();
-                user.role = userData.funcao; // Anexamos a função ao objeto do usuário
-                
-                console.log(`Acesso concedido. Usuário: ${user.email}, Função: ${user.role}`);
-                adminUserEmail.textContent = `${user.email} (${user.role})`;
-                loginContainer.style.display = 'none';
-                adminPanel.style.display = 'block';
-                fetchQuotes(user.role);
-            } else {
-                console.error("ACESSO NEGADO! Usuário não está na coleção 'equipe'.");
-                alert("Você não tem permissão para acessar este painel.");
-                auth.signOut();
-            }
-        }).catch(error => {
-            console.error("Erro ao buscar função do usuário:", error);
-            alert("Ocorreu um erro ao verificar suas permissões.");
-            auth.signOut();
-        });
-    } else {
-        console.log("Nenhum usuário logado. Exibindo tela de login.");
-        loginContainer.style.display = 'block';
-        adminPanel.style.display = 'none';
-    }
-});
+    // O "maestro" da autenticação
+    auth.onAuthStateChanged(user => {
+        if (user) {
+            const userRef = db.collection("equipe").doc(user.uid);
+            userRef.get().then((doc) => {
+                if (doc.exists) {
+                    const userRole = doc.data().funcao;
+                    user.role = userRole; // Anexa a função ao objeto do usuário
+                    
+                    adminUserEmail.textContent = `${user.email} (${userRole})`;
+                    loginContainer.style.display = 'none';
+                    adminPanel.style.display = 'block';
+                    attachQuotesListener(userRole);
+                } else {
+                    alert("Você não tem permissão para acessar este painel.");
+                    auth.signOut();
+                }
+            });
+        } else {
+            if (quotesListener) quotesListener(); // Desconecta o ouvinte ao fazer logout
+            loginContainer.style.display = 'block';
+            adminPanel.style.display = 'none';
+        }
+    });
+
+// DAQUI PRA CIMA 08/07/25 16:21
+
+
 
 // Listener para o botão de Login
 btnAdminLogin.addEventListener('click', () => {
@@ -242,4 +233,5 @@ quotesListContainer.addEventListener('click', (e) => {
             updateQuoteStatus(quoteId, 'CANCELADO', cardElement);
         }
     }
+  });
 });
