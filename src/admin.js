@@ -1,16 +1,4 @@
-/*
-const firebaseConfig = {
-  apiKey: "AIzaSyBbcXKzor-xgsQzip6c7gZbn4iRVFr2Tfo",
-  authDomain: "premoldaco-webapp.firebaseapp.com",
-  projectId: "premoldaco-webapp",
-  storageBucket: "premoldaco-webapp.appspot.com",
-  messagingSenderId: "918710823829",
-  appId: "1:918710823829:web:b41e60568d4b0d30c9a49c",
-  measurementId: "G-VJ4ETSMZT7"
-};
-*/
-
-// A configuração do Firebase vem primeiro.
+// A configuração do Firebase vem no topo do arquivo.
 const firebaseConfig = {
   apiKey: "AIzaSyBbcXKzor-xgsQzip6c7gZbn4iRVFr2Tfo",
   authDomain: "premoldaco-webapp.firebaseapp.com",
@@ -26,17 +14,17 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-// --- FUNÇÕES GLOBAIS DE LÓGICA ---
+// --- FUNÇÕES DE LÓGICA ---
 
-let quotesListener = null; // Variável para controlar nosso ouvinte em tempo real
+let quotesListener = null;
 
-function attachQuotesListener(role) {
-    console.log(`Anexando ouvinte para a função: ${role}`);
+function fetchQuotes(role) {
+    console.log(`Buscando orçamentos para a função: ${role}`);
     const loader = document.getElementById('loader');
     const quotesListContainer = document.getElementById('quotes-list');
     
     loader.style.display = 'block';
-    if (quotesListener) quotesListener(); // Remove ouvintes antigos para evitar duplicação
+    if (quotesListener) quotesListener();
 
     let query = db.collection("orcamentos");
 
@@ -84,10 +72,10 @@ function attachQuotesListener(role) {
                     allowedTransitions = ['NOVO', 'EM ANÁLISE', 'APROVADO', 'EM PRODUÇÃO', 'PRONTO P/ ENTREGA', 'FINALIZADO'];
                 }
 
-                let optionsHTML = `<option value="${currentStatus}" selected>${currentStatus}</option>`;
+                let optionsHTML = `<option value="${currentStatus}" selected>${currentStatus.replace(/-/g, ' ')}</option>`;
                 allowedTransitions.forEach(status => {
                     if (status !== currentStatus) {
-                        optionsHTML += `<option value="${status}">${status}</option>`;
+                        optionsHTML += `<option value="${status}">${status.replace(/-/g, ' ')}</option>`;
                     }
                 });
                 return optionsHTML;
@@ -100,32 +88,28 @@ function attachQuotesListener(role) {
             }
 
             card.innerHTML = `
-                <div class="quote-header">
-                    <h3>${quote.obraName || 'Orçamento sem nome'}</h3>
-                    <span class="status-badge status-${statusClass}">${statusAtual}</span>
+              <div class="quote-header">
+                <h3>${quote.obraName || 'Orçamento sem nome'}</h3>
+                <span class="status-badge status-${statusClass}">${statusAtual}</span>
+              </div>
+              <p class="quote-id">ID: ${quoteId}</p>
+              <div class="quote-details">
+                <p><strong>Cliente:</strong> ${quote.clienteNome || 'Não informado'}</p>
+                <p><strong>Telefone:</strong> ${quote.clienteTelefone || 'Não informado'}</p>
+                <p><strong>E-mail:</strong> ${quote.clienteEmail || 'Não informado'}</p>
+                <p><strong>Data:</strong> ${data}</p>
+                <p><strong>Tipo de Laje:</strong> ${quote.tipoLaje || 'N/A'}</p>
+                <p><strong>Área Total:</strong> ${quote.totalArea || 'N/A'} m²</p>
+              </div>
+              <div class="quote-actions">
+                <div class="status-changer">
+                  <label for="status-select-${quoteId}">Alterar Status:</label>
+                  <select class="status-select" data-id="${quoteId}">
+                    ${statusOptionsHTML}
+                  </select>
                 </div>
-                <p style="font-size: 0.8em; color: #888; margin-top: -0.5rem; margin-bottom: 1rem;">ID: ${quoteId}</p>
-                <div class="quote-details">
-                    <div>
-                        <p><strong>Cliente:</strong> ${quote.clienteNome || 'Não informado'}</p>
-                        <p><strong>Telefone:</strong> ${quote.clienteTelefone || 'Não informado'}</p>
-                        <p><strong>E-mail:</strong> ${quote.clienteEmail || 'Não informado'}</p>
-                    </div>
-                    <div>
-                        <p><strong>Data:</strong> ${data}</p>
-                        <p><strong>Tipo de Laje:</strong> ${quote.tipoLaje || 'N/A'}</p>
-                        <p><strong>Área Total:</strong> ${quote.totalArea || 'N/A'} m²</p>
-                    </div>
-                </div>
-                <div class="quote-actions">
-                    <div class="status-changer">
-                        <label for="status-select-${quoteId}">Alterar Status:</label>
-                        <select class="status-select" data-id="${quoteId}">
-                            ${statusOptionsHTML}
-                        </select>
-                    </div>
-                    ${cancelButtonHTML}
-                </div>
+                ${cancelButtonHTML}
+              </div>
             `;
             quotesListContainer.appendChild(card);
         });
@@ -136,12 +120,11 @@ function attachQuotesListener(role) {
     });
 }
 
-function updateQuoteStatus(quoteId, newStatus, cardElement) {
+function updateQuoteStatus(quoteId, newStatus) {
     const quoteRef = db.collection("orcamentos").doc(quoteId);
     quoteRef.update({ status: newStatus })
     .then(() => {
         console.log(`Status do orçamento ${quoteId} atualizado para ${newStatus}`);
-        // Não precisamos fazer nada aqui, o onSnapshot cuida da atualização da UI.
     })
     .catch(error => {
         console.error("Erro ao atualizar status: ", error);
