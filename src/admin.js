@@ -93,7 +93,7 @@ function attachQuotesListener(role) {
                 cancelButtonHTML = `<button class="cancel-button" data-id="${quoteId}">Cancelar</button>`;
             }
 
-           // --- NOVA LÓGICA PARA EXIBIR A PLACA ---
+             // --- LÓGICA PARA MONTAR O HTML DA PLACA ---
             let deliveryInfoHTML = '';
             if (quote.placaVeiculo) {
                 deliveryInfoHTML = `
@@ -101,7 +101,8 @@ function attachQuotesListener(role) {
                     <p><strong>Veículo de Entrega:</strong> ${quote.placaVeiculo}</p>
                 </div>`;
             }
-            // --- CÓDIGO HTML DO CARD CORRIGIDO ---
+
+            // --- HTML DO CARD CORRIGIDO ---
             card.innerHTML = `
               <div class="quote-header">
                 <h3>${quote.obraName || 'Orçamento sem nome'}</h3>
@@ -120,7 +121,7 @@ function attachQuotesListener(role) {
                   <p><strong>Área Total:</strong> ${quote.totalArea || 'N/A'} m²</p>
                 </div>
               </div>
-              <div class="quote-actions">
+              ${deliveryInfoHTML}  <div class="quote-actions">
                 <div class="status-changer">
                   <label for="status-select-${quoteId}">Alterar Status:</label>
                   <select class="status-select" data-id="${quoteId}">
