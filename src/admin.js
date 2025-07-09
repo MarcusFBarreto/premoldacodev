@@ -93,6 +93,12 @@ function attachQuotesListener(role) {
                 cancelButtonHTML = `<button class="cancel-button" data-id="${quoteId}">Cancelar</button>`;
             }
 
+             // --- NOVO: LÓGICA PARA EXIBIR A PLACA ---
+            let deliveryInfoHTML = '';
+            if (quote.placaVeiculo) {
+                deliveryInfoHTML = `<p><strong>Veículo:</strong> ${quote.placaVeiculo}</p>`;
+            }
+
             // --- CÓDIGO HTML DO CARD CORRIGIDO ---
             card.innerHTML = `
               <div class="quote-header">
@@ -133,7 +139,27 @@ function attachQuotesListener(role) {
 
 function updateQuoteStatus(quoteId, newStatus, cardElement) {
     const quoteRef = db.collection("orcamentos").doc(quoteId);
-    quoteRef.update({ status: newStatus })
+    let dataToUpdate = { status: newStatus };
+
+    // --- LÓGICA CORRIGIDA: PEDE A PLACA NA FASE "CARREGANDO" ---
+    if (newStatus === 'CARREGANDO') {
+        const placa = prompt("Por favor, digite a placa do veículo de entrega:");
+        if (placa && placa.trim() !== '') {
+            dataToUpdate.placaVeiculo = placa.trim().toUpperCase();
+        } else {
+            alert("A mudança de status foi cancelada pois a placa não foi informada.");
+            // Recarrega a página para resetar o menu dropdown para o estado anterior.
+            window.location.reload(); 
+            return; 
+        }
+    }
+
+     quoteRef.update(dataToUpdate)
+    .then(() => {
+        console.log(`Dados do orçamento ${quoteId} atualizados.`);
+    })
+    
+    
     .catch(error => {
         console.error("Erro ao atualizar status: ", error);
         alert("Não foi possível atualizar o status.");
