@@ -93,12 +93,14 @@ function attachQuotesListener(role) {
                 cancelButtonHTML = `<button class="cancel-button" data-id="${quoteId}">Cancelar</button>`;
             }
 
-             // --- NOVO: LÓGICA PARA EXIBIR A PLACA ---
+           // --- NOVA LÓGICA PARA EXIBIR A PLACA ---
             let deliveryInfoHTML = '';
             if (quote.placaVeiculo) {
-                deliveryInfoHTML = `<p><strong>Veículo:</strong> ${quote.placaVeiculo}</p>`;
+                deliveryInfoHTML = `
+                <div class="delivery-info">
+                    <p><strong>Veículo de Entrega:</strong> ${quote.placaVeiculo}</p>
+                </div>`;
             }
-
             // --- CÓDIGO HTML DO CARD CORRIGIDO ---
             card.innerHTML = `
               <div class="quote-header">
