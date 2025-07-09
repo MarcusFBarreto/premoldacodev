@@ -24,25 +24,49 @@ function attachQuotesListener(role) {
     const loader = document.getElementById('loader');
     const quotesListContainer = document.getElementById('quotes-list');
     
-    loader.style.display = 'block';
-    
+     loader.style.display = 'block';
     if (quotesListener) quotesListener();
 
     let query = db.collection("orcamentos");
 
     
-    // LÓGICA DAS PRANCHETAS: Filtra o que cada um vê
+    // Lógica das Pranchetas
     if (role === 'vendas') {
         query = query.where('status', 'in', ['NOVO', 'EM ANÁLISE']);
     } else if (role === 'producao') {
-        // Produção vê o que foi aprovado e o que está sendo produzido
-        query = query.where('status', 'in', ['APROVADO', 'AGUARDANDO PRODUÇÃO', 'EM PRODUÇÃO']);
+        query = query.where('status', 'in', ['APROVADO', 'EM PRODUÇÃO']);
     } else if (role === 'transporte') {
-        // Transporte vê tudo relacionado à logística
-        query = query.where('status', 'in', ['PRONTO P/ ENTREGA', 'AGUARDANDO CARGA', 'CARREGANDO', 'EM ROTA']);
+        query = query.where('status', 'in', ['PRONTO P/ ENTREGA']);
     }
 
     query = query.orderBy("dataCriacao", "desc");
+
+    // --- FUNÇÃO AUXILIAR DEFINIDA AQUI FORA DO LOOP ---
+    const getStatusOptions = (userRole, currentStatus) => {
+        const allStatuses = ['NOVO', 'EM ANÁLISE', 'APROVADO', 'EM PRODUÇÃO', 'PRONTO P/ ENTREGA', 'FINALIZADO'];
+        let allowedTransitions = [];
+
+        if (userRole === 'vendas') {
+            if (currentStatus === 'NOVO') allowedTransitions = ['EM ANÁLISE', 'APROVADO'];
+            else if (currentStatus === 'EM ANÁLISE') allowedTransitions = ['APROVADO'];
+        } else if (userRole === 'producao') {
+            if (currentStatus === 'APROVADO') allowedTransitions = ['EM PRODUÇÃO'];
+            else if (currentStatus === 'EM PRODUÇÃO') allowedTransitions = ['PRONTO P/ ENTREGA'];
+        } else if (userRole === 'transporte') {
+            if (currentStatus === 'PRONTO P/ ENTREGA') allowedTransitions = ['FINALIZADO'];
+        } else if (userRole === 'superadmin' || userRole === 'gerencia') {
+            allowedTransitions = allStatuses;
+        }
+
+        let optionsHTML = `<option value="${currentStatus}" selected>${currentStatus.replace(/-/g, ' ')}</option>`;
+        allowedTransitions.forEach(status => {
+            if (status !== currentStatus) {
+                optionsHTML += `<option value="${status}">${status.replace(/-/g, ' ')}</option>`;
+            }
+        });
+        return optionsHTML;
+    };
+
 
     quotesListener = query.onSnapshot((querySnapshot) => {
         loader.style.display = 'none';
@@ -58,43 +82,12 @@ function attachQuotesListener(role) {
             const quoteId = doc.id;
             const card = document.createElement('div');
             card.className = 'quote-card';
-
+            
             const data = quote.dataCriacao ? quote.dataCriacao.toDate().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Data indisponível';
             const statusAtual = quote.status || 'NOVO';
             const statusClass = statusAtual.toLowerCase().replace(/\s+/g, '-');
-
-            const getStatusOptions = (userRole, currentStatus) => {
-                const allStatuses =  [
-                    'NOVO', 'EM ANÁLISE', 'APROVADO', 
-                    'AGUARDANDO PRODUÇÃO', 'EM PRODUÇÃO', 'PRONTO P/ ENTREGA',
-                    'AGUARDANDO CARGA', 'CARREGANDO', 'EM ROTA', 'ENTREGUE',
-                    'FINALIZADO'];
-
-                if (userRole === 'vendas') {
-                    if (currentStatus === 'NOVO') allowedTransitions = ['EM ANÁLISE', 'APROVADO'];
-                    else if (currentStatus === 'EM ANÁLISE') allowedTransitions = ['APROVADO'];
-                } else if (userRole === 'producao') {
-                    if (currentStatus === 'APROVADO') allowedTransitions = ['AGUARDANDO PRODUÇÃO'];
-                    else if (currentStatus === 'AGUARDANDO PRODUÇÃO') allowedTransitions = ['EM PRODUÇÃO'];
-                    else if (currentStatus === 'EM PRODUÇÃO') allowedTransitions = ['PRONTO P/ ENTREGA'];
-                } else if (userRole === 'transporte') {
-                    if (currentStatus === 'PRONTO P/ ENTREGA') allowedTransitions = ['AGUARDANDO CARGA'];
-                    else if (currentStatus === 'AGUARDANDO CARGA') allowedTransitions = ['CARREGANDO'];
-                    else if (currentStatus === 'CARREGANDO') allowedTransitions = ['EM ROTA'];
-                    else if (currentStatus === 'EM ROTA') allowedTransitions = ['ENTREGUE'];
-                } else if (userRole === 'superadmin' || userRole === 'gerencia') {
-                    allowedTransitions = allStatuses;
-                }
-
-                let optionsHTML = `<option value="${currentStatus}" selected>${currentStatus}</option>`;
-                allowedTransitions.forEach(status => {
-                    if (status !== currentStatus) {
-                        optionsHTML += `<option value="${status}">${status}</option>`;
-                    }
-                });
-                return optionsHTML;
-            };
-
+            
+            // Agora apenas chamamos a função, que já existe.
             const statusOptionsHTML = getStatusOptions(role, statusAtual);
             
             let cancelButtonHTML = '';
@@ -103,33 +96,7 @@ function attachQuotesListener(role) {
             }
 
             card.innerHTML = `
-              <div class="quote-header">
-                <h3>${quote.obraName || 'Orçamento sem nome'}</h3>
-                <span class="status-badge status-${statusClass}">${statusAtual}</span>
-              </div>
-              <p style="font-size: 0.8em; color: #888; margin-top: -0.5rem; margin-bottom: 1rem;">ID: ${quoteId}</p>
-              <div class="quote-details">
-                <div>
-                  <p><strong>Cliente:</strong> ${quote.clienteNome || 'Não informado'}</p>
-                  <p><strong>Telefone:</strong> ${quote.clienteTelefone || 'Não informado'}</p>
-                  <p><strong>E-mail:</strong> ${quote.clienteEmail || 'Não informado'}</p>
-                </div>
-                <div>
-                  <p><strong>Data:</strong> ${data}</p>
-                  <p><strong>Tipo de Laje:</strong> ${quote.tipoLaje || 'N/A'}</p>
-                  <p><strong>Área Total:</strong> ${quote.totalArea || 'N/A'} m²</p>
-                </div>
-              </div>
-              <div class="quote-actions">
-                <div class="status-changer">
-                  <label for="status-select-${quoteId}">Alterar Status:</label>
-                  <select class="status-select" data-id="${quoteId}">
-                    ${statusOptionsHTML}
-                  </select>
-                </div>
-                ${cancelButtonHTML}
-              </div>
-            `;
+                `;
             quotesListContainer.appendChild(card);
         });
     }, (error) => {
