@@ -1,12 +1,12 @@
 // A configuração do Firebase vem primeiro.
 const firebaseConfig = {
-  apiKey: "AIzaSyBbcXKzor-xgsQzip6c7gZbn4iRVFr2Tfo",
-  authDomain: "premoldaco-webapp.firebaseapp.com",
-  projectId: "premoldaco-webapp",
-  storageBucket: "premoldaco-webapp.appspot.com",
-  messagingSenderId: "918710823829",
-  appId: "1:918710823829:web:b41e60568d4b0d30c9a49c",
-  measurementId: "G-VJ4ETSMZT7"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
 // Inicializa o Firebase e os serviços
@@ -170,6 +170,8 @@ function updateQuoteStatus(quoteId, newStatus, cardElement) {
 }
 
 // --- LÓGICA EXECUTADA QUANDO A PÁGINA CARREGA ---
+// Substitua o bloco existente por este em seu admin.js
+
 document.addEventListener('DOMContentLoaded', () => {
     console.log("DOM carregado, iniciando script...");
 
@@ -181,27 +183,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const adminUserEmail = document.getElementById('admin-user-email');
     const quotesListContainer = document.getElementById('quotes-list');
 
+    console.log("1. Entrando na verificação de autenticação (onAuthStateChanged)...");
     auth.onAuthStateChanged(user => {
         if (user) {
+            console.log("2. Usuário detectado:", user.email, "UID:", user.uid);
+            console.log("3. Buscando perfil na coleção 'equipe' para verificar permissões...");
+
             const userRef = db.collection("equipe").doc(user.uid);
             userRef.get().then((doc) => {
                 if (doc.exists) {
                     const userRole = doc.data().funcao;
+                    console.log("4. SUCESSO! Perfil encontrado. Função:", userRole);
                     user.role = userRole; 
                     adminUserEmail.textContent = `${user.email} (${userRole})`;
                     loginContainer.style.display = 'none';
                     adminPanel.style.display = 'block';
+                    console.log("5. Anexando o listener para buscar os orçamentos...");
                     attachQuotesListener(userRole);
                 } else {
-                    alert("Você não tem permissão para acessar este painel.");
+                    console.error("ERRO GRAVE: O documento na coleção 'equipe' não existe para este usuário. Verifique se o UID do usuário no Authentication corresponde a um documento na coleção 'equipe'.");
+                    alert("Acesso negado. Você não faz parte da equipe autorizada.");
                     auth.signOut();
                 }
             }).catch(error => {
-                console.error("Erro ao buscar função do usuário:", error);
-                alert("Ocorreu um erro ao verificar suas permissões.");
+                console.error("ERRO GRAVE ao tentar ler o perfil na coleção 'equipe':", error);
+                alert("Ocorreu um erro ao verificar suas permissões. Verifique as regras de segurança do Firestore.");
                 auth.signOut();
             });
         } else {
+            console.log("2. Nenhum usuário logado. Exibindo formulário de login.");
             if (quotesListener) quotesListener();
             loginContainer.style.display = 'block';
             adminPanel.style.display = 'none';
