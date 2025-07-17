@@ -1,4 +1,4 @@
-import './styles.css'; // Corrigido para o caminho correto
+import './styles.css';
 
 // --- FUNÇÕES GLOBAIS PARA INTEGRAÇÃO COM ANDROID ---
 window.preencherDadosUsuario = function(email, nome, telefone) {
@@ -13,7 +13,6 @@ window.preencherDadosUsuario = function(email, nome, telefone) {
 };
 
 window.updateSubmitButton = function(state, message = '') {
-    // CORREÇÃO: Usando o ID correto do HTML
     const submitQuoteBtn = document.getElementById('submit-quote-btn');
     if (!submitQuoteBtn) return;
     let errorMsgEl = document.getElementById('submit-error-msg');
@@ -48,10 +47,75 @@ window.updateSubmitButton = function(state, message = '') {
     }
 };
 
+// --- NOVAS FUNÇÕES PARA O MODAL DE RESUMO ---
+// Estas funções precisam estar aqui (fora do DOMContentLoaded) para serem acessíveis
+function formatSummaryMessage(data) {
+    let message = `*${data.clienteNome}*\n`;
+    message += `Telefone: ${data.clienteTelefone}\n`;
+    message += `E-mail: ${data.clienteEmail || 'Não informado'}\n\n`;
+    message += `*--*\n`;
+    message += `Solicitação: Orçamento para *${data.obraName}*\n`;
+    message += `*--*\n\n`;
+
+    if (data.comodos && data.comodos.length > 0) {
+        data.comodos.forEach(comodo => {
+            message += `*${comodo.name}:*\n`;
+            message += `Largura ${comodo.largura}m x Comp. ${comodo.comprimento}m (Área: ${comodo.area}m²)\n`;
+            if (comodo.quantidadeVigotas && comodo.tamanhoTrilho) {
+                message += `Vigotas: ${comodo.quantidadeVigotas} (${comodo.tamanhoTrilho}m)\n`;
+            }
+            if (comodo.quantidadeBlocos) {
+                 const tipoBloco = comodo.tipoBloco ? `(${comodo.tipoBloco})` : '';
+                 message += `Blocos: ${comodo.quantidadeBlocos} ${tipoBloco}\n\n`;
+            } else {
+                message += `\n`;
+            }
+        });
+        message += `*--*\n`;
+    }
+    
+    message += `*Área Total:* ${data.totalArea}m²\n`;
+    if (data.clienteObservacoes) {
+         message += `\n*Observações:* ${data.clienteObservacoes}\n`;
+    }
+    return message;
+}
+
+function showSummaryModal(data) {
+    // Verifique se o ID do modal no seu HTML é 'budget-modal'
+    const modal = document.getElementById('budget-modal'); 
+    const modalText = document.getElementById('modal-summary-text');
+    const btnWhatsapp = document.getElementById('modal-btn-whatsapp');
+    const btnClose = document.querySelector('.close-modal');
+    const btnConfirm = document.getElementById('confirm-budget');
+
+    if (!modal || !modalText || !btnWhatsapp || !btnClose || !btnConfirm) {
+        console.error("Elementos do modal (budget-modal, modal-summary-text, modal-btn-whatsapp, close-modal, confirm-budget) não encontrados no HTML.");
+        return;
+    }
+
+    const summary = formatSummaryMessage(data);
+    modalText.textContent = summary.replace(/\*/g, '');
+
+    // IMPORTANTE: PREENCHA O SEU NÚMERO DE WHATSAPP AQUI
+    // Use o número completo com DDI e DDD (ex: 5585992947431)
+    const numeroVendas = "5585992947431"; 
+    const mensagemCodificada = encodeURIComponent(`Olá, gostaria de confirmar minha solicitação de orçamento:\n\n${summary}`);
+    const whatsappUrl = `https://wa.me/${numeroVendas}?text=${mensagemCodificada}`;
+    
+    btnWhatsapp.onclick = () => { window.open(whatsappUrl, '_blank'); };
+    const closeModal = () => { modal.style.display = 'none'; };
+    btnClose.onclick = closeModal;
+    btnConfirm.onclick = closeModal;
+
+    modal.style.display = 'flex';
+}
+
+
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM carregado, iniciando script...');
 
-    // 3.1. INICIALIZAÇÃO DO FIREBASE (DENTRO DO DOMContentLoaded, MAS NO INÍCIO DELE)
+    // INICIALIZAÇÃO DO FIREBASE (DENTRO DO DOMContentLoaded, NO INÍCIO)
     const firebaseConfig = {
        apiKey: "AIzaSyBbcXKzor-xgsQzip6c7gZbn4iRVFr2Tfo",
        authDomain: "premoldaco-webapp.firebaseapp.com",
@@ -61,10 +125,8 @@ document.addEventListener('DOMContentLoaded', () => {
        appId: "1:918710823829:web:b41e60568d4b0d30c9a49c",
        measurementId: "G-VJ4ETSMZT7"
     };
-    // Certifique-se de que o SDK do Firebase (firebase-app-compat.js e firebase-firestore-compat.js)
-    // está incluído no SEU HTML ANTES do main.js, como discutimos.
     firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore(); // Agora `db` estará disponível para o resto do código.
+    const db = firebase.firestore();
 
 
     // --- CONFIGURAÇÃO DO VIEWPORT ---
@@ -218,7 +280,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
             progressCircles.forEach(c => c.classList.remove('active'));
-            backButtons.forEach(b => b.style.display = 'none');
 
             if (step === 0) {
                 calcStep0.style.display = 'flex';
@@ -226,20 +287,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 progressCircles[0].classList.add('active');
                 document.getElementById('obra-name')?.focus();
                 if (footerMenu) footerMenu.style.display = 'flex';
+                backButtons.forEach(b => b.style.display = 'none');
             } else if (step === 1) {
                 calcStep1.style.display = 'flex';
                 calcStep1.classList.add('active');
                 progressCircles[1].classList.add('active');
-                backButtons[0].style.display = 'block';
                 document.getElementById('tipo-laje')?.focus();
                 if (footerMenu) footerMenu.style.display = 'flex';
+                backButtons.forEach(b => b.style.display = 'block');
             } else if (step === 2) {
                 if (calcData.tipoLaje !== 'solicitar-medicao') {
                     calcStep2.style.display = 'flex';
                     calcStep2.classList.add('active');
                     progressCircles[2].classList.add('active');
-                    backButtons[1].style.display = 'block';
                     if (footerMenu) footerMenu.style.display = 'none';
+                    backButtons.forEach(b => b.style.display = 'block');
                 } else {
                     showStep(3);
                 }
@@ -247,7 +309,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 calcStep3.style.display = 'flex';
                 calcStep3.classList.add('active');
                 progressCircles[3].classList.add('active');
-                backButtons[2].style.display = 'block';
                 document.getElementById('nome')?.focus();
                 if (footerMenu) footerMenu.style.display = 'none';
                 if (submitQuoteBtn) {
@@ -256,6 +317,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         submitQuoteBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     }, 200);
                 }
+                backButtons.forEach(b => b.style.display = 'block');
             }
         };
 
@@ -285,7 +347,7 @@ document.addEventListener('DOMContentLoaded', () => {
             comodoDiv.classList.add('comodo-item');
             comodoDiv.innerHTML = `
                 <label for="comodo-name-${comodoCount}">Nome do Cômodo (opcional):</label>
-                <input type="text" id="comodo-name-${comodoCount}" placeholder="Ex.: Sala">
+                <input type="text" id="comodo-name-${comodoCount}" placeholder="Ex.: Quarto">
                 <label for="largura-${comodoCount}">Largura (m):</label>
                 <input type="number" id="largura-${comodoCount}" min="0.1" max="20" step="0.01" required aria-required="true" placeholder="Ex.: 4.00">
                 <label for="comprimento-${comodoCount}">Comprimento (m):</label>
@@ -415,32 +477,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log('Ambiente Web detectado. Salvando no Firebase e mostrando modal de resumo...');
                 updateSubmitButton('sending'); // Atualiza o botão para "Enviando..."
 
-                // ATENÇÃO: Adicione a inicialização do Firebase aqui, se ela ainda não estiver.
-                // No código que você me enviou da versão estável, a inicialização do Firebase
-                // parece ter sido removida do DOMContentLoaded. Vamos recolocá-la.
-
-                // INICIALIZAÇÃO DO FIREBASE (COLOCAR AQUI OU NO INÍCIO DO DOMContentLoaded)
-                // Se a seção INICIALIZAÇÃO DO FIREBASE NÃO ESTIVER NO SEU CÓDIGO, ADICIONE-A!
-                // const firebaseConfig = { ... }; // Use suas credenciais
-                // firebase.initializeApp(firebaseConfig);
-                // const db = firebase.firestore();
-                // ^^^ Certifique-se de que `db` está acessível aqui ^^^
-
-                // Se db não estiver definido aqui, mova a inicialização do Firebase
-                // para o início do document.addEventListener('DOMContentLoaded', () => { ... });
-                // como estava nas versões anteriores que eu te enviei.
-
-                // Simulação de envio para Firebase (se db não estiver inicializado)
-                // Remova este bloco se o Firebase estiver realmente configurado e você quer usá-lo.
-                /*
-                console.log('Simulando envio para Firebase...');
-                setTimeout(() => {
-                    console.log('Lead simulado salvo:', orcamentoData);
-                    updateSubmitButton('success');
-                    showSummaryModal(orcamentoData); // Chama o modal para WhatsApp
-                }, 1500);
-                */
-
                 // Lógica de envio REAL para Firebase:
                 db.collection("webleads").add(orcamentoData) // Usando orcamentoData
                     .then(() => {
@@ -454,35 +490,52 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
+        // Lógica dos botões "Voltar"
         backButtons.forEach((button, index) => {
             button.addEventListener('click', () => {
-                showStep(index);
+                // Ajusta o índice para voltar ao passo anterior
+                // O backButtons[0] (do passo 1) deve voltar para o passo 0
+                // O backButtons[1] (do passo 2) deve voltar para o passo 1
+                // O backButtons[2] (do passo 3) deve voltar para o passo 2
+                showStep(index); 
             });
         });
 
+        // Lógica dos círculos de progresso
         progressCircles.forEach(circle => {
             circle.setAttribute('role', 'button');
             circle.setAttribute('tabindex', '0');
             circle.addEventListener('click', () => {
                 const step = parseInt(circle.getAttribute('data-step'));
-                if (step === 0 || (step === 1 && calcData.obraName) || (step === 2 && calcData.tipoLaje) || (step === 3 && calcData.comodos)) {
+                // Validações simplificadas para permitir avanço entre passos já visitados
+                // Ou para forçar a completude dos passos anteriores
+                if (step === 0 || 
+                    (step === 1 && calcData.obraName) || 
+                    (step === 2 && calcData.tipoLaje) || 
+                    (step === 3 && calcData.comodos && calcData.comodos.length > 0)) 
+                {
                     showStep(step);
                 } else {
-                    alert('Por favor, complete os passos anteriores antes de prosseguir.');
+                    alert('Por favor, complete os passos anteriores antes de prosseguir diretamente.');
                 }
             });
             circle.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                     const step = parseInt(circle.getAttribute('data-step'));
-                    if (step === 0 || (step === 1 && calcData.obraName) || (step === 2 && calcData.tipoLaje) || (step === 3 && calcData.comodos)) {
+                     if (step === 0 || 
+                        (step === 1 && calcData.obraName) || 
+                        (step === 2 && calcData.tipoLaje) || 
+                        (step === 3 && calcData.comodos && calcData.comodos.length > 0)) 
+                    {
                         showStep(step);
                     } else {
-                        alert('Por favor, complete os passos anteriores antes de prosseguir.');
+                        alert('Por favor, complete os passos anteriores antes de prosseguir diretamente.');
                     }
                 }
             });
         });
 
+        // Inicializa a calculadora no primeiro passo
         showStep(0);
     } else {
         console.log('Calculadora não encontrada nesta página.');
