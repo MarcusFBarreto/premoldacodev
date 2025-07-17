@@ -51,6 +51,22 @@ window.updateSubmitButton = function(state, message = '') {
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM carregado, iniciando script...');
 
+    // 3.1. INICIALIZAÇÃO DO FIREBASE (DENTRO DO DOMContentLoaded, MAS NO INÍCIO DELE)
+    const firebaseConfig = {
+       apiKey: "AIzaSyBbcXKzor-xgsQzip6c7gZbn4iRVFr2Tfo",
+       authDomain: "premoldaco-webapp.firebaseapp.com",
+       projectId: "premoldaco-webapp",
+       storageBucket: "premoldaco-webapp.appspot.com",
+       messagingSenderId: "918710823829",
+       appId: "1:918710823829:web:b41e60568d4b0d30c9a49c",
+       measurementId: "G-VJ4ETSMZT7"
+    };
+    // Certifique-se de que o SDK do Firebase (firebase-app-compat.js e firebase-firestore-compat.js)
+    // está incluído no SEU HTML ANTES do main.js, como discutimos.
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore(); // Agora `db` estará disponível para o resto do código.
+
+
     // --- CONFIGURAÇÃO DO VIEWPORT ---
     const setViewportScale = () => {
         const viewport = document.querySelector('meta[name="viewport"]');
@@ -342,11 +358,12 @@ document.addEventListener('DOMContentLoaded', () => {
             showStep(3);
         });
 
-        if (submitQuoteBtn) {
+       if (submitQuoteBtn) {
             submitQuoteBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 console.log('Botão "Enviar Orçamento" clicado.');
 
+                // 1. Coleta e Valida os Dados do Formulário (Nome, Telefone, Email, Observações)
                 const nome = document.getElementById('nome')?.value.trim();
                 const telefone = document.getElementById('telefone')?.value;
                 const email = document.getElementById('email')?.value.trim();
@@ -358,21 +375,24 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
 
-                updateSubmitButton('idle');
-
-                const orcamentoData = {
+                // 2. Prepara o Objeto de Dados para Envio (Lead Data)
+                // Usando 'calcData' que deve ter sido populado pelo botão 'Calcular'
+                const orcamentoData = { // Renomeado para orcamentoData para corresponder ao seu código
                     clienteNome: nome,
                     clienteTelefone: telefoneRaw,
                     clienteEmail: email,
                     clienteObservacoes: observacoes,
-                    obraName: calcData.obraName,
-                    tipoLaje: calcData.tipoLaje,
-                    totalArea: calcData.totalArea.toFixed(2),
-                    comodos: calcData.comodos,
+                    obraName: calcData.obraName || 'Não Informado', // Adiciona fallback para caso calcData não tenha sido totalmente populado
+                    tipoLaje: calcData.tipoLaje || 'Não Informado',
+                    totalArea: calcData.totalArea ? calcData.totalArea.toFixed(2) : '0.00',
+                    comodos: calcData.comodos || [],
                     status: 'NOVO'
                 };
 
+                // 3. Lógica Condicional para Ambiente Android vs. Web
                 if (window.Android && typeof window.Android.submitQuote === 'function') {
+                    // Ambiente Android detectado
+                    console.log('Ambiente Android detectado. Enviando para o aplicativo...');
                     try {
                         updateSubmitButton('sending');
                         window.Android.submitQuote(JSON.stringify(orcamentoData));
@@ -383,13 +403,54 @@ document.addEventListener('DOMContentLoaded', () => {
                             }
                         }, 10000);
                     } catch (error) {
-                        console.error('Erro ao enviar orçamento:', error);
-                        updateSubmitButton('error', 'Erro interno. Tente novamente.');
+                        console.error('Erro ao enviar orçamento para o Android:', error);
+                        updateSubmitButton('error', 'Erro interno no app. Tente novamente.');
                     }
-                } else {
-                    console.error('Ambiente Android não detectado.');
-                    alert('Esta função está disponível apenas no aplicativo Premoldaço.');
+                    // MUITO IMPORTANTE: Retornar aqui para não executar a lógica web SE FOR o app Android.
+                    return; 
                 }
+                
+                // 4. Lógica de Envio para a WEB (Firebase/WhatsApp)
+                // Esta parte será executada APENAS se o ambiente Android NÃO for detectado
+                console.log('Ambiente Web detectado. Salvando no Firebase e mostrando modal de resumo...');
+                updateSubmitButton('sending'); // Atualiza o botão para "Enviando..."
+
+                // ATENÇÃO: Adicione a inicialização do Firebase aqui, se ela ainda não estiver.
+                // No código que você me enviou da versão estável, a inicialização do Firebase
+                // parece ter sido removida do DOMContentLoaded. Vamos recolocá-la.
+
+                // INICIALIZAÇÃO DO FIREBASE (COLOCAR AQUI OU NO INÍCIO DO DOMContentLoaded)
+                // Se a seção INICIALIZAÇÃO DO FIREBASE NÃO ESTIVER NO SEU CÓDIGO, ADICIONE-A!
+                // const firebaseConfig = { ... }; // Use suas credenciais
+                // firebase.initializeApp(firebaseConfig);
+                // const db = firebase.firestore();
+                // ^^^ Certifique-se de que `db` está acessível aqui ^^^
+
+                // Se db não estiver definido aqui, mova a inicialização do Firebase
+                // para o início do document.addEventListener('DOMContentLoaded', () => { ... });
+                // como estava nas versões anteriores que eu te enviei.
+
+                // Simulação de envio para Firebase (se db não estiver inicializado)
+                // Remova este bloco se o Firebase estiver realmente configurado e você quer usá-lo.
+                /*
+                console.log('Simulando envio para Firebase...');
+                setTimeout(() => {
+                    console.log('Lead simulado salvo:', orcamentoData);
+                    updateSubmitButton('success');
+                    showSummaryModal(orcamentoData); // Chama o modal para WhatsApp
+                }, 1500);
+                */
+
+                // Lógica de envio REAL para Firebase:
+                db.collection("webleads").add(orcamentoData) // Usando orcamentoData
+                    .then(() => {
+                        updateSubmitButton('success');
+                        showSummaryModal(orcamentoData); // Mostra o modal de resumo com link para WhatsApp
+                    })
+                    .catch((error) => {
+                        console.error("Erro ao salvar lead no Firebase: ", error);
+                        updateSubmitButton('error', 'Falha no envio. Verifique sua conexão e tente novamente.');
+                    });
             });
         }
 
