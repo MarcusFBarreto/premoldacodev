@@ -12,7 +12,7 @@
 /* Definindo variáveis de cores */
 :root {
   --preto: #1d1d1d;
-  --laranja: #FF4F00;
+  --laranja: #D94F04;
   --branco: #ffffff;
   --whatsapp-verde: #25D366;
     --cinza-claro: #ccc;
@@ -165,7 +165,7 @@ header {
 }
 
 .hero-content p.hero-slogan {
-  color: #FF4F00; /* Use uma cor secundária ou outra que contraste */
+  color: #D94F04; /* Use uma cor secundária ou outra que contraste */
   font-size: 1.5em; /* Um tamanho menor para indicar que é um slogan secundário */
   margin-top: 10px; /* Adiciona um espaço entre as frases */
     font-weight: normal; /* Slogan com peso normal */
@@ -613,7 +613,7 @@ header {
 .calc-step input:invalid:focus,
 .calc-step select:invalid:focus,
 .calc-step textarea:invalid:focus {
-  border-color: #FF4F00;
+  border-color: #D94F04;
 }
 
 .contact-info {
@@ -795,7 +795,7 @@ main {
 .calc-step input:invalid:focus,
 .calc-step select:invalid:focus,
 .calc-step textarea:invalid:focus {
-  border-color: #FF4F00;
+  border-color: #D94F04;
 }
 
 .calc-step .form-actions {
@@ -887,7 +887,7 @@ main {
 
 #add-comodo:hover,
 #calculate-button:hover {
-  background-color: #FF4F00;
+  background-color: #D94F04;
 }
 
 .remove-comodo {
@@ -1196,7 +1196,7 @@ header {
 }
 
 .header-contact:hover {
-  color: #FF4F00; /* Laranja */
+  color: #D94F04; /* Laranja */
 }
 
 /* 3. Estilo para o ícone de telefone */
@@ -1279,18 +1279,19 @@ header {
 
 /* Botão Calculadora Flutuante no Rodapé */
 .calculator-float {
-  background-color: var(--laranja); /* Usando a cor da sua marca */
-  color: var(--branco);
-  padding: 0.6rem 1.2rem;
-  border-radius: 50px;
-  text-decoration: none;
-  font-size: 1rem;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  transition: background-color 0.3s ease, transform 0.3s ease;
+background-color: var(--laranja); 
+color: var(--branco);
+padding: 0.6rem 1.2rem;
+border-radius: 50px;
+text-decoration: none;
+font-size: 1rem;
+font-weight: 700;
+display: flex;
+align-items: center;
+gap: 8px;
+box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+transition: background-color 0.3s ease, transform 0.3s ease;
+margin-left: 15px; / A linha que você adicionou */
 }
 
 .calculator-float:hover {
