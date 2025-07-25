@@ -186,7 +186,7 @@ header {
 }
 
 /* =================================== */
-/* Demais Seções (Mantidas 100%)       */
+/* Demais Seções (Originais Mantidas)  */
 /* =================================== */
 
 /* Carrossel */
@@ -519,7 +519,7 @@ header {
   z-index: 2000;
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
   border-top: 1px solid #333;
-  padding: 0;
+  padding: 5px 0;
 }
 
 .nav-menu {
@@ -570,12 +570,32 @@ header {
   transform: scale(1.1);
 }
 
-/* CORREÇÃO ADICIONADA AQUI */
 .whatsapp-float .whatsapp-icon {
   width: 24px;
   height: 24px;
 }
 
+/* =================================== */
+/* ÍCONES SOCIAIS - REGRAS RESTAURADAS */
+/* =================================== */
+.social-icons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding: 10px 0;
+}
+
+.social-item img.social-icon {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.social-item:hover img.social-icon {
+  transform: scale(1.1);
+}
 
 /* =========================================== */
 /* Seção Responsiva 100% Completa e Corrigida  */
