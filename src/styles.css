@@ -62,11 +62,15 @@ header {
   background-color: var(--preto);
   z-index: 2000;
   box-sizing: border-box;
-  /* Propriedades unificadas */
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px 1.5rem;
+  border-bottom: 1px solid #333;
+}
+
+.brand .site-title {
+  font-weight: 700;
 }
 
 .header-contact {
@@ -76,7 +80,7 @@ header {
   font-size: 1.1rem;
   display: flex;
   align-items: center;
-  gap: 8px; /* Espaço entre o ícone e o número */
+  gap: 8px;
   transition: color 0.3s ease;
 }
 
@@ -85,16 +89,14 @@ header {
 }
 
 .header-phone-icon {
-  fill: cornflowerblue; /* Cor corrigida para o laranja da marca */
+  fill: var(--laranja);
   width: 22px;
   height: 22px;
 }
 
-/* Esconde o texto de celular em telas grandes por padrão */
 .header-contact-text-mobile {
   display: none;
 }
-
 
 /* Menu Flutuante no Rodapé */
 .footer-menu {
@@ -152,18 +154,17 @@ header {
 /* =================================== */
 
 .hero {
-  background: #000000;
   text-align: center;
   padding: 4rem 1.5rem;
   color: var(--branco);
-  margin-top: 40px;
+  margin-top: 60px;
   margin-bottom: 2rem;
 }
 
 .hero-content {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   max-width: 1200px;
   margin: 0 auto;
   gap: 2rem;
@@ -171,6 +172,7 @@ header {
 
 .hero-text {
   flex: 1;
+  max-width: 600px;
 }
 
 .hero-logo {
@@ -179,27 +181,24 @@ header {
   margin-bottom: 1.5rem;
 }
 
-/* 1. O Título Principal (H1) */
 .hero-content h1.hero-slogan {
   color: var(--branco);
-  font-size: clamp(2.2em, 5vw, 3em);
+  font-size: clamp(2.2rem, 5vw, 3rem);
   font-weight: 700;
   font-style: normal;
   line-height: 1.2;
   margin-bottom: 0.75rem;
 }
 
-/* 2. O Slogan de Apoio (P) */
 .hero-content p.hero-slogan {
   color: var(--laranja);
-  font-size: clamp(1.5em, 4vw, 2em);
+  font-size: clamp(1.5rem, 4vw, 2rem);
   font-weight: 400;
   margin-bottom: 2rem;
 }
 
-/* 3. A Chamada para Ação (Tagline) */
 .hero-tagline {
-  font-size: 1.1em;
+  font-size: 1.1rem;
   font-weight: 400;
   color: #ccc;
   margin-bottom: 1.5rem;
@@ -207,6 +206,7 @@ header {
 
 .hero-image {
   flex: 1;
+  max-width: 500px;
 }
 
 .hero-image img {
@@ -215,7 +215,6 @@ header {
   border-radius: 10px;
 }
 
-/* Botão WhatsApp na Seção Hero */
 .whatsapp-contact {
   margin-top: 1rem;
   padding: 1rem 1.8rem;
@@ -227,6 +226,7 @@ header {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  transition: background-color 0.3s ease;
 }
 
 .whatsapp-contact:hover {
@@ -270,7 +270,7 @@ header {
   cursor: pointer;
   font-size: 1.5rem;
   border-radius: 5px;
-  transition: 0.3s ease;
+  transition: background-color 0.3s ease;
 }
 
 .carousel-prev:hover,
@@ -286,7 +286,6 @@ header {
   right: 15px;
 }
 
-/* Indicadores (Dots) */
 .carousel-dots {
   position: absolute;
   bottom: 10px;
@@ -299,10 +298,10 @@ header {
 .carousel-dot {
   width: 12px;
   height: 12px;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(255, 255, 255, 0.5);
   border-radius: 50%;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: background-color 0.3s ease;
 }
 
 .carousel-dot.active {
@@ -316,29 +315,13 @@ header {
 /* Seção Destaques */
 .highlights {
   padding: 3rem 2rem;
-  background-color: var(--preto);
-  color: var(--branco);
   text-align: center;
-  margin-bottom: 2rem;
 }
 
 .highlights h2 {
   font-size: 2rem;
   margin-bottom: 2rem;
   color: var(--laranja);
-  position: relative;
-  padding-bottom: 0.5rem;
-}
-
-.highlights h2::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100px;
-  height: 3px;
-  background-color: var(--laranja);
 }
 
 .highlights-grid {
@@ -351,10 +334,6 @@ header {
 
 .highlight-item {
   padding: 1.5rem;
-  border-radius: 10px;
-  background-color: var(--preto);
-  color: var(--branco);
-  text-align: center;
 }
 
 .highlight-icon {
@@ -375,29 +354,13 @@ header {
 /* Seção Avaliações */
 .reviews {
   padding: 3rem 2rem;
-  background-color: var(--preto);
-  color: var(--branco);
   text-align: center;
-  margin-bottom: 2rem;
 }
 
 .reviews h2 {
   font-size: 2rem;
   margin-bottom: 2.5rem;
   color: var(--laranja);
-  position: relative;
-  padding-bottom: 0.5rem;
-}
-
-.reviews h2::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100px;
-  height: 3px;
-  background-color: var(--laranja);
 }
 
 .reviews-grid {
@@ -426,27 +389,13 @@ header {
   padding: 3rem 2rem;
   background-color: var(--branco);
   color: var(--preto);
-  margin-bottom: 2rem;
+  text-align: center;
 }
 
 .products h2 {
-  text-align: center;
   font-size: 2rem;
   margin-bottom: 2.5rem;
   color: var(--laranja);
-  position: relative;
-  padding-bottom: 0.5rem;
-}
-
-.products h2::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100px;
-  height: 3px;
-  background-color: var(--laranja);
 }
 
 .product-grid {
@@ -462,7 +411,6 @@ header {
   color: var(--branco);
   padding: 1.5rem;
   border-radius: 10px;
-  text-align: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease;
 }
@@ -505,11 +453,8 @@ header {
 
 /* Seção Sobre */
 .about {
-  background-color: var(--preto);
-  color: var(--branco);
   padding: 3rem 2rem;
   text-align: center;
-  margin-bottom: 2rem;
 }
 
 .about h2 {
@@ -529,6 +474,7 @@ header {
 
 .about-text {
   flex: 1;
+  text-align: left;
 }
 
 .about-text h3 {
@@ -548,8 +494,6 @@ header {
 
 /* Seção Contato */
 .contact {
-  background-color: var(--preto);
-  color: var(--branco);
   padding: 3rem 2rem;
   text-align: center;
 }
@@ -566,8 +510,6 @@ header {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  width: 100%;
-  box-sizing: border-box;
 }
 
 .contact input,
@@ -575,10 +517,8 @@ header {
   padding: 0.8rem;
   border: 2px solid transparent;
   border-radius: 5px;
-  background-color: #666;
+  background-color: #333;
   color: var(--branco);
-  width: 100%;
-  box-sizing: border-box;
   transition: border-color 0.3s ease;
 }
 
@@ -592,9 +532,10 @@ header {
   min-height: 100px;
 }
 
-.contact input:invalid:focus,
-.contact textarea:invalid:focus {
-  border-color: #FF5733;
+.contact input:focus,
+.contact textarea:focus {
+    outline: none;
+    border-color: var(--laranja);
 }
 
 .contact-info {
@@ -606,85 +547,41 @@ header {
   margin: 0.5rem 0;
 }
 
-.social-links {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 1rem;
+/* Rodapé Final com Ícones Sociais */
+footer.footer-menu {
+    border-top: 1px solid #333;
 }
-
-/* Rodapé */
-footer {
-  background-color: var(--preto);
-  text-align: center;
-  padding: 1rem;
-  color: var(--branco);
-  width: 100%;
-}
-
-/* Ícones Sociais no Rodapé */
 .social-icons {
   display: flex;
-  justify-content: space-between;
+  justify-content: center; /* Centraliza o grupo de ícones */
   align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 25px 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  gap: 20px; /* Espaço entre os ícones */
+  padding: 10px 0;
 }
 
-.social-item {
-  display: flex;
-  align-items: center;
+.social-item img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  transition: transform 0.3s ease;
 }
 
-.social-group {
-  display: flex;
-  gap: 40px;
-}
-
-.social-item:hover .social-icon {
-  transform: scale(1.2);
-}
-
-/* Botão WhatsApp no Rodapé */
-.whatsapp-float {
-  background-color: var(--whatsapp-verde);
-  color: var(--branco);
-  padding: 0.6rem 1rem;
-  border-radius: 50px;
-  text-decoration: none;
-  font-size: 0.9rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  margin-right: 60px;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.whatsapp-float:hover {
-  background-color: #20b358;
+.social-item:hover img {
   transform: scale(1.1);
 }
 
 /* Contêiner principal */
 main {
-  margin-bottom: 200px;
-  padding-bottom: 200px;
-  position: relative;
-  z-index: 500;
-  min-height: calc(100vh - 200px);
-  padding-top: 40px;
+  flex-grow: 1; /* Faz o conteúdo principal crescer para preencher o espaço */
+  padding-top: 70px; /* Adiciona espaço para o cabeçalho fixo */
+  padding-bottom: 100px; /* Adiciona espaço para o menu do rodapé */
 }
+
 
 /* Calculadora */
 .calculator-panel {
   padding: 2rem;
   border-radius: 10px;
-  background-color: var(--preto);
-  color: var(--branco);
-  text-align: center;
 }
 
 .progress-circles {
@@ -698,12 +595,11 @@ main {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: #666;
+  background-color: #333;
   color: var(--branco);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1rem;
   border: none;
   cursor: pointer;
   transition: background-color 0.3s ease;
@@ -713,185 +609,11 @@ main {
   background-color: var(--laranja);
 }
 
-.progress-circle:focus {
-  outline: 2px solid var(--laranja);
-  outline-offset: 2px;
-}
-
-.calculator-steps {
-  max-width: 100%;
-  margin: 0 auto;
-}
-
-.calc-step {
-  display: none;
-  flex-direction: column;
-  gap: 1rem;
-  text-align: center;
-  padding: 1rem;
-}
-
-.calc-step.active {
-  display: flex;
-  min-height: 0;
-}
-
 .calc-step h3 {
   font-size: 1.4rem;
   color: var(--laranja);
-  margin-bottom: 0.7rem;
   font-weight: 600;
 }
-
-.calc-step label {
-  font-size: 0.95rem;
-  text-align: left;
-  margin-bottom: 0.1rem;
-  font-weight: 500;
-  color: #ddd;
-}
-
-.calc-step input,
-.calc-step select,
-.calc-step textarea {
-  padding: 0.7rem;
-  border: 2px solid transparent;
-  border-radius: 5px;
-  background-color: #666;
-  color: var(--branco);
-  font-size: 0.95rem;
-  width: 100%;
-  max-width: 100%;
-  margin: 0 auto 0.8rem auto;
-  box-sizing: border-box;
-  transition: border-color 0.3s ease;
-}
-
-.calc-step input::placeholder,
-.calc-step select::placeholder,
-.calc-step textarea::placeholder {
-  color: #aaa;
-}
-
-.calc-step input:invalid:focus,
-.calc-step select:invalid:focus,
-.calc-step textarea:invalid:focus {
-  border-color: #FF5733;
-}
-
-.calc-step .form-actions {
-  display: flex;
-  gap: 0.9rem;
-  justify-content: center;
-  margin-top: 1.2rem;
-  width: 100%;
-  max-width: 100%;
-  margin: 0 auto;
-  position: relative;
-  z-index: 1003;
-}
-
-.calc-step button {
-  background-color: var(--laranja);
-  color: var(--branco);
-  padding: 0.7rem 1.3rem;
-  border: none;
-  border-radius: 5px;
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  flex: 1;
-  min-width: 110px;
-}
-
-.calc-step button:hover {
-  background-color: #D94F04;
-}
-
-.calc-step .back-button {
-  background-color: #666;
-  display: none;
-}
-
-.calc-step .back-button:hover {
-  background-color: #888;
-}
-
-.calc-result {
-  margin-top: 1.5rem;
-  padding: 1rem;
-  background-color: #666;
-  border-radius: 5px;
-  text-align: left;
-  max-width: 100%;
-  margin: 0 auto;
-}
-
-/* Modal para Orçamento */
-.modal {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 3000;
-  justify-content: center;
-  align-items: center;
-}
-
-.modal-content {
-  background-color: var(--preto);
-  padding: 1.5rem;
-  border-radius: 5px;
-  width: 90%;
-  max-width: 500px;
-  color: var(--branco);
-  position: relative;
-  text-align: left;
-}
-
-.modal-content li {
-  margin-bottom: 0.8rem;
-  word-break: break-word;
-}
-
-.modal-content hr {
-  border: 0;
-  border-top: 1px solid var(--branco);
-  margin: 1rem 0;
-  opacity: 0.3;
-}
-
-#modal-comodos-list {
-  max-height: 250px;
-  overflow-y: auto;
-  padding-right: 10px;
-}
-
-#modal-observacoes {
-  margin-top: 1rem;
-  color: var(--branco);
-}
-
-.close-modal {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 1.5rem;
-  color: var(--branco);
-  cursor: pointer;
-  border: none;
-  background: none;
-}
-
-#confirm-budget {
-  margin-top: 1rem;
-  padding: 0.8rem 1.5rem;
-  width: 100%;
-}
-
 
 /* =================================== */
 /* Seção Responsiva Completa e Corrigida */
@@ -900,99 +622,27 @@ main {
   
   /* Ajustes Gerais para Telas Menores */
   main {
-    margin-bottom: 120px;
-    padding-bottom: 120px;
+    padding-top: 60px;
+    padding-bottom: 80px;
   }
 
-  /* Novas Regras para o Contato no Celular */
+  header {
+    padding: 8px 1rem;
+  }
+
+  /* Regras para o Contato no Celular */
   .header-contact .header-contact-text-full {
     display: none; /* Esconde o texto completo */
   }
   .header-contact .header-contact-text-mobile {
     display: inline; /* Mostra o texto "Disk-laje" */
-    font-size: 1.1rem; /* Tamanho ajustado para mobile */
-  }
-  .header-contact {
-    padding: 5px;
-  }
-
-  #modal-comodos-list {
-    max-height: 150px;
-  }
-
-  .nav-menu.active {
-    display: block;
-  }
-
-  .logo {
-    display: flex;
-    justify-content: center;
-  }
-
-  .social-icons {
-    justify-content: space-between;
-    padding: 22px 1rem;
-  }
-
-  .social-group {
-    gap: 30px;
-  }
-
-  .social-icon {
-    width: 30px;
-    height: 30px;
-  }
-
-  .whatsapp-float {
-    padding: 0.5rem 0.8rem;
-    font-size: 0.8rem;
-    margin-right: 40px;
-  }
-
-  .hero-content {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .hero-image {
-    max-width: 100%;
-  }
-
-  .carousel-prev,
-  .carousel-next {
-    padding: 0.3rem 0.8rem;
     font-size: 1rem;
   }
 
-  .carousel-dot {
-    width: 10px;
-    height: 10px;
-  }
-
-  .highlights {
-    padding: 2rem 1rem;
-  }
-
-  .reviews {
-    padding: 2rem 1rem;
-  }
-
-  .products {
-    padding: 2rem 1rem;
-  }
-
-  .product-grid {
-    grid-template-columns: 1fr;
-    max-width: 250px;
-    margin: 0 auto;
-  }
-
-  .product-item {
-    padding: 1rem;
-  }
-
-  .about {
-    padding: 2rem 1.5rem;
+  /* Ajuste no layout da seção Hero para empilhar */
+  .hero-content {
+    flex-direction: column;
+    text-align: center;
   }
 
   .about-content {
@@ -1000,60 +650,9 @@ main {
     text-align: center;
   }
 
-  .about-image {
-    max-width: 100%;
-  }
-
-  .contact {
-    margin-bottom: 2rem;
-    padding: 2.5rem 1.5rem;
-  }
-
-  .contact-info {
-    margin-top: 1.5rem;
-  }
-
-  .calculator-panel {
-    padding: 1.5rem;
-  }
-
-  .progress-circles {
-    gap: 0.5rem;
-  }
-
-  .progress-circle {
-    width: 30px;
-    height: 30px;
-    font-size: 0.9rem;
-  }
-
-  .calc-step h3 {
-    font-size: 1.3rem;
-  }
-
-  .calc-step input,
-  .calc-step select {
-    padding: 0.6rem;
-  }
-
-  .calc-step button {
-    padding: 0.6rem 1rem;
-    font-size: 0.9rem;
-  }
-
-  .comodo-item {
-    padding: 0.8rem;
-  }
-
-  #add-comodo,
-  #calculate-button,
-  #whatsapp-link {
-    padding: 0.6rem 1rem;
-    font-size: 0.9rem;
-  }
-
-  .remove-comodo {
-    padding: 0.3rem 0.6rem;
-    font-size: 0.8rem;
+  .product-grid {
+    grid-template-columns: 1fr;
+    max-width: 300px;
+    margin: 0 auto;
   }
 }
