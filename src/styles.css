@@ -4,6 +4,8 @@
   --laranja: #FF5733;
   --branco: #ffffff;
   --whatsapp-verde: #25D366;
+  --cinza-claro: #ccc;
+  --cinza-escuro: #333;
 }
 
 * {
@@ -12,10 +14,8 @@
   box-sizing: border-box;
 }
 
-html,
-body {
-  height: 100%;
-  overflow-x: hidden;
+html {
+  scroll-behavior: smooth;
 }
 
 body {
@@ -38,7 +38,6 @@ main {
   margin: 0 auto;
   padding: 0 1rem;
   width: 100%;
-  box-sizing: border-box;
 }
 
 .sr-only {
@@ -53,7 +52,7 @@ main {
 }
 
 /* =================================== */
-/* Cabeçalho e Contato (Regra Unificada) */
+/* Cabeçalho e Contato                 */
 /* =================================== */
 
 header {
@@ -61,19 +60,19 @@ header {
   top: 0;
   left: 0;
   width: 100%;
-  height: auto;
-  background-color: var(--preto);
+  background-color: rgba(29, 29, 29, 0.9);
+  backdrop-filter: blur(5px);
   z-index: 2000;
-  box-sizing: border-box;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px 1.5rem;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid var(--cinza-escuro);
 }
 
 .brand .site-title {
   font-weight: 700;
+  font-size: 1.5rem;
 }
 
 .header-contact {
@@ -102,7 +101,7 @@ header {
 }
 
 /* =================================== */
-/* CSS REFINADO PARA A SEÇÃO HERO      */
+/* Seção Hero                          */
 /* =================================== */
 
 .hero {
@@ -152,7 +151,7 @@ header {
 .hero-tagline {
   font-size: 1.1rem;
   font-weight: 400;
-  color: #ccc;
+  color: var(--cinza-claro);
   margin-bottom: 1.5rem;
 }
 
@@ -177,7 +176,7 @@ header {
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 8px;
   transition: background-color 0.3s ease;
 }
 
@@ -185,15 +184,19 @@ header {
   background-color: #20b358;
 }
 
-/* =================================== */
-/* Demais Seções (Originais Mantidas)  */
-/* =================================== */
+.whatsapp-icon {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
 
 /* Carrossel */
 .carousel {
   position: relative;
   max-width: 100%;
   overflow: hidden;
+  border-radius: 10px;
 }
 
 .carousel-item {
@@ -207,84 +210,24 @@ header {
   opacity: 1;
 }
 
-.carousel-item img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 10px;
-  object-fit: cover;
-}
-
-.carousel-prev,
-.carousel-next {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.7);
-  color: var(--branco);
-  border: none;
-  padding: 0.8rem 1.2rem;
-  cursor: pointer;
-  font-size: 1.5rem;
-  border-radius: 5px;
-  transition: background-color 0.3s ease;
-}
-
-.carousel-prev:hover,
-.carousel-next:hover {
-  background: rgba(0, 0, 0, 0.9);
-}
-
-.carousel-prev {
-  left: 15px;
-}
-
-.carousel-next {
-  right: 15px;
-}
-
-.carousel-dots {
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 8px;
-}
-
-.carousel-dot {
-  width: 12px;
-  height: 12px;
-  background-color: rgba(255, 255, 255, 0.5);
-  border-radius: 50%;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.carousel-dot.active {
-  background-color: var(--laranja);
-}
-
-.carousel-dot:hover {
-  background-color: var(--branco);
-}
-
-/* Seção Destaques */
+/* Seção Destaques (Highlights) */
 .highlights {
-  padding: 3rem 2rem;
+  padding: 4rem 2rem;
   text-align: center;
+  background-color: #111;
 }
 
-.highlights h2 {
-  font-size: 2rem;
-  margin-bottom: 2rem;
+.highlights h2, .reviews h2, .products h2, .about h2, .contact h2 {
+  font-size: 2.2rem;
+  margin-bottom: 2.5rem;
   color: var(--laranja);
 }
 
 .highlights-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
-  max-width: 900px;
+  max-width: 1000px;
   margin: 0 auto;
 }
 
@@ -293,106 +236,109 @@ header {
 }
 
 .highlight-icon {
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   margin-bottom: 1rem;
 }
 
 .highlight-item h3 {
-  font-size: 1.3rem;
-  margin: 0.5rem 0;
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
 }
 
-/* Seção Avaliações */
+/* Seção Avaliações (Reviews) */
 .reviews {
-  padding: 3rem 2rem;
-  text-align: center;
-}
-
-.reviews h2 {
-  font-size: 2rem;
-  margin-bottom: 2.5rem;
-  color: var(--laranja);
+  padding: 4rem 2rem;
 }
 
 .reviews-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
   max-width: 1200px;
   margin: 0 auto;
 }
 
 .review-item {
-  padding: 1.5rem;
+  padding: 2rem;
   border-radius: 10px;
-  background-color: #2a2a2a;
+  background-color: var(--cinza-escuro);
   text-align: left;
 }
 
 .review-author {
   font-style: italic;
-  margin-top: 0.5rem;
+  margin-top: 1rem;
   color: var(--laranja);
 }
 
 /* Seção Produtos */
 .products {
-  padding: 3rem 2rem;
+  padding: 4rem 2rem;
   background-color: var(--branco);
   color: var(--preto);
-  text-align: center;
-}
-
-.products h2 {
-  font-size: 2rem;
-  margin-bottom: 2.5rem;
-  color: var(--laranja);
 }
 
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2rem;
   max-width: 1200px;
   margin: 0 auto;
 }
 
 .product-item {
-  background-color: var(--preto);
-  color: var(--branco);
-  padding: 1.5rem;
+  background-color: #f9f9f9;
+  color: var(--preto);
+  padding: 0;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .product-item:hover {
   transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .product-item img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 5px;
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
 }
 
-.product-item h3 {
-  font-size: 1.3rem;
-  margin: 0.5rem 0;
+.product-item-content {
+    padding: 1.5rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-item-content h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.product-item-content p {
+    flex-grow: 1;
+    margin-bottom: 1rem;
 }
 
 .product-button {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
   background-color: var(--whatsapp-verde);
   color: var(--branco);
-  padding: 0.5rem 1rem;
+  padding: 0.8rem 1.5rem;
   border-radius: 5px;
   text-decoration: none;
-  margin-top: 1rem;
-  font-size: 0.9rem;
+  font-weight: 700;
+  transition: background-color 0.3s ease;
 }
 
 .product-button:hover {
@@ -401,21 +347,13 @@ header {
 
 /* Seção Sobre */
 .about {
-  padding: 3rem 2rem;
-  text-align: center;
-}
-
-.about h2 {
-  font-size: 2rem;
-  margin-bottom: 1rem;
-  color: var(--laranja);
+  padding: 4rem 2rem;
 }
 
 .about-content {
   display: flex;
-  gap: 2rem;
+  gap: 3rem;
   align-items: center;
-  justify-content: center;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -433,6 +371,7 @@ header {
 
 .about-image {
   flex: 1;
+  max-width: 500px;
 }
 
 .about-image img {
@@ -440,85 +379,72 @@ header {
   border-radius: 10px;
 }
 
-/* Seção Contato e Formulários da Calculadora */
-.contact,
-.calculator-panel {
-  padding: 3rem 2rem;
-  text-align: center;
+/* Seção Contato */
+.contact {
+  padding: 4rem 2rem;
 }
 
-.contact h2,
-.calc-step h3 {
-  font-size: 2rem;
-  margin-bottom: 2rem;
-  color: var(--laranja);
-}
-
-.calc-step h3 {
-  font-size: 1.4rem;
-  font-weight: 600;
-}
-
-.contact form,
-.calculator-steps form {
+.contact form {
   max-width: 600px;
-  margin: 0 auto;
+  margin: 2rem auto 0;
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-.contact input,
-.contact textarea,
-.calc-step input,
-.calc-step select,
-.calc-step textarea {
-  padding: 0.8rem;
-  border: 2px solid transparent;
+.contact input, .contact textarea {
+  padding: 1rem;
+  border: 1px solid var(--cinza-escuro);
   border-radius: 5px;
-  background-color: #333;
+  background-color: #222;
   color: var(--branco);
-  transition: border-color 0.3s ease;
   font-size: 1rem;
+  transition: border-color 0.3s ease;
 }
 
-.contact input::placeholder,
-.contact textarea::placeholder,
-.calc-step input::placeholder,
-.calc-step select::placeholder,
-.calc-step textarea::placeholder {
-  color: #aaa;
-}
-
-.contact textarea,
-.calc-step textarea {
-  resize: vertical;
-  min-height: 100px;
-}
-
-.contact input:focus,
-.contact textarea:focus,
-.calc-step input:focus,
-.calc-step select:focus,
-.calc-step textarea:focus {
+.contact input:focus, .contact textarea:focus {
   outline: none;
   border-color: var(--laranja);
 }
 
-.contact-info {
-  margin-top: 2rem;
+.contact button {
+    background-color: var(--laranja);
+    color: var(--branco);
+    padding: 1rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-/* Menu e Rodapé */
+.contact button:hover {
+    background-color: #D94F04;
+}
+
+.contact-info {
+  margin-top: 3rem;
+  line-height: 1.8;
+}
+.contact-info a {
+    color: var(--laranja);
+    text-decoration: none;
+}
+.contact-info a:hover {
+    text-decoration: underline;
+}
+
+/* Rodapé Fixo com Navegação */
 .footer-menu {
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
-  background-color: var(--preto);
+  background-color: rgba(29, 29, 29, 0.9);
+  backdrop-filter: blur(5px);
   z-index: 2000;
-  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
-  border-top: 1px solid #333;
+  border-top: 1px solid var(--cinza-escuro);
   padding: 5px 0;
 }
 
@@ -527,7 +453,7 @@ header {
   justify-content: space-around;
   align-items: center;
   width: 100%;
-  padding: 10px 0;
+  padding: 5px 0;
 }
 
 .menu-item {
@@ -535,55 +461,25 @@ header {
   flex-direction: column;
   align-items: center;
   text-decoration: none;
-  color: var(--branco);
+  color: var(--cinza-claro);
   font-size: 12px;
   padding: 5px 10px;
   transition: color 0.3s ease;
 }
 
-.menu-item:hover {
+.menu-item:hover, .menu-item.active {
   color: var(--laranja);
 }
 
 .menu-icon {
-  width: 20px;
-  height: 20px;
-  margin-bottom: 2px;
-}
-
-.whatsapp-float {
-  background-color: var(--whatsapp-verde);
-  color: var(--branco);
-  padding: 0.6rem 1rem;
-  border-radius: 50px;
-  text-decoration: none;
-  font-size: 0.9rem;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.whatsapp-float:hover {
-  background-color: #20b358;
-  transform: scale(1.1);
-}
-
-.whatsapp-float .whatsapp-icon {
   width: 24px;
   height: 24px;
+  margin-bottom: 4px;
+  fill: currentColor;
 }
 
-/* =================================== */
-/* ÍCONES SOCIAIS - REGRAS RESTAURADAS */
-/* =================================== */
 .social-icons {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-  padding: 10px 0;
+    padding: 10px 0;
 }
 
 .social-item img.social-icon {
@@ -597,9 +493,9 @@ header {
   transform: scale(1.1);
 }
 
-/* =========================================== */
-/* Seção Responsiva 100% Completa e Corrigida  */
-/* =========================================== */
+/* =================================== */
+/* Seção Responsiva                    */
+/* =================================== */
 @media (max-width: 768px) {
 
   main {
@@ -639,13 +535,13 @@ header {
   .about-content {
     flex-direction: column;
   }
+  
+  .highlights-grid {
+      grid-template-columns: 1fr;
+  }
 
-  .highlights,
-  .reviews,
-  .products,
-  .about,
-  .contact {
-    padding: 2rem 1rem;
+  .highlights, .reviews, .products, .about, .contact {
+    padding: 2.5rem 1.5rem;
   }
 
   .product-grid {
@@ -653,22 +549,8 @@ header {
     max-width: 300px;
     margin: 0 auto;
   }
-
-  .calculator-panel {
-    padding: 1.5rem;
-  }
-
-  .progress-circles {
-    gap: 0.5rem;
-  }
-
-  .progress-circle {
-    width: 30px;
-    height: 30px;
-    font-size: 0.9rem;
-  }
-
-  .calc-step h3 {
-    font-size: 1.3rem;
+  
+  .footer-menu {
+      padding-bottom: env(safe-area-inset-bottom, 0);
   }
 }
