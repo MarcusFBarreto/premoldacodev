@@ -145,14 +145,15 @@ header {
 }
 
 .hero-content h1.hero-slogan {
-  color: var(--cor-principal); /* Use sua cor principal */
-  font-size: 2.5em; /* Ajuste o tamanho conforme necessário */
+  color: #ddd; /* Use sua cor principal */
+  font-size: 1.5em; /* Ajuste o tamanho conforme necessário */
   font-weight: bold; /* Título em negrito */
   font-style: italic; /* Opcional: título em itálico */
+
 }
 
 .hero-content p.hero-slogan {
-  color: var(--cor-secundaria); /* Use uma cor secundária ou outra que contraste */
+  color: #D94F04; /* Use uma cor secundária ou outra que contraste */
   font-size: 1.5em; /* Um tamanho menor para indicar que é um slogan secundário */
   margin-top: 10px; /* Adiciona um espaço entre as frases */
     font-weight: normal; /* Slogan com peso normal */
