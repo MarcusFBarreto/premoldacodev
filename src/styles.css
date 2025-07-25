@@ -1,7 +1,7 @@
 /* Definindo variáveis de cores */
 :root {
   --preto: #1d1d1d;
-  --laranja: #ff8c57;
+  --laranja: #FF5733;
   --branco: #ffffff;
   --whatsapp-verde: #25D366;
 }
@@ -134,30 +134,18 @@ header {
   height: 20px;
 }
 
-/* Seção Hero */
+/* =================================== */
+/* CSS REFINADO PARA A SEÇÃO HERO      */
+/* =================================== */
+
 .hero {
+  /* Mantivemos o fundo escuro, mas garantimos o alinhamento central do texto */
   background: #000000;
-  text-align: left;
-  padding: 5rem 2rem;
-  color: var(--preto);
+  text-align: center; /* Alinha todo o texto no centro */
+  padding: 4rem 1.5rem; /* Ajuste no preenchimento */
+  color: var(--branco); /* Cor padrão do texto na seção */
   margin-top: 40px;
   margin-bottom: 2rem;
-}
-
-.hero-content h1.hero-slogan {
-  color: #ddd; /* Use sua cor principal */
-  font-size: 1.5em; /* Ajuste o tamanho conforme necessário */
-  font-weight: bold; /* Título em negrito */
-  font-style: italic; /* Opcional: título em itálico */
-
-}
-
-.hero-content p.hero-slogan {
-  color: #D94F04; /* Use uma cor secundária ou outra que contraste */
-  font-size: 1.5em; /* Um tamanho menor para indicar que é um slogan secundário */
-  margin-top: 10px; /* Adiciona um espaço entre as frases */
-    font-weight: normal; /* Slogan com peso normal */
-
 }
 
 .hero-content {
@@ -174,25 +162,40 @@ header {
 }
 
 .hero-logo {
-  height: 200px;
+  height: 150px; /* Um pouco menor para dar mais espaço aos textos */
   width: auto;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
-.hero-slogan {
-  font-size: 2rem;
-  font-weight: bold;
-  margin-bottom: 1rem;
-  color: var(--laranja);
+/* 1. O Título Principal (H1) - O mais importante */
+.hero-content h1.hero-slogan {
+  color: var(--branco); /* Branco puro para máximo destaque */
+  font-size: clamp(2.2em, 5vw, 3em); /* Fonte grande e responsiva */
+  font-weight: 700; /* Negrito bem definido */
+  font-style: normal; /* Removemos o itálico para mais legibilidade e impacto */
+  line-height: 1.2; /* Melhora o espaçamento entre as linhas do título */
+  margin-bottom: 0.75rem; /* Espaço abaixo do título */
 }
 
+/* 2. O Slogan de Apoio (P) - Importância secundária */
+.hero-content p.hero-slogan {
+  color: var(--laranja); /* Sua cor de destaque, o laranja vivo */
+  font-size: clamp(1.5em, 4vw, 2em); /* Visivelmente menor que o H1 */
+  font-weight: 400; /* Peso normal para não competir com o título */
+  margin-bottom: 2rem; /* Mais espaço abaixo do slogan */
+}
+
+/* 3. A Chamada para Ação (Tagline) - Importância terciária */
 .hero-tagline {
-  font-size: 1.2rem;
-  font-weight: bold;
-  margin-bottom: 2rem;
-  color: #FFFFFF; /* ou white */
-  /*color: var(--preto);*/
+  font-size: 1.1em; /* O menor dos três textos */
+  font-weight: 400;
+  color: #ccc; /* Um cinza claro para não tirar o foco do título e slogan */
+  margin-bottom: 1.5rem;
 }
+
+/* NOTA: A regra genérica ".hero-slogan" que estava aqui foi REMOVIDA
+  para evitar conflitos com as regras mais específicas acima.
+*/
 
 .hero-image {
   flex: 1;
@@ -204,19 +207,11 @@ header {
   border-radius: 10px;
 }
 
-/* Botão do Hero */
+/* Ajuste fino no botão do WhatsApp */
 .whatsapp-contact {
   margin-top: 1rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  background-color: var(--whatsapp-verde);
-  color: var(--branco);
-  padding: 0.8rem 1.5rem;
-  border-radius: 5px;
-  text-decoration: none;
-  font-size: 1rem;
-  transition: background-color 0.3s ease;
+  padding: 1rem 1.8rem; /* Botão um pouco maior para mais destaque */
+  font-size: 1.1rem;
 }
 
 .whatsapp-contact:hover {
@@ -601,7 +596,7 @@ header {
 .calc-step input:invalid:focus,
 .calc-step select:invalid:focus,
 .calc-step textarea:invalid:focus {
-  border-color: #ff4d4d;
+  border-color: #FF5733;
 }
 
 .contact-info {
@@ -803,7 +798,7 @@ main {
 .calc-step input:invalid:focus,
 .calc-step select:invalid:focus,
 .calc-step textarea:invalid:focus {
-  border-color: #ff4d4d;
+  border-color: #FF5733;
 }
 
 .calc-step .form-actions {
@@ -895,7 +890,7 @@ main {
 
 #add-comodo:hover,
 #calculate-button:hover {
-  background-color: #D94F04;
+  background-color: #FF5733;
 }
 
 .remove-comodo {
@@ -1059,21 +1054,9 @@ main {
   height: 18px;
   }
 
-  .hero {
-    padding: 3rem 1rem;
-  }
-
-  .hero-content {
+.hero-content {
     flex-direction: column;
     text-align: center;
-  }
-
-  .hero-logo {
-    height: 120px;
-  }
-
-  .hero-slogan {
-    font-size: 1.8rem;
   }
 
   .hero-image {
@@ -1187,3 +1170,5 @@ main {
     font-size: 0.8rem;
   }
 }
+}
+Com o código .css completo, pode reanalisar e ver se o logo e a imagem do lado direito dele não ficaram estranhos?
