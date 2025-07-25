@@ -66,6 +66,55 @@ header {
   padding-top: 2px;
 }
 
+/* =================================== */
+/* Estilos para o Contato no Cabeçalho */
+/* =================================== */
+
+header {
+  /* Adicionamos estas propriedades para alinhar os itens */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.header-contact {
+  color: var(--branco);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Espaço entre o ícone e o número */
+  transition: color 0.3s ease;
+}
+
+.header-contact:hover {
+  color: var(--laranja);
+}
+
+.header-phone-icon {
+  fill: var(--laranja);
+  width: 20px;
+  height: 20px;
+}
+
+/* Ajuste para celular */
+@media (max-width: 768px) {
+  .header-contact span {
+    display: none; /* Esconde o texto do número no celular */
+  }
+  .header-contact {
+    font-size: 1rem;
+    padding: 5px; /* Aumenta a área de clique */
+  }
+  .header-phone-icon {
+    width: 24px;
+    height: 24px;
+  }
+}
+
 /* Menu Flutuante no Rodapé */
 .footer-menu {
   position: fixed;
