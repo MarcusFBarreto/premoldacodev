@@ -1259,3 +1259,51 @@ header {
     padding: 8px 1rem;
   }
 }
+/* ============================================= */
+/* NOVO LAYOUT PARA A SEÇÃO DE DIFERENCIAIS      */
+/* ============================================= */
+
+/* Altera o grid para empilhar os itens verticalmente */
+.highlights-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem; /* Aumenta o espaço entre os itens */
+}
+
+/* Transforma cada item em um container flexível (imagem ao lado do texto) */
+.highlight-item {
+  display: flex;
+  align-items: center; /* Alinha o ícone e o texto verticalmente */
+  gap: 1.5rem; /* Cria o "espaço" entre a imagem e o texto */
+  text-align: left; /* Alinha o texto à esquerda, melhorando a leitura */
+}
+
+/* Deixa o ícone maior, como você pediu */
+.highlight-icon {
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0; /* Impede que o ícone encolha */
+}
+
+/* O novo container para o texto */
+.highlight-text h3 {
+  margin-bottom: 0.5rem;
+  color: var(--branco);
+}
+
+.highlight-text p {
+  color: #ccc; /* Deixa o texto de apoio com um tom mais suave */
+}
+
+/* Ajustes para o layout voltar ao original em telas pequenas (celular) */
+@media (max-width: 768px) {
+  .highlight-item {
+    flex-direction: column; /* Empilha o ícone em cima do texto */
+    text-align: center;   /* Centraliza tudo novamente */
+  }
+
+  .highlight-icon {
+    width: 60px;
+    height: 60px;
+  }
+}
