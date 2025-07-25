@@ -12,7 +12,7 @@
 /* Definindo variáveis de cores */
 :root {
   --preto: #1d1d1d;
-  --laranja: #FF5733;
+  --laranja: #FF4F00;
   --branco: #ffffff;
   --whatsapp-verde: #25D366;
 }
@@ -163,7 +163,7 @@ header {
 }
 
 .hero-content p.hero-slogan {
-  color: #FF5733; /* Use uma cor secundária ou outra que contraste */
+  color: #FF4F00; /* Use uma cor secundária ou outra que contraste */
   font-size: 1.5em; /* Um tamanho menor para indicar que é um slogan secundário */
   margin-top: 10px; /* Adiciona um espaço entre as frases */
     font-weight: normal; /* Slogan com peso normal */
@@ -611,7 +611,7 @@ header {
 .calc-step input:invalid:focus,
 .calc-step select:invalid:focus,
 .calc-step textarea:invalid:focus {
-  border-color: #FF5733;
+  border-color: #FF4F00;
 }
 
 .contact-info {
@@ -813,7 +813,7 @@ main {
 .calc-step input:invalid:focus,
 .calc-step select:invalid:focus,
 .calc-step textarea:invalid:focus {
-  border-color: #FF5733;
+  border-color: #FF4F00;
 }
 
 .calc-step .form-actions {
@@ -905,7 +905,7 @@ main {
 
 #add-comodo:hover,
 #calculate-button:hover {
-  background-color: #FF5733;
+  background-color: #FF4F00;
 }
 
 .remove-comodo {
@@ -1195,5 +1195,65 @@ main {
   .remove-comodo {
     padding: 0.3rem 0.6rem;
     font-size: 0.8rem;
+  }
+}
+
+/* ================================================= */
+/* MÓDULO DE ATUALIZAÇÃO DO CABEÇALHO - Disk-laje   */
+/* ================================================= */
+
+/* 1. Regra para o container do cabeçalho */
+/* Esta regra vai sobrescrever a original para alinhar os itens */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 1.5rem;
+  border-bottom: 1px solid #333;
+}
+
+/* 2. Estilos para o link de contato */
+.header-contact {
+  color:cornflowerblue;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.3s ease;
+}
+
+.header-contact:hover {
+  color: #FF4F00; /* Laranja */
+}
+
+/* 3. Estilo para o ícone de telefone */
+.header-phone-icon {
+  fill:#FFA500; /* Laranja */
+  width: 22px;
+  height: 22px;
+}
+
+/* 4. Regra para esconder o texto mobile em telas grandes */
+.header-contact-text-mobile {
+  display: none;
+}
+
+
+/* 5. Regras para o cabeçalho em telas de celular */
+@media (max-width: 768px) {
+
+  .header-contact .header-contact-text-full {
+    display: none; /* Esconde o texto completo */
+  }
+
+  .header-contact .header-contact-text-mobile {
+    display: inline; /* Mostra apenas "Disk-laje" */
+    font-size: 1rem;
+  }
+  
+  header {
+    padding: 8px 1rem;
   }
 }
