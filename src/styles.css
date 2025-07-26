@@ -1097,9 +1097,16 @@ main {
   }
 
   .social-icons {
-    justify-content: space-between;
-    padding: 22px 1rem;
-  }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 25px 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  /* --- Adicione esta linha: --- */
+  gap: 20px; /* Ou o valor que você preferir para o espaçamento */
+}
 
   .social-group {
     gap: 30px;
