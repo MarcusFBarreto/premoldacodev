@@ -227,19 +227,19 @@ header {
 .hero-content h1.hero-slogan {
   color: #ddd;
   font-size: 1.5em;
-  font-weight: bold;
+  font-weight:lighter;
 }
 
 .hero-content p.hero-slogan {
   color: var(--laranja);
   font-size: 1.5em;
   margin-top: 10px;
-  font-weight: normal;
+  font-weight: lighter;
 }
 
 .hero-tagline {
   font-size: 1.2rem;
-  font-weight: bold;
+  font-weight: lighter;
   margin-bottom: 2rem;
   color: var(--branco);
 }
@@ -400,7 +400,7 @@ header {
 .highlight-item {
   display: flex;
   align-items: center; /* Alinha o ícone e o texto verticalmente */
-  gap: 1.5rem; /* Cria o "espaço" entre a imagem e o texto */
+  gap: 1.0rem; /* Cria o "espaço" entre a imagem e o texto */
   text-align: left; /* Alinha o texto à esquerda, melhorando a leitura */
   padding: 1.5rem; /* Mantém o padding */
   border-radius: 10px; /* Mantém o border-radius */
@@ -410,8 +410,8 @@ header {
 
 /* Deixa o ícone maior */
 .highlight-icon {
-  width: 80px;
-  height: 80px;
+  width: 10%; /* Ajustado para 10% da largura do container */
+ /* height: 10%; *//* Ajustado para 10% da altura do container */
   flex-shrink: 0; /* Impede que o ícone encolha */
   fill: var(--laranja); /* Adicionado para ícones SVG, se aplicável */
   margin-bottom: 0; /* Remove margin-bottom que era usada em layout de coluna */
@@ -481,7 +481,7 @@ header {
 /* --- Seção Produtos --- */
 .products {
   padding: 3rem 2rem;
-  background-color: var(--branco);
+  background-color: var(--preto);
   color: var(--preto);
   margin-bottom: 2rem;
 }
