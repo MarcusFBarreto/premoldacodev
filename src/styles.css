@@ -1,24 +1,14 @@
-/* Definindo variáveis de cores 
-:root {
-  --preto: #1d1d1d;
-  --laranja: #FF5733;
-  --branco: #ffffff;
-  --whatsapp-verde: #25D366;
-  --cinza-claro: #ccc;
-  --cinza-escuro: #333;
-}
-*/
-
 /* Definindo variáveis de cores */
 :root {
   --preto: #1d1d1d;
   --laranja: #D94F04;
   --branco: #ffffff;
   --whatsapp-verde: #25D366;
-    --cinza-claro: #ccc;
+  --cinza-claro: #ccc;
   --cinza-escuro: #333;
 }
 
+/* Reset básico */
 * {
   margin: 0;
   padding: 0;
@@ -62,36 +52,89 @@ body {
   border: 0;
 }
 
-/* Cabeçalho */
+/* --- Cabeçalho --- */
 header {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: auto;
-  padding: 5px 10px;
+  padding: 10px 1.5rem; /* Ajustado para consistência */
   background-color: var(--preto);
   z-index: 2000;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between; /* Alinha o conteúdo nas extremidades */
   align-items: center;
   box-sizing: border-box;
-  padding-top: 2px;
+  border-bottom: 1px solid var(--cinza-escuro); /* Adicionado borda para separação */
 }
 
-/* Menu Flutuante no Rodapé */
+/* Estilos para o link de contato no cabeçalho */
+.header-contact {
+  color: cornflowerblue;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.3s ease;
+}
+
+.header-contact:hover {
+  color: var(--laranja);
+}
+
+/* Estilo para o ícone de telefone no cabeçalho */
+.header-phone-icon {
+  fill: #FFA500; /* Laranja */
+  width: 22px;
+  height: 22px;
+}
+
+/* Esconde o texto completo para mobile */
+.header-contact-text-mobile {
+  display: none;
+}
+
+/* Botão WhatsApp no Cabeçalho */
+.whatsapp-button {
+  background-color: var(--whatsapp-verde);
+  color: var(--branco);
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background-color 0.3s ease;
+}
+
+.whatsapp-button:hover {
+  background-color: #20b358; /* Tom mais escuro de verde */
+}
+
+/* Ícone do WhatsApp */
+.whatsapp-icon {
+  width: 20px;
+  height: 20px;
+  fill: var(--branco); /* Garante que o ícone tenha a cor correta */
+}
+
+
+/* --- Menu Flutuante no Rodapé --- */
 .footer-menu {
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
   background-color: var(--preto);
-  padding: 15px 0;
+  padding: 15px 0 2px 0; /* Ajustado padding */
   z-index: 2000;
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
-  padding-bottom: 2px;
 }
 
 .nav-menu {
@@ -122,54 +165,43 @@ header {
   width: 20px;
   height: 20px;
   margin-bottom: 2px;
+  fill: var(--branco); /* Garante que o ícone tenha a cor correta */
 }
 
-/* Botão WhatsApp no Cabeçalho */
-.whatsapp-button {
-  background-color: var(--whatsapp-verde);
+/* Botão Calculadora Flutuante no Rodapé */
+.calculator-float {
+  background-color: var(--laranja);
   color: var(--branco);
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
+  padding: 0.6rem 1.2rem;
+  border-radius: 50px;
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 1rem;
+  font-weight: 700;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  margin-left: 15px;
 }
 
-.whatsapp-button:hover {
-  background-color: #20b358;
+.calculator-float:hover {
+  background-color: #D94F04;
+  transform: scale(1.05);
 }
 
-/* Ícone do WhatsApp */
-.whatsapp-icon {
-  width: 20px;
-  height: 20px;
+.calculator-float .menu-icon {
+  fill: var(--branco);
 }
 
-/* Seção Hero */
+/* --- Seção Hero --- */
 .hero {
   background: #000000;
   text-align: left;
   padding: 5rem 2rem;
-  color: var(--preto);
-  margin-top: 40px;
+  color: var(--branco); /* Ajustado para branco, já que o fundo é preto */
+  margin-top: 60px; /* Aumentado para compensar o cabeçalho fixo */
   margin-bottom: 2rem;
-}
-
-.hero-content h1.hero-slogan {
-  color: #ddd; /* Use sua cor principal */
-  font-size: 1.5em; /* Ajuste o tamanho conforme necessário */
-  font-weight: bold; /* Título em negrito */
-
-}
-
-.hero-content p.hero-slogan {
-  color: #D94F04; /* Use uma cor secundária ou outra que contraste */
-  font-size: 1.5em; /* Um tamanho menor para indicar que é um slogan secundário */
-  margin-top: 10px; /* Adiciona um espaço entre as frases */
-    font-weight: normal; /* Slogan com peso normal */
-
 }
 
 .hero-content {
@@ -191,19 +223,25 @@ header {
   margin-bottom: 1rem;
 }
 
-.hero-slogan {
-  font-size: 2rem;
+/* Correção para os slogans do Hero */
+.hero-content h1.hero-slogan {
+  color: #ddd;
+  font-size: 1.5em;
   font-weight: bold;
-  margin-bottom: 1rem;
+}
+
+.hero-content p.hero-slogan {
   color: var(--laranja);
+  font-size: 1.5em;
+  margin-top: 10px;
+  font-weight: normal;
 }
 
 .hero-tagline {
   font-size: 1.2rem;
   font-weight: bold;
   margin-bottom: 2rem;
-  color: #FFFFFF; /* ou white */
-  /*color: var(--preto);*/
+  color: var(--branco);
 }
 
 .hero-image {
@@ -235,7 +273,7 @@ header {
   background-color: #20b358;
 }
 
-/* Carrossel */
+/* --- Carrossel --- */
 .carousel {
   position: relative;
   max-width: 100%;
@@ -315,13 +353,13 @@ header {
   background-color: var(--branco);
 }
 
-/* Acessibilidade */
+/* Acessibilidade do carrossel */
 .carousel:focus {
   outline: 2px solid var(--laranja);
   outline-offset: 2px;
 }
 
-/* Seção Destaques */
+/* --- Seção Destaques (Diferenciais) --- */
 .highlights {
   padding: 3rem 2rem;
   background-color: var(--preto);
@@ -349,38 +387,49 @@ header {
   background-color: var(--laranja);
 }
 
+/* Altera o grid para empilhar os itens verticalmente */
 .highlights-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 2rem;
-  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem; /* Aumenta o espaço entre os itens */
+  max-width: 600px; /* Mantém a largura máxima */
   margin: 0 auto;
 }
 
+/* Transforma cada item em um container flexível (imagem ao lado do texto) */
 .highlight-item {
-  padding: 1.5rem;
-  border-radius: 10px;
-  background-color: var(--preto);
-  color: var(--branco);
-  text-align: center;
+  display: flex;
+  align-items: center; /* Alinha o ícone e o texto verticalmente */
+  gap: 1.5rem; /* Cria o "espaço" entre a imagem e o texto */
+  text-align: left; /* Alinha o texto à esquerda, melhorando a leitura */
+  padding: 1.5rem; /* Mantém o padding */
+  border-radius: 10px; /* Mantém o border-radius */
+  background-color: var(--preto); /* Mantém o background */
+  color: var(--branco); /* Mantém a cor do texto */
 }
 
+/* Deixa o ícone maior */
 .highlight-icon {
-  width: 40px;
-  height: 40px;
-  margin-bottom: 1rem;
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0; /* Impede que o ícone encolha */
+  fill: var(--laranja); /* Adicionado para ícones SVG, se aplicável */
+  margin-bottom: 0; /* Remove margin-bottom que era usada em layout de coluna */
 }
 
-.highlight-item h3 {
+/* O novo container para o texto */
+.highlight-text h3 {
   font-size: 1.3rem;
-  margin: 0.5rem 0;
+  margin: 0.5rem 0; /* Ajustado para um melhor espaçamento */
+  color: var(--branco);
 }
 
-.highlight-item p {
+.highlight-text p {
   font-size: 1rem;
+  color: var(--cinza-claro); /* Deixa o texto de apoio com um tom mais suave */
 }
 
-/* Seção Avaliações */
+/* --- Seção Avaliações --- */
 .reviews {
   padding: 3rem 2rem;
   background-color: var(--preto);
@@ -419,7 +468,7 @@ header {
 .review-item {
   padding: 1.5rem;
   border-radius: 10px;
-  background-color: #555;
+  background-color: var(--cinza-escuro); /* Usando variável de cor */
   text-align: left;
 }
 
@@ -429,7 +478,7 @@ header {
   color: var(--laranja);
 }
 
-/* Seção Produtos */
+/* --- Seção Produtos --- */
 .products {
   padding: 3rem 2rem;
   background-color: var(--branco);
@@ -505,13 +554,14 @@ header {
   text-decoration: none;
   margin-top: 1rem;
   font-size: 0.9rem;
+  transition: background-color 0.3s ease;
 }
 
 .product-button:hover {
   background-color: #20b358;
 }
 
-/* Seção Sobre */
+/* --- Seção Sobre --- */
 .about {
   background-color: var(--preto);
   color: var(--branco);
@@ -554,7 +604,7 @@ header {
   border-radius: 10px;
 }
 
-/* Seção Contato */
+/* --- Seção Contato --- */
 .contact {
   background-color: var(--preto);
   color: var(--branco);
@@ -587,7 +637,7 @@ header {
   padding: 0.8rem;
   border: 2px solid transparent;
   border-radius: 5px;
-  background-color: #666;
+  background-color: var(--cinza-escuro); /* Usando variável de cor */
   color: var(--branco);
   width: 100%;
   box-sizing: border-box;
@@ -599,7 +649,7 @@ header {
 .calc-step input::placeholder,
 .calc-step select::placeholder,
 .calc-step textarea::placeholder {
-  color: #aaa;
+  color: var(--cinza-claro); /* Usando variável de cor */
 }
 
 .contact textarea,
@@ -613,7 +663,7 @@ header {
 .calc-step input:invalid:focus,
 .calc-step select:invalid:focus,
 .calc-step textarea:invalid:focus {
-  border-color: #D94F04;
+  border-color: var(--laranja);
 }
 
 .contact-info {
@@ -645,7 +695,7 @@ header {
   color: var(--laranja);
 }
 
-/* Rodapé */
+/* --- Rodapé --- */
 footer {
   background-color: var(--preto);
   text-align: center;
@@ -680,24 +730,25 @@ footer {
   height: 32px;
   object-fit: contain;
   transition: transform 0.3s ease;
+  fill: var(--branco); /* Garante que os ícones SVG do rodapé sejam brancos */
 }
 
 .social-item:hover .social-icon {
   transform: scale(1.2);
+  fill: var(--laranja); /* Muda a cor ao passar o mouse */
 }
 
-
-/* Contêiner principal */
+/* Contêiner principal (main) */
 main {
-  margin-bottom: 200px;
-  padding-bottom: 200px;
+  margin-bottom: 200px; /* Espaço para o menu do rodapé */
+  padding-bottom: 20px; /* Padding extra para não cortar o conteúdo */
   position: relative;
   z-index: 500;
-  min-height: calc(100vh - 200px);
-  padding-top: 40px;
+  min-height: calc(100vh - 200px); /* Ajustado para considerar o cabeçalho e rodapé */
+  padding-top: 80px; /* Ajustado para evitar sobreposição do cabeçalho */
 }
 
-/* Calculadora */
+/* --- Calculadora --- */
 .calculator-panel {
   padding: 2rem;
   border-radius: 10px;
@@ -717,7 +768,7 @@ main {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: #666;
+  background-color: var(--cinza-escuro); /* Usando variável de cor */
   color: var(--branco);
   display: flex;
   align-items: center;
@@ -767,7 +818,7 @@ main {
   text-align: left;
   margin-bottom: 0.1rem;
   font-weight: 500;
-  color: #ddd;
+  color: var(--cinza-claro); /* Usando variável de cor */
 }
 
 .calc-step input,
@@ -776,7 +827,7 @@ main {
   padding: 0.7rem;
   border: 2px solid transparent;
   border-radius: 5px;
-  background-color: #666;
+  background-color: var(--cinza-escuro); /* Usando variável de cor */
   color: var(--branco);
   font-size: 0.95rem;
   width: 100%;
@@ -789,13 +840,13 @@ main {
 .calc-step input::placeholder,
 .calc-step select::placeholder,
 .calc-step textarea::placeholder {
-  color: #aaa;
+  color: var(--cinza-claro);
 }
 
 .calc-step input:invalid:focus,
 .calc-step select:invalid:focus,
 .calc-step textarea:invalid:focus {
-  border-color: #D94F04;
+  border-color: var(--laranja);
 }
 
 .calc-step .form-actions {
@@ -824,29 +875,29 @@ main {
 }
 
 .calc-step button:hover {
-  background-color: #D94F04;
+  background-color: #c04000; /* Tom mais escuro de laranja */
 }
 
 .calc-step .back-button {
-  background-color: #666;
+  background-color: var(--cinza-escuro);
   display: none;
 }
 
 .calc-step .back-button:hover {
-  background-color: #888;
+  background-color: #555; /* Tom mais escuro de cinza */
 }
 
 .calc-result {
   margin-top: 1.5rem;
   padding: 1rem;
-  background-color: #666;
+  background-color: var(--cinza-escuro);
   border-radius: 5px;
   text-align: left;
   max-width: 100%;
   margin: 0 auto;
 }
 
-/* Estilos para a Calculadora */
+/* Estilos para a Calculadora - Adicionar Cômodos */
 #comodos-container {
   margin-bottom: 1.5rem;
 }
@@ -857,7 +908,7 @@ main {
   gap: 0.5rem;
   margin-bottom: 1rem;
   padding: 1rem;
-  background-color: #666;
+  background-color: var(--cinza-escuro);
   border-radius: 5px;
 }
 
@@ -882,12 +933,15 @@ main {
 }
 
 #calculate-button {
-  background-color: #28a745;
+  background-color: #28a745; /* Verde específico para o botão de calcular */
 }
 
-#add-comodo:hover,
+#add-comodo:hover {
+  background-color: #c04000; /* Tom mais escuro de laranja */
+}
+
 #calculate-button:hover {
-  background-color: #D94F04;
+  background-color: #228b22; /* Tom mais escuro de verde */
 }
 
 .remove-comodo {
@@ -905,7 +959,7 @@ main {
   background-color: #666;
 }
 
-/* Modal para Orçamento */
+/* --- Modal para Orçamento --- */
 .modal {
   display: none;
   position: fixed;
@@ -968,9 +1022,20 @@ main {
   margin-top: 1rem;
   padding: 0.8rem 1.5rem;
   width: 100%;
+  background-color: var(--laranja);
+  color: var(--branco);
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-/* Toast Notification */
+#confirm-budget:hover {
+  background-color: #c04000;
+}
+
+/* --- Toast Notification --- */
 .toast {
   position: fixed;
   bottom: 20px;
@@ -989,19 +1054,26 @@ main {
 }
 
 @keyframes slideIn {
-  from { transform: translateX(100%); }
-  to { transform: translateX(0); }
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
 }
 
 @keyframes fadeOut {
-  to { opacity: 0; }
+  to {
+    opacity: 0;
+  }
 }
 
-/* Responsividade para telas menores */
+/* --- Responsividade para telas menores --- */
 @media (max-width: 768px) {
   main {
-    margin-bottom: 120px;
-    padding-bottom: 120px;
+    margin-bottom: 120px; /* Ajustado para o menu flutuante do rodapé */
+    padding-bottom: 20px;
+    padding-top: 60px; /* Ajustado para o cabeçalho fixo */
   }
 
   #modal-comodos-list {
@@ -1009,12 +1081,10 @@ main {
   }
 
   .nav-menu {
-    display: flex;
+    /* display: flex;  Já está em flex por padrão para mobile */
   }
 
-  .nav-menu.active {
-    display: block;
-  }
+  /* .nav-menu.active { display: block; } Isso seria para um menu hambúrguer, se for o caso. */
 
   .logo {
     display: flex;
@@ -1042,6 +1112,7 @@ main {
 
   .hero {
     padding: 3rem 1rem;
+    margin-top: 50px; /* Ajuste para o cabeçalho menor em mobile */
   }
 
   .hero-content {
@@ -1076,8 +1147,16 @@ main {
     padding: 2rem 1rem;
   }
 
-  .highlights-grid {
-    grid-template-columns: 1fr;
+  /* Ajustes para o layout de diferenciais voltar ao original em telas pequenas (celular) */
+  .highlight-item {
+    flex-direction: column; /* Empilha o ícone em cima do texto */
+    text-align: center;   /* Centraliza tudo novamente */
+  }
+
+  .highlight-icon {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 1rem; /* Adiciona espaçamento abaixo do ícone */
   }
 
   .reviews {
@@ -1167,53 +1246,11 @@ main {
     padding: 0.3rem 0.6rem;
     font-size: 0.8rem;
   }
-}
 
-/* ================================================= */
-/* MÓDULO DE ATUALIZAÇÃO DO CABEÇALHO - Disk-laje   */
-/* ================================================= */
-
-/* 1. Regra para o container do cabeçalho */
-/* Esta regra vai sobrescrever a original para alinhar os itens */
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 1.5rem;
-  border-bottom: 1px solid #333;
-}
-
-/* 2. Estilos para o link de contato */
-.header-contact {
-  color:cornflowerblue;
-  text-decoration: none;
-  font-weight: 700;
-  font-size: 1.1rem;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: color 0.3s ease;
-}
-
-.header-contact:hover {
-  color: #D94F04; /* Laranja */
-}
-
-/* 3. Estilo para o ícone de telefone */
-.header-phone-icon {
-  fill:#FFA500; /* Laranja */
-  width: 22px;
-  height: 22px;
-}
-
-/* 4. Regra para esconder o texto mobile em telas grandes */
-.header-contact-text-mobile {
-  display: none;
-}
-
-
-/* 5. Regras para o cabeçalho em telas de celular */
-@media (max-width: 768px) {
+  /* Regras para o cabeçalho em telas de celular */
+  header {
+    padding: 8px 1rem;
+  }
 
   .header-contact .header-contact-text-full {
     display: none; /* Esconde o texto completo */
@@ -1223,83 +1260,4 @@ header {
     display: inline; /* Mostra apenas "Disk-laje" */
     font-size: 1rem;
   }
-  
-  header {
-    padding: 8px 1rem;
-  }
-}
-/* ============================================= */
-/* NOVO LAYOUT PARA A SEÇÃO DE DIFERENCIAIS      */
-/* ============================================= */
-
-/* Altera o grid para empilhar os itens verticalmente */
-.highlights-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 2.5rem; /* Aumenta o espaço entre os itens */
-}
-
-/* Transforma cada item em um container flexível (imagem ao lado do texto) */
-.highlight-item {
-  display: flex;
-  align-items: center; /* Alinha o ícone e o texto verticalmente */
-  gap: 1.5rem; /* Cria o "espaço" entre a imagem e o texto */
-  text-align: left; /* Alinha o texto à esquerda, melhorando a leitura */
-}
-
-/* Deixa o ícone maior, como você pediu */
-.highlight-icon {
-  width: 80px;
-  height: 80px;
-  flex-shrink: 0; /* Impede que o ícone encolha */
-}
-
-/* O novo container para o texto */
-.highlight-text h3 {
-  margin-bottom: 0.5rem;
-  color: var(--branco);
-}
-
-.highlight-text p {
-  color: #ccc; /* Deixa o texto de apoio com um tom mais suave */
-}
-
-/* Ajustes para o layout voltar ao original em telas pequenas (celular) */
-@media (max-width: 768px) {
-  .highlight-item {
-    flex-direction: column; /* Empilha o ícone em cima do texto */
-    text-align: center;   /* Centraliza tudo novamente */
-  }
-
-  .highlight-icon {
-    width: 60px;
-    height: 60px;
-  }
-}
-
-/* Botão Calculadora Flutuante no Rodapé */
-.calculator-float {
-background-color: var(--laranja); 
-color: var(--branco);
-padding: 0.6rem 1.2rem;
-border-radius: 50px;
-text-decoration: none;
-font-size: 1rem;
-font-weight: 700;
-display: flex;
-align-items: center;
-gap: 8px;
-box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-transition: background-color 0.3s ease, transform 0.3s ease;
-margin-left: 15px; / A linha que você adicionou */
-}
-
-.calculator-float:hover {
-  background-color: #D94F04; /* Um tom de laranja mais escuro ao passar o mouse */
-  transform: scale(1.05);
-}
-
-/* Ajuste para o ícone da calculadora dentro do botão */
-.calculator-float .menu-icon {
-    fill: var(--branco);
 }
