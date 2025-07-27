@@ -12,27 +12,23 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-// Inicializa o Firebase de forma segura para ambientes de build
 let app: FirebaseApp;
 
 // Verifica se as chaves essenciais existem antes de inicializar
-if (firebaseConfig.apiKey) {
+// Isso é crucial para o processo de build do Next.js (SSG) não quebrar
+// quando as variáveis de ambiente não estão disponíveis no lado do servidor.
+if (firebaseConfig.apiKey && firebaseConfig.projectId) {
     if (!getApps().length) {
       app = initializeApp(firebaseConfig);
     } else {
       app = getApp();
     }
 } else {
-    // Se não houver chaves, usamos um app placeholder no lado do servidor/build
-    // para evitar que a aplicação quebre. O cliente ainda receberá as chaves via
-    // variáveis de ambiente.
-    if (!getApps().length) {
-        // Apenas para evitar o erro "Firebase app is not initialized" no build.
-        // As funcionalidades do Firebase não funcionarão no lado servidor sem as chaves.
-        app = initializeApp({ projectId: "stub" });
-    } else {
-        app = getApp();
-    }
+    // Se as chaves não estão disponíveis (ex: durante o build),
+    // podemos retornar um app "stub" ou simplesmente não inicializar.
+    // Para a maioria dos casos de uso onde o Firebase é client-side,
+    // o código do cliente irá re-executar isso e obter o app correto.
+    app = getApps().length > 0 ? getApp() : initializeApp({});
 }
 
 

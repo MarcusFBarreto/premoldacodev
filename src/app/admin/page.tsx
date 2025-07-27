@@ -2,6 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -392,7 +393,8 @@ function LoginPage({ login, error, loading }: { login: (email: string, pass: str
   )
 }
 
-export default function AdminPage() {
+// Componente principal que gerencia a lógica de autenticação
+function AuthManager() {
   const { user, loading, error, login, logout } = useAuth();
 
    if (loading && !user) { // Mostra o loader principal apenas na checagem inicial
@@ -410,4 +412,16 @@ export default function AdminPage() {
   return <LoginPage login={login} error={error} loading={loading} />;
 }
 
-    
+// Carrega o AuthManager dinamicamente apenas no lado do cliente
+const DynamicAuthManager = dynamic(() => Promise.resolve(AuthManager), {
+    ssr: false,
+    loading: () => (
+        <div className="flex h-screen items-center justify-center bg-muted/40">
+            <Loader2 className="h-16 w-16 animate-spin text-primary" />
+        </div>
+    )
+})
+
+export default function AdminPage() {
+    return <DynamicAuthManager />;
+}

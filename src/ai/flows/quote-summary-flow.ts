@@ -77,11 +77,6 @@ Dados recebidos:
 Detalhes dos Cômodos:
 {{#each comodos}}
 - Cômodo {{@index_1}}: Largura de {{{largura}}}m, Comprimento de {{{comprimento}}}m, Bloco de {{{tipoBloco}}}.
-  {{#if (eval "this.comprimento >= 7")}}
-  - !! ALERTA CRÍTICO: Vão de {{this.comprimento}}m excede o limite de 7m para transporte. O projeto é inviável como está. Contatar o cliente para discutir alternativas estruturais é URGENTE.
-  {{else if (eval "this.comprimento >= 4.5")}}
-  - ** AVISO: Vão de {{this.comprimento}}m. Discutir necessidade de reforço com o cliente.
-  {{/if}}
 {{/each}}
 
 Com base nos dados e nos resultados da ferramenta, gere o campo "summary" com o texto do resumo. O resumo deve consolidar as informações de forma coesa, incluindo os totais calculados e os alertas sobre os vãos. Se o cliente solicitar uma visita, destaque isso. Se houver observações, inclua-as de forma proeminente.
