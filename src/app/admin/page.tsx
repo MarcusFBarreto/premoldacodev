@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Building2, User, LogOut, Loader2, KeyRound, Globe, Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useAuth, User as FirebaseUser } from '@/context/auth-context';
+import { useAuth, User as FirebaseUser, AuthProvider } from '@/context/auth-context';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -70,6 +70,7 @@ const statusColors: Record<Status, string> = {
 function QuoteCard({ quote, user, collectionName }: { quote: Quote, user: FirebaseUser, collectionName: string }) {
   
   const handleStatusChange = async (newStatus: Status) => {
+    if (!db) return; // Garante que o db está disponível
     const quoteRef = doc(db, collectionName, quote.id);
     let dataToUpdate: { [key: string]: any } = { status: newStatus };
 
@@ -97,7 +98,7 @@ function QuoteCard({ quote, user, collectionName }: { quote: Quote, user: Fireba
         alert("Nome do vendedor não encontrado. Não é possível resgatar.");
         return;
     }
-
+    if (!db) return; // Garante que o db está disponível
     const batch = writeBatch(db);
     
     // Referência ao documento original em 'webleads'
@@ -137,6 +138,7 @@ function QuoteCard({ quote, user, collectionName }: { quote: Quote, user: Fireba
   const handleCancel = async () => {
     if(confirm(`Tem certeza que deseja CANCELAR o orçamento para a obra "${quote.nomeObra}"?`)){
        try {
+        if (!db) return;
          await updateDoc(doc(db, collectionName, quote.id), { status: 'Cancelado' });
          console.log(`Orçamento ${quote.id} cancelado.`);
        } catch(error){
@@ -218,7 +220,7 @@ function AdminDashboard({ user, logout }: { user: FirebaseUser, logout: () => vo
   const [activeTab, setActiveTab] = useState("app");
 
   useEffect(() => {
-    if (!user.role || !user.displayName) return;
+    if (!user.role || !user.displayName || !db) return;
 
     let quotesQuery;
     if (user.role === 'vendas') {
@@ -393,11 +395,11 @@ function LoginPage({ login, error, loading }: { login: (email: string, pass: str
   )
 }
 
-// Componente principal que gerencia a lógica de autenticação
+// Componente que gerencia a lógica de autenticação
 function AuthManager() {
   const { user, loading, error, login, logout } = useAuth();
 
-   if (loading && !user) { // Mostra o loader principal apenas na checagem inicial
+   if (loading && !user) {
     return (
       <div className="flex h-screen items-center justify-center bg-muted/40">
         <Loader2 className="h-16 w-16 animate-spin text-primary" />
@@ -412,16 +414,26 @@ function AuthManager() {
   return <LoginPage login={login} error={error} loading={loading} />;
 }
 
-// Carrega o AuthManager dinamicamente apenas no lado do cliente
-const DynamicAuthManager = dynamic(() => Promise.resolve(AuthManager), {
+
+// Componente principal da página que envolve tudo no AuthProvider
+function AdminPageComponent() {
+    return (
+        <AuthProvider>
+            <AuthManager />
+        </AuthProvider>
+    );
+}
+
+// Carrega o componente principal dinamicamente para evitar SSR
+const DynamicAdminPage = dynamic(() => Promise.resolve(AdminPageComponent), {
     ssr: false,
     loading: () => (
         <div className="flex h-screen items-center justify-center bg-muted/40">
             <Loader2 className="h-16 w-16 animate-spin text-primary" />
         </div>
     )
-})
+});
 
 export default function AdminPage() {
-    return <DynamicAuthManager />;
+    return <DynamicAdminPage />;
 }
