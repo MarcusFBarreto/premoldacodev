@@ -29,3 +29,5 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_PREMOLDACODEV }}'
           channelId: live
           projectId: premoldaco-webapp
+        env:
+          FIREBASE_CLI_EXPERIMENTS: webframeworks
