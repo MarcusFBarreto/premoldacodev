@@ -88,7 +88,7 @@ function QuoteCard({ quote, user, collectionName }: { quote: Quote, user: Fireba
       await updateDoc(quoteRef, dataToUpdate);
       console.log(`Status do orçamento ${quote.id} atualizado para ${newStatus}`);
     } catch (error) {
-      console.error("Erro ao atualizar status:", error);
+      console.error("Erro ao atualizar o status:", error);
       alert("Não foi possível atualizar o status.");
     }
   };
